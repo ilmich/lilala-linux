@@ -1,0 +1,2 @@
+# file-system  mount-point  type   options          dump  fsck
+#/dev/[xxx]     /            [fff]  defaults         1     1

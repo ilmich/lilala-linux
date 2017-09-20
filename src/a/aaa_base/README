@@ -1,0 +1,4 @@
+For creating the _aaa_base.tar.gz file, cd into where ever you extract the
+existing version, make your changes, the tar it up like:
+
+tar cvzf ../_aa_base.tar.gz --owner=root --group=root .

@@ -1,0 +1,20 @@
+# /etc/profile
+
+# Set the initial path
+export PATH=/bin:/usr/bin:/usr/local/bin
+
+if [ `id -u` -eq 0 ] ; then
+        PATH=/sbin:/usr/sbin:/usr/local/sbin:$PATH
+        unset HISTFILE
+fi
+
+# Setup some environment variables.
+export USER=`id -un`
+export LOGNAME=$USER
+export HOSTNAME=`/bin/hostname`
+export HISTSIZE=1000
+export HISTFILESIZE=1000
+export PAGER='/bin/less'
+export EDITOR='/bin/vi'
+
+# End /etc/profile

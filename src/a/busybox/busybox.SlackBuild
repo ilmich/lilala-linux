@@ -1,0 +1,137 @@
+#!/bin/sh
+
+# Slackware build script for busybox
+
+# Copyright 2017 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=busybox
+CWD=$(pwd)
+TMP=${TMP:-/tmp}
+PKG=$TMP/package-$PRGNAM
+OUTPUT=${OUTPUT:-/tmp}
+
+if [ ! -e $CWD/$PRGNAM.info ]; then
+    echo "File $PRGNAM.info not found"
+    exit 1
+fi
+
+. $CWD/$PRGNAM.info
+
+if [ ! -z "$SLK_TARGET" ]; then
+    TARGET=$SLK_TARGET-
+    ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
+fi
+
+if [ ! -z "$SLK_SYSROOT" ]; then
+    SYSROOT=" --sysroot=$SLK_SYSROOT "
+fi
+
+# Automatically determine the architecture we're building on:
+if [ -z "$ARCH" ]; then
+  case "$( uname -m )" in
+    i?86) ARCH=i486 ;;
+   armv6) ARCH=armv6 ;;
+    arm*) ARCH=arm ;;
+       *) ARCH=$( uname -m ) ;;
+  esac
+fi
+
+CWD=$(pwd)
+TMP=${TMP:-/tmp}
+PKG=$TMP/package-$PRGNAM
+OUTPUT=${OUTPUT:-/tmp}
+
+if [ "$ARCH" = "i486" ]; then
+  SLKCFLAGS="-O2 -march=i486 -mtune=i686"
+elif [ "$ARCH" = "i686" ]; then
+  SLKCFLAGS="-O2 -march=i686 -mtune=i686"
+elif [ "$ARCH" = "x86_64" ]; then
+  SLKCFLAGS="-O2 -fPIC"
+elif [ "$ARCH" = "armv6" ]; then
+  SLKCFLAGS="-O2 -march=armv6 -mfpu=vfp -mfloat-abi=hard"
+  LIBDIRSUFFIX=""
+else
+  SLKCFLAGS="-O2"
+fi
+
+set -e # Exit on most errors
+
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+if [ ! -e ${CWD}/$SOURCE_TAR ]; then
+  wget -c $DOWNLOAD_URL
+fi
+
+if [ ! $DOWNLOAD_SHA1 == `sha1sum $SOURCE_TAR | cut -d " " -f 1` ]; then
+    echo "SHA1 did not match"
+    exit 1
+fi
+
+rm -rf $PKG
+mkdir -p $TMP $PKG $OUTPUT
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+find -L . \
+ \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
+  -o -perm 511 \) -exec chmod 755 {} \; -o \
+ \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
+  -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
+
+#make defconfig CONFIG_EXTRA_CFLAGS="\"$SLKCFLAGS -s $SYSROOT\"" CROSS_COMPILE=$TARGET
+cp $CWD/.config .
+
+# Disable inetd and ifplugd as they fail to compile with musl
+#sed -i 's/\(CONFIG_\)\(.*\)\(INETD\)\(.*\)=y/# \1\2\3\4 is not set/g' .config
+#sed -i 's/\(CONFIG_IFPLUGD\)=y/# \1 is not set/' .config
+
+# Compile the application and install it into the $PKG directory
+make -j2 CONFIG_EXTRA_CFLAGS="\"$SLKCFLAGS -s $SYSROOT\"" CROSS_COMPILE=$TARGET
+make install CONFIG_EXTRA_CFLAGS="\"$SLKCFLAGS -s $SYSROOT \"" CROSS_COMPILE=$TARGET CONFIG_PREFIX=$PKG
+
+#remove linuxrc
+#rm $PKG/linuxrc
+
+# Copy program documentation into the package
+# The included documentation varies from one application to another, so be sure
+# to adjust your script as needed
+# Also, include the SlackBuild script in the documentation directory
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+
+# Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
+mkdir -p $PKG/install
+cat $CWD/slack-desc > $PKG/install/slack-desc
+
+#generate slack-required
+if [ ! -z "$DEPS" ]; then
+    for i in $DEPS;
+    do
+	echo $i >> $PKG/install/slack-required
+    done
+fi
+
+# Make the package; be sure to leave it in $OUTPUT
+# If package symlinks need to be created during install *before*
+# your custom contents of doinst.sh runs, then add the -p switch to
+# the makepkg command below -- see makepkg(8) for details
+cd $PKG
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}

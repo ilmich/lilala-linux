@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.
+# Line up the first '|' above the ':' following the base package name, and
+# the '|' on the right side marks the last column you can put a character in.
+# You must make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':' except on otherwise blank lines.
+
+       |-----handy-ruler------------------------------------------------------|
+busybox: busybox (swiss army knife of embedded linux)
+busybox:
+busybox: Busybox is a single binary which executes many common and standard
+busybox: shell utilities and the ash shell, but stripped down to the bare
+busybox: essentials and optimized for size.
+busybox:
+busybox: Use busybox instead of many other utilities, such as: bash, gzip, tar,
+busybox: and gnu-coreutils.
+busybox:
+busybox:
+busybox:
