@@ -35,9 +35,11 @@ fi
 
 . $CWD/$PRGNAM.info
 
+STRIP_CMD=strip
 if [ ! -z "$SLK_TARGET" ]; then
     TARGET=$SLK_TARGET-
     ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
+    STRIP_CMD=$SLK_TARGET-strip
 fi
 
 if [ ! -z "$SLK_SYSROOT" ]; then
@@ -108,8 +110,12 @@ cp $CWD/.config .
 make -j2 CONFIG_EXTRA_CFLAGS="\"$SLKCFLAGS -s $SYSROOT\"" CROSS_COMPILE=$TARGET
 make install CONFIG_EXTRA_CFLAGS="\"$SLKCFLAGS -s $SYSROOT \"" CROSS_COMPILE=$TARGET CONFIG_PREFIX=$PKG
 
-#remove linuxrc
-#rm $PKG/linuxrc
+#strip binaries
+( cd $PKG
+  find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
+  find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
+  find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
+)
 
 # Copy program documentation into the package
 # The included documentation varies from one application to another, so be sure

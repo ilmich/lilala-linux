@@ -37,10 +37,11 @@ fi
 
 #VERSION=${VERSION:-1.1.16}
 #BUILD=${BUILD:-1}
-
+STRIP_CMD=strip
 if [ ! -z "$SLK_TARGET" ]; then
     TARGET=" --target=$SLK_TARGET "
     ARCH=` echo $SLK_TARGET | cut -d - -f 1 -`
+    STRIP_CMD=$SLK_TARGET-strip
 fi
 
 if [ ! -z "$SLK_SYSROOT" ]; then
@@ -123,6 +124,13 @@ cat > $PKG/etc/ld-musl-${ARCH}.path << "EOF"
 /lib
 /usr/lib
 EOF
+
+#strip binaries
+( cd $PKG
+  find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
+  find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
+  find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
+)
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a COPYRIGHT INSTALL README VERSION WHATSNEW $PKG/usr/doc/$PRGNAM-$VERSION
