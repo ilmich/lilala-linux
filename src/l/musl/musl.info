@@ -1,5 +1,5 @@
 VERSION=1.1.16
-BUILD=2
+BUILD=3
 DOWNLOAD_URL=https://www.musl-libc.org/releases/musl-1.1.16.tar.gz
 DOWNLOAD_SHA1=5c2204b31b1ee08a01d4d3e34c6e46f6256bdac8
 DEPS=

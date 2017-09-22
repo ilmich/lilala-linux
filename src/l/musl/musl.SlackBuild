@@ -107,6 +107,7 @@ CXXFLAGS="$SLKCFLAGS $SYSROOT -s " \
   --prefix=/ \
   --disable-static \
   --libdir=/lib$LIBDIRSUFFIX \
+  --includedir=/usr/include \
   $TARGET
 
 make -j2

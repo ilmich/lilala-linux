@@ -106,14 +106,15 @@ CXXFLAGS="$SLKCFLAGS $SYSROOT -s " \
 ./configure \
   --prefix=/ \
   --enable-elf-shlibs \
-  --libdir=/lib$LIBDIRSUFFIX \
+  --libdir=/usr/lib$LIBDIRSUFFIX \
+  --includedir=/usr/include \
   $TARGET
 
 make -j2
 make DESTDIR=$PKG install install-libs
 
 # remove static lib
-rm $PKG/lib$LIBDIRSUFFIX/*.a
+rm $PKG/usr/lib$LIBDIRSUFFIX/*.a
 
 # Don't clobber an existing config file
 mv $PKG/etc/mke2fs.conf $PKG/etc/mke2fs.conf.new
