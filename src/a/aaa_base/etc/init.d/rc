@@ -4,20 +4,8 @@
 
 # Fallback Configuration Values, to be able to run even with a broken, deleted
 # or outdated minirc.conf:
-DAEMONS="syslog-ng iptables alsa crond dbus wpa_supplicant dhcpcd sshd privoxy polipo acpid mpd vsftpd lighttpd ntpd haveged"
-ENABLED="@syslog-ng @crond @dhcpcd @sshd"
 UDEV="busybox"
-NETWORK_INTERFACE="eth0"
-WIFI_INTERFACE="wlan0"
 HOSTNAME="$(cat /etc/HOSTNAME)"
-
-# User-definable start/stop/restart/poll functions which fall back to defaults
-custom_restart() { default_restart "$@"; }
-custom_start()   { default_start   "$@"; }
-custom_stop()    { default_stop    "$@"; }
-custom_poll()    { default_poll    "$@"; }
-
-. /etc/minirc.conf
 
 on_boot() {
     #===================
@@ -33,28 +21,42 @@ on_boot() {
     mountpoint -q /dev/shm || mount -t tmpfs shm /dev/shm -o mode=1777,nosuid,nodev
 
     sleep 2
-    echo loading modules...
-    #find /sys -name modalias | xargs sort -u | xargs modprobe
-    MODULE=`find /sys -name modalias | xargs sort -u | xargs echo`
-    for i in $MODULE; do
-	modprobe $i >/dev/null 2>/dev/null
-    done
-
+    
     #===================
     # initialize system
     echo setting up loopback device...
     /sbin/ip link set up dev lo
 
-    echo initializing udev...
-    if [ "$UDEV" = systemd ]; then
-        /usr/lib/systemd/systemd-udevd --daemon
-        /usr/bin/udevadm trigger --action=add --type=subsystems
-        /usr/bin/udevadm trigger --action=add --type=devices
-    elif [ "$UDEV" = eudev ]; then
+    # Determine the version of the running kernel:
+    RELEASE=$(uname -r)
+
+    # Update kernel module dependencies:
+    if [ -e "/lib/modules/$RELEASE/modules.dep" ]; then 
+	echo "Updating module dependency list for $RELEASE:  /sbin/depmod --quick"
+	/sbin/depmod --quick
+    else 
+	echo "Creating module dependency list for $RELEASE:  /sbin/depmod --all"
+	/sbin/depmod --all
+    fi    
+    
+    if [ -x "/etc/rc.d/rc.modules" ]; then
+	/etc/rc.d/rc.modules
+    fi
+    
+    if [ "$UDEV" = eudev ]; then
+	echo initializing udev...
         /usr/bin/udevd --daemon
         /usr/bin/udevadm trigger --action=add --type=subsystems
         /usr/bin/udevadm trigger --action=add --type=devices
     else # use busybox mdev as fallback:
+	echo loading modules...
+	find /sys -name modalias | xargs sort -u | xargs modprobe
+	MODULE=`find /sys -name modalias | xargs sort -u | xargs echo`
+	for i in $MODULE; do
+		modprobe $i >/dev/null 2>/dev/null
+	done
+	
+	echo initializing mdev...
         echo /sbin/mdev > /proc/sys/kernel/hotplug
         busybox mdev -s
     fi
@@ -74,18 +76,6 @@ on_boot() {
 
     echo load keyboard
     loadkmap < /etc/keymap
-
-    #===================
-    # start the default daemons
-    echo starting daemons...
-    for dmn in $ENABLED; do
-        if [ "$(echo "$dmn" | awk '{ s=substr($0, 1, 1); print s; }')" = '@' ]; then
-            custom_start "$(echo "$dmn" | awk '{ s=substr($0, 2); print s; }')" &
-        else
-            custom_start "$dmn"
-        fi
-    done
-
 
     #===================
     # load /etc/minirc.local
@@ -109,10 +99,6 @@ on_boot() {
 }
 
 on_shutdown() {
-    #===================
-    # stop the default daemons
-    #echo stopping daemons...
-    #custom_stop all
 
     #===================
     # load minirc.local.shutdown
@@ -136,102 +122,6 @@ on_shutdown() {
     #umount -r /run
 }
 
-default_start() {
-    echo_color 2 starting "$1"...
-    case "$1" in
-    all)
-        for dmn in $DAEMONS $ENABLED; do
-            custom_poll "${dmn##@}" || custom_start "${dmn##@}"
-        done;;
-    alsa)
-        alsactl restore;;
-    bitlbee)
-        su -s /bin/sh -c 'bitlbee -F' bitlbee;;
-    dbus)
-        mkdir -p /run/dbus &&
-            dbus-uuidgen --ensure &&
-            dbus-daemon --system;;
-    iptables)
-        iptables-restore < /etc/iptables/iptables.rules;;
-    sshd)
-        /usr/bin/sshd;;  # requires an absolute path
-    privoxy)
-        privoxy --user privoxy.privoxy /etc/privoxy/config;;
-    polipo)
-        su -c 'polipo daemonise=true logFile="/var/log/polipo.log"' -s /bin/sh - nobody;;
-    dhcpcd)
-        if ip link | grep -Fq $NETWORK_INTERFACE; then :; else
-            echo "waiting for $NETWORK_INTERFACE to settle..."
-            for i in $(seq 100); do
-                ip link | grep -Fq $NETWORK_INTERFACE && break
-                sleep 1
-            done
-        fi
-        dhcpcd -nqb;;
-    vsftpd)
-        vsftpd &;;
-    lighttpd)
-        lighttpd -f /etc/lighttpd/lighttpd.conf;;
-    ntpd)
-        ntpd -g -u ntp;;
-    wpa_supplicant)
-        wpa_supplicant -Dwext -B -i"$WIFI_INTERFACE" -c/etc/wpa_supplicant.conf;;
-    icecast)
-        icecast -b -c /etc/icecast.xml;;
-    *)
-        # fallback: start the command
-        "$1";;
-    esac
-}
-
-default_stop() {
-    echo_color 1 stopping "$1"...
-    case "$1" in
-    all)
-        for dmn in $DAEMONS $ENABLED; do
-            custom_poll "${dmn##@}" && custom_stop "${dmn##@}"
-        done;;
-    alsa)
-        alsactl store;;
-    dbus)
-        killall dbus-launch
-        killall dbus-daemon
-        rm /run/dbus/pid;;
-    iptables)
-        for table in $(cat /proc/net/ip_tables_names); do
-            iptables-restore < /var/lib/iptables/empty-"$table".rules
-        done;;
-    *)
-        # fallback: kill all processes with the name of the command
-        killall "$1";;
-    esac
-}
-
-default_restart() {
-    case "$1" in
-    sshd)
-        # Make sure minirc doesn't hang up when restarting it remotely
-        busybox setsid sh -c '"$0" stop "$@"; "$0" start "$@"' "$0" "$@";;
-    *)
-        custom_stop "$@"
-        custom_start "$@";;
-    esac
-}
-
-default_poll() {
-    case "$1" in
-    alsa)
-        return 0;;  # doesn't make much sense for this service
-    iptables)
-        iptables -L -n | grep -m 1 -q '^ACCEPT\|^REJECT';;
-    dbus)
-        test -e /run/dbus/pid;;
-    *)
-        # fallback: check if any processes of that name are running
-        pgrep "(^|/)$1\$" >/dev/null 2>&1;;
-    esac
-}
-
 echo_color() {
   color="$1"
   shift
@@ -246,30 +136,6 @@ init)
     on_boot;;
 shutdown)
     on_shutdown;;
-start|stop|restart)
-    cmd="$1"
-    shift
-    for dmn in ${@:-$DAEMONS}; do
-        custom_"${cmd}" "$dmn"
-    done;;
-''|list)
-    # list all daemons and their status
-    for dmn in $DAEMONS; do
-        if custom_poll "$dmn" >/dev/null 2>&1; then
-            echo_color 2 [X] "$dmn"
-        else
-            echo_color 0 [ ] "$dmn"
-        fi
-    done;;
---version)
-    echo minirc 0.2;;
 *)
-    self=$(basename "$0")
-    echo "Usage: $self [--help] [--version] <action> [list of daemons]"
-    echo
-    echo "Actions:"
-    echo "   $self list               shows status of all daemons (default action)"
-    echo "   $self start [daemons]    starts daemons"
-    echo "   $self stop [daemons]     stops daemons"
-    echo "   $self restart [daemons]  restarts daemons";;
+    echo "This is an init script! Don't run as normal program"
 esac
