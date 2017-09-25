@@ -26,7 +26,7 @@ PRGNAM=wireless-tools
 CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
-OUTPUT=${OUTPUT:-/tmp}
+OUTPUT=${OUTPUT:-$PWD}
 
 if [ ! -e $CWD/$PRGNAM.info ]; then
     echo "File $PRGNAM.info not found"
@@ -128,4 +128,10 @@ if [ ! -z "$DEPS" ]; then
 fi
 
 cd $PKG
+mkdir -p $OUTPUT
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD.${PKGTYPE:-tgz}
+
+# Clean up the extra stuff:
+if [ "$1" = "--cleanup" ]; then
+  rm -rf $PKG
+fi
