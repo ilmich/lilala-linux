@@ -8,7 +8,7 @@
         |-----handy-ruler------------------------------------------------------|
 aaa_base: aaa_base (Basic Linux filesystem package)
 aaa_base:
-aaa_base: Sets up the empty directory tree for Flaccid.
+aaa_base: Sets up the empty directory tree for Lilala
 aaa_base: This package should be installed first, and never uninstalled.
 aaa_base:
 aaa_base:
