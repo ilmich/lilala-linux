@@ -86,7 +86,7 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 
 # install files
-for i in `find etc/ -name *.new`; do
+for i in `find etc/ `; do
     install -D -m=0644 $i $PKG/$i
 done
 

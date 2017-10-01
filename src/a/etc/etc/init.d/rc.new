@@ -21,7 +21,7 @@ on_boot() {
     mountpoint -q /dev/shm || mount -t tmpfs shm /dev/shm -o mode=1777,nosuid,nodev
 
     sleep 2
-    
+
     #===================
     # initialize system
     echo setting up loopback device...
@@ -37,12 +37,12 @@ on_boot() {
     else 
 	echo "Creating module dependency list for $RELEASE:  /sbin/depmod --all"
 	/sbin/depmod --all
-    fi    
-    
-    if [ -x "/etc/rc.d/rc.modules" ]; then
-	/etc/rc.d/rc.modules
     fi
-    
+
+    if [ -x "/etc/init.d/rc.modules" ]; then
+	/etc/init.d/rc.modules
+    fi
+
     if [ "$UDEV" = eudev ]; then
 	echo initializing udev...
         /usr/bin/udevd --daemon
@@ -71,8 +71,8 @@ on_boot() {
     echo start syslogd
     syslogd
 
-    echo start crond
-    crond
+    echo starting supervisor
+    /usr/bin/runsvdir /var/services/ &
 
     echo load keyboard
     loadkmap < /etc/keymap
@@ -106,6 +106,9 @@ on_shutdown() {
         echo loading /etc/minirc.local.shutdown...
         /etc/minirc.local.shutdown
     fi
+
+    echo stopping services
+    sv stop /var/services/*
 
     #===================
     # shut down udev
