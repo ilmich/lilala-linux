@@ -1,3 +1,4 @@
+PRGNAM=musl
 VERSION=1.1.16
 BUILD=3
 DOWNLOAD_URL=https://www.musl-libc.org/releases/musl-1.1.16.tar.gz
