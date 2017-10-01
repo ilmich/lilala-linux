@@ -99,12 +99,7 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-#make defconfig CONFIG_EXTRA_CFLAGS="\"$SLKCFLAGS -s $SYSROOT\"" CROSS_COMPILE=$TARGET
 cp $CWD/.config .
-
-# Disable inetd and ifplugd as they fail to compile with musl
-#sed -i 's/\(CONFIG_\)\(.*\)\(INETD\)\(.*\)=y/# \1\2\3\4 is not set/g' .config
-#sed -i 's/\(CONFIG_IFPLUGD\)=y/# \1 is not set/' .config
 
 # Compile the application and install it into the $PKG directory
 make -j2 CONFIG_EXTRA_CFLAGS="\"$SLKCFLAGS -s $SYSROOT\"" CROSS_COMPILE=$TARGET
@@ -116,6 +111,26 @@ make install CONFIG_EXTRA_CFLAGS="\"$SLKCFLAGS -s $SYSROOT \"" CROSS_COMPILE=$TA
   find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
   find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
 )
+
+#prepare crontabs
+mkdir -p $PKG/etc/cron.d
+mkdir -p $PKG/etc/cron.daily
+mkdir -p $PKG/etc/cron.hourly
+mkdir -p $PKG/etc/cron.weekly
+mkdir -p $PKG/etc/cron.monthly
+mkdir -p $PKG/var/spool/cron/crontabs
+mkdir -p $PKG/var/services
+
+chmod -R 0750 $PKG/var/spool/cron/crontabs
+install -D -m 0600 $CWD/crontabs.default $PKG/var/spool/cron/crontabs/root
+
+#install runit service script
+install -D -m 0700 $CWD/crond.runit $PKG/etc/runit.d/crond/run
+(
+    cd $PKG/var/services/
+    ln -s ../../etc/runit.d/crond .
+)
+
 
 # Copy program documentation into the package
 # The included documentation varies from one application to another, so be sure
