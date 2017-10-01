@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Slackware build script for aaa_base
+# Slackware build script for etc
 
 # Copyright 2017 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved.
@@ -27,7 +27,8 @@ if [ $UID != "0" ]; then
     exit 1
 fi
 
-PRGNAM=aaa_base
+
+PRGNAM=etc
 CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
@@ -85,29 +86,17 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 
 # install files
-install -D -m=0644 lilala-version $PKG/etc/lilala-version
-install -D -m=0644 os-release $PKG/etc/os-release
+for i in `find etc/ -name *.new`; do
+    install -D -m=0644 $i $PKG/$i
+done
 
-# create directory
-mkdir -m=0777 -p $PKG/var/spool/mail/
-mkdir -p $PKG/var/run
-mkdir -p $PKG/var/tmp
-mkdir -p $PKG/dev
-mkdir -p $PKG/run
-mkdir -p $PKG/sys
-mkdir -p $PKG/proc
-mkdir -p $PKG/boot
-mkdir -p $PKG/mnt
-mkdir -p $PKG/media
-mkdir -m=0777 -p $PKG/tmp
-mkdir -m=0700 -p $PKG/root
-mkdir -p $PKG/home
-
-# change owners
-chown -R root.16 $PKG/var/spool/mail
+# change permission for special files
+chmod 0600 $PKG/etc/passwd.new
+chmod 0700 $PKG/etc/init.d/rc.new
 
 # Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
 mkdir -p $PKG/install
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 #generate slack-required
