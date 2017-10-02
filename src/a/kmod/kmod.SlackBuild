@@ -170,7 +170,7 @@ fi
 
 cd $PKG
 mkdir -p $OUTPUT
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD.${PKGTYPE:-tgz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
 
 # Clean up the extra stuff:
 if [ "$1" = "--cleanup" ]; then
