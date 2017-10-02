@@ -21,3 +21,4 @@ config etc/minirc.conf.new
 config etc/passwd.new
 config etc/profile.new
 config etc/syslog.conf.new
+config etc/shells.new
