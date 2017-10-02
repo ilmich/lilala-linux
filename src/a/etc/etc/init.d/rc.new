@@ -72,16 +72,16 @@ on_boot() {
     syslogd
 
     echo starting supervisor
-    /usr/bin/runsvdir /var/services/ &
+    /bin/runsvdir /var/services/ &
 
     echo load keyboard
     loadkmap < /etc/keymap
 
     #===================
     # load /etc/minirc.local
-    if [ -x /etc/minirc.local ]; then
-        echo loading /etc/minirc.local...
-        /etc/minirc.local    
+    if [ -x /etc/init.d/rc.local ]; then
+        echo loading /etc/init.d/rc.local...
+        /etc/init.d/rc.local
     fi
 
     dmesg > /var/log/dmesg
@@ -102,9 +102,9 @@ on_shutdown() {
 
     #===================
     # load minirc.local.shutdown
-    if [ -x /etc/minirc.local.shutdown ]; then
-        echo loading /etc/minirc.local.shutdown...
-        /etc/minirc.local.shutdown
+    if [ -x /etc/init.d/rc.local_shutdown ]; then
+        echo loading /etc/init.d/rc.local_shutdown...
+        /etc/init.d/rc.local_shutdown
     fi
 
     echo stopping services
