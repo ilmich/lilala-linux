@@ -4,7 +4,7 @@
 
 # Fallback Configuration Values, to be able to run even with a broken, deleted
 # or outdated minirc.conf:
-UDEV="busybox"
+UDEV="mdev"
 HOSTNAME="$(cat /etc/HOSTNAME)"
 
 on_boot() {
@@ -19,8 +19,6 @@ on_boot() {
     mkdir -p /dev/pts /dev/shm
     mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts -o mode=0620,gid=5,nosuid,noexec
     mountpoint -q /dev/shm || mount -t tmpfs shm /dev/shm -o mode=1777,nosuid,nodev
-
-    sleep 2
 
     #===================
     # initialize system
@@ -71,6 +69,13 @@ on_boot() {
     echo start syslogd
     syslogd
 
+    #===================
+    # load /etc/init.d/rc.network
+    if [ -x /etc/init.d/rc.network ]; then
+        echo loading /etc/init.d/rc.network...
+        /etc/init.d/rc.network
+    fi
+
     echo starting supervisor
     /bin/runsvdir /var/services/ &
 
@@ -78,7 +83,7 @@ on_boot() {
     loadkmap < /etc/keymap
 
     #===================
-    # load /etc/minirc.local
+    # load /etc/init.d/rc.local
     if [ -x /etc/init.d/rc.local ]; then
         echo loading /etc/init.d/rc.local...
         /etc/init.d/rc.local
@@ -101,7 +106,7 @@ on_boot() {
 on_shutdown() {
 
     #===================
-    # load minirc.local.shutdown
+    # load /etc/init.d/rc.local_shutdown
     if [ -x /etc/init.d/rc.local_shutdown ]; then
         echo loading /etc/init.d/rc.local_shutdown...
         /etc/init.d/rc.local_shutdown
