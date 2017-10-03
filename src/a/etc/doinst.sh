@@ -17,7 +17,6 @@ config etc/hosts.new
 config etc/init.d/rc.new
 config etc/inittab.new
 config etc/mdev.conf.new
-config etc/minirc.conf.new
 config etc/passwd.new
 config etc/profile.new
 config etc/syslog.conf.new
