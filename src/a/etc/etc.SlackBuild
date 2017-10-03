@@ -91,7 +91,7 @@ for i in `find etc -type f`; do
 done
 
 # change permission for special files
-chmod 0600 $PKG/etc/passwd.new
+chmod 0644 $PKG/etc/passwd.new
 chmod 0700 $PKG/etc/init.d/rc.new
 
 # Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
