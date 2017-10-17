@@ -135,6 +135,14 @@ cat > $PKG/etc/ld-musl-${ARCH}.path << EOF
 /usr/local/lib$LIBDIRSUFFIX
 EOF
 
+# create symlinks for glibc compatibility
+(
+    cd $PKG/lib$LIBDIRSUFFIX
+    for i in libc.so.6 libcrypt.so.1 libdl.so.2 libm.so.6 libpthread.so.0 librt.so.1 libutil.so.1; do
+	ln -sf libc.so $i
+    done
+)
+
 #strip binaries
 ( cd $PKG
   find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
