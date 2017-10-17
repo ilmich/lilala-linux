@@ -104,7 +104,7 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-cp $CWD/.config .
+cp $CWD/dot.config .config
 
 # Compile the application and install it into the $PKG directory
 make -j2 CONFIG_EXTRA_CFLAGS="\"$SLKCFLAGS -s $SYSROOT\"" CROSS_COMPILE=$TARGET
