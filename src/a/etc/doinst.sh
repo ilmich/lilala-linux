@@ -21,3 +21,4 @@ config etc/passwd.new
 config etc/profile.new
 config etc/syslog.conf.new
 config etc/shells.new
+config etc/services.new
