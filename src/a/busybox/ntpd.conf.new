@@ -1,0 +1,8 @@
+#/bin/sh
+
+# time server
+NTPD_SERVER=
+# use also as daemon
+#NTPD_DAEMON=yes
+# daemon interface
+#NTPD_DAEMON_IFACE=

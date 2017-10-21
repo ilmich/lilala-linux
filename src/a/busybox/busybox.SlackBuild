@@ -128,9 +128,11 @@ mkdir -p $PKG/var/services
 
 chmod -R 0750 $PKG/var/spool/cron/crontabs
 install -D -m 0600 $CWD/crontabs.default $PKG/var/spool/cron/crontabs/root
+install -D -m 0644 $CWD/ntpd.conf.new $PKG/etc/ntpd.conf.new
 
 #install runit service script
 install -D -m 0700 $CWD/crond.runit $PKG/etc/runit.d/crond/run
+install -D -m 0700 $CWD/ntpd.runit $PKG/etc/runit.d/ntpd/run
 (
     cd $PKG/var/services/
     ln -s ../../etc/runit.d/crond .
@@ -145,6 +147,7 @@ mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 
 # Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
 mkdir -p $PKG/install
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 #generate slack-required
