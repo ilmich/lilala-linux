@@ -104,12 +104,15 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
+patch -p0 < $CWD/configure-mandir.patch
+
 CFLAGS="$SLKCFLAGS $SYSROOT -s " \
 CXXFLAGS="$SLKCFLAGS $SYSROOT -s " \
 CHOST=$SLK_TARGET \
 ./configure \
   --prefix=/ \
   --libdir=/lib$LIBDIRSUFFIX \
+  --mandir=/usr/man \
   --includedir=/usr/include
 
 make -j2

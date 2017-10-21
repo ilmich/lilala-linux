@@ -1,0 +1,10 @@
+--- configure	2016-12-31 19:06:40.000000000 +0100
++++ configure.new	2017-10-21 09:28:27.510321798 +0200
+@@ -120,6 +120,7 @@ case "$1" in
+     -l*=* | --libdir=*) libdir=`echo $1 | sed 's/.*=//'`; shift ;;
+     --sharedlibdir=*) sharedlibdir=`echo $1 | sed 's/.*=//'`; shift ;;
+     -i*=* | --includedir=*) includedir=`echo $1 | sed 's/.*=//'`;shift ;;
++    -m*=* | --mandir=*) mandir=`echo $1 | sed 's/.*=//'`;shift ;;
+     -u*=* | --uname=*) uname=`echo $1 | sed 's/.*=//'`;shift ;;
+     -p* | --prefix) prefix="$2"; shift; shift ;;
+     -e* | --eprefix) exec_prefix="$2"; shift; shift ;;
