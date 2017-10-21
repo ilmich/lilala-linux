@@ -16,6 +16,7 @@ export HISTSIZE=1000
 export HISTFILESIZE=1000
 export PAGER='/bin/less'
 export EDITOR='/bin/vi'
+export MANPATH='/usr/local/man:/usr/man:/usr/share/man'
 export PS1='\u@\h:\w\$ '
 
 # End /etc/profile
