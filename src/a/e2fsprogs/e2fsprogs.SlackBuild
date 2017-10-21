@@ -109,9 +109,14 @@ find -L . \
 CFLAGS="$SLKCFLAGS $SYSROOT -s " \
 CXXFLAGS="$SLKCFLAGS $SYSROOT -s " \
 ./configure \
-  --prefix=/ \
+  --prefix=/usr \
+  --sysconfdir=/etc \
   --enable-elf-shlibs \
   --libdir=/usr/lib$LIBDIRSUFFIX \
+  --enable-libuuid \
+  --enable-libblkid \
+  --mandir=/usr/man \
+  --infodir=/usr/info \
   --includedir=/usr/include \
   $TARGET
 
