@@ -108,7 +108,7 @@ find -L . \
 
 make CC="$SLK_CC $SLKCFLAGS $SYSROOT"
 make INSTALL_DIR=$PKG/sbin INSTALL_INC=$PKG/usr/include \
-     INSTALL_LIB=$PKG/lib$LIBDIRSUFFIX INSTALL_MAN=$PKG/usr/share/man install
+     INSTALL_LIB=$PKG/lib$LIBDIRSUFFIX INSTALL_MAN=$PKG/usr/man install
 
 #strip binaries
 ( cd $PKG
