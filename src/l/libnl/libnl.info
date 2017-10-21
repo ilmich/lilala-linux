@@ -1,0 +1,7 @@
+PRGNAM=libnl
+VERSION=3.4.0
+BUILD=1
+DOWNLOAD_URL=https://github.com/thom311/libnl/releases/download/libnl3_4_0/libnl-3.4.0.tar.gz
+DOWNLOAD_SHA1=4fc4c3b6812dc7e68ef8acb69287583685266a0b
+DEPS="musl"
+
