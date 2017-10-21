@@ -1,0 +1,7 @@
+PRGNAM=openssl
+VERSION=1.0.2l
+BUILD=1
+DOWNLOAD_URL=https://www.openssl.org/source/openssl-1.0.2l.tar.gz
+DOWNLOAD_SHA1=b58d5d0e9cea20e571d903aafa853e2ccd914138
+DEPS="musl"
+
