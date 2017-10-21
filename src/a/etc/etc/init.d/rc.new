@@ -27,6 +27,8 @@ on_boot() {
 
     # Determine the version of the running kernel:
     RELEASE=$(uname -r)
+    
+    mount -o remount,rw /
 
     # Update kernel module dependencies:
     if [ -e "/lib/modules/$RELEASE/modules.dep" ]; then 
@@ -64,7 +66,6 @@ on_boot() {
 
     echo mounting...
     mount -a
-    mount -o remount,rw /
 
     echo start syslogd
     syslogd
