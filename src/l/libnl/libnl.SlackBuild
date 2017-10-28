@@ -107,17 +107,26 @@ find -L . \
 #fix header for musl build
 sed -i -e 's/defined(__GLIBC__)/1/g' include/linux-private/linux/libc-compat.h
 
-CFLAGS="$SLKCFLAGS -s " \
-CXXFLAGS="$SLKCFLAGS -s " \
+CFLAGS="$SLKCFLAGS $SYSROOT -s " \
+CXXFLAGS="$SLKCFLAGS $SYSROOT -s " \
 ./configure \
-  --prefix=/usr/ \
+  --prefix=/usr \
   --libdir=/usr/lib$LIBDIRSUFFIX \
   --mandir=/usr/man \
   --disable-static \
   --sysconfdir=/etc/ \
   $TARGET
 
+sed -i -e "s|lt_sysroot=|lt_sysroot=$SLK_SYSROOT|g" libtool
+
 make -j2
+#fix .la files to avoid useless relinking
+for i in `ls src/lib/*.la lib/*.la`; do
+    echo "fixing $i"
+    sed -i -e "/^relink_command/ d" $i
+done
+
+read
 make DESTDIR=$PKG install
 
 #strip binaries
