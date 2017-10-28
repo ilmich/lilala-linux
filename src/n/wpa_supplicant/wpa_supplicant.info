@@ -1,6 +1,6 @@
 PRGNAM=wpa_supplicant
 VERSION=2.6
-BUILD=1
+BUILD=2
 DOWNLOAD_URL=https://w1.fi/releases/wpa_supplicant-2.6.tar.gz
 DOWNLOAD_SHA1=8189704e257c3e9f8300c49dc6e49a381b1d6299
 DEPS="musl openssl libnl"

@@ -107,14 +107,14 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
+#apply patches
+for i in `find $CWD/patches/ -name *.patch | sort -`; do
+    patch -p1 < $i
+done
+
 cd wpa_supplicant
 cp $CWD/dot.config .config
 
-sed -i -e 's/-ldl//g' Makefile
-sed -i -e 's/-lrt//g' Makefile
-sed -i -e 's/-lpthread//g' Makefile
-
-#make LDO="$SLK_LD $SYSROOT -L=/lib64 " CC="$SLK_CC $SLKCFLAGS $SYSROOT" LIBDIR=/usr/lib$LIBDIRSUFFIX BINDIR=/usr/sbin/ DESTDIR=$PKG/ 
 make CC="$SLK_CC $SLKCFLAGS $SYSROOT" LIBDIR=/usr/lib$LIBDIRSUFFIX BINDIR=/usr/sbin/ DESTDIR=$PKG/ install
 
 #strip binaries
