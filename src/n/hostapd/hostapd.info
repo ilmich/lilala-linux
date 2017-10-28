@@ -1,0 +1,8 @@
+PRGNAM=hostapd
+VERSION=2.6
+BUILD=1
+DOWNLOAD_URL=https://w1.fi/releases/hostapd-2.6.tar.gz
+DOWNLOAD_SHA1=ef9f03ba3477e8abc189b24c70c51ddb3e45f2a0
+DEPS="musl openssl libnl"
+
+
