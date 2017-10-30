@@ -94,7 +94,7 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$SVERSION
-tar xvzf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR
 cd $PRGNAM-$SVERSION
 chown -R root:root .
 find -L . \
@@ -103,6 +103,7 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
+PATH="$SLK_SYSROOT/usr/bin:$PATH" \
 CFLAGS="$SLKCFLAGS $SYSROOT -s -DENABLE_NLS -DNLS_TEXTDOMAIN=PACKAGE" \
 CXXFLAGS="$SLKCFLAGS $SYSROOT -s " \
 ./configure \

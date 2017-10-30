@@ -22,30 +22,35 @@ echo "Toolchain path: $SLK_TOOLCHAIN_PATH"
 echo "Final rootfs: $ROOTFS"
 echo "Final pkgs output: $OUTPUT_PKGS"
 read
+
 export PATH=$PWD/tools/:$SLK_TOOLCHAIN_PATH:$PATH
+export PKG_CONFIG_PATH= 
+export PKG_CONFIG_LIBDIR=$ROOTFS/usr/lib/pkgconfig:$ROOTFS/usr/lib64/pkgconfig
 
 mkdir -p $ROOTFS
 
 for i in \
 a/aaa_base \
 a/etc \
+a/tzdb \
+a/keymaps \
 l/musl \
 l/zlib \
 l/libmnl \
 l/libnftnl \
 l/libpcap \
 l/openssl \
+l/libnl \
+l/ncurses \
 a/busybox \
 a/e2fsprogs \
 a/kmod \
+a/dialog \
 n/dropbear \
 n/iptables \
-l/libnl \
 n/wpa_supplicant \
 n/iw \
 n/hostapd \
-l/ncurses \
-a/dialog \
 n/wireless-tools;
 do
     PKG_DIR=$OUTPUT_PKGS/`dirname $i`
@@ -63,7 +68,6 @@ do
     PKGFINAL=$PKG_DIR/$PKG_NAME-$VERSION-$SLK_ARCH-$BUILD$TAG.$PKGTYPE
     if [ ! -e $PKGFINAL ]; then
         echo "Building $i"
-        PATH=$ROOTFS/bin:$ROOTFS/usr/bin:$PATH PKG_CONFIG_PATH= PKG_CONFIG_LIBDIR=$ROOTFS/usr/lib/pkgconfig:$ROOTFS/usr/lib64/pkgconfig \
         SLK_TARGET=$SLK_TARGET SLK_SYSROOT=$ROOTFS \
         TAG=$TAG PKGTYPE=$PKGTYPE OUTPUT=$PKG_DIR ./$PKG_NAME.SlackBuild #&> $PKG_DIR/$PKG_NAME.log
 
