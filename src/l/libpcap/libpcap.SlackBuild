@@ -123,6 +123,9 @@ CXXFLAGS="$SLKCFLAGS $SYSROOT -s " \
 make -j2
 make DESTDIR=$PKG install
 
+#remove static lib
+rm $PKG/usr/lib$LIBDIRSUFFIX/*.a
+
 #strip binaries
 ( cd $PKG
   find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
