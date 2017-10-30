@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+    |-----handy-ruler------------------------------------------------------|
+tzdb: tzdb (timezone database)
+tzdb:
+tzdb: This package allows you to configure your time zone.
+tzdb:
+tzdb: This timezone database comes from the tzdata and tzcode packages by
+tzdb: Arthur David Olson et.al.  The latest version and more information
+tzdb: may be found at:  http://www.iana.org/time-zones
+tzdb:
+tzdb:
+tzdb:
+tzdb:

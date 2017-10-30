@@ -1,0 +1,9 @@
+PRGNAM=keymaps
+SRCNAM=kbd
+VERSION=1.15.5
+BUILD=1
+DOWNLOAD_URL=http://kbd-project.org/download/kbd-$VERSION.tar.xz
+DOWNLOAD_SHA1=727c36f1029da07b8eabe4c293d73b2fba67249c
+DEPS=""
+
+

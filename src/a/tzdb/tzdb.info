@@ -1,0 +1,7 @@
+PRGNAM=tzdb
+VERSION=2017c
+BUILD=1
+DOWNLOAD_URL=https://www.iana.org/time-zones/repository/releases/tzdb-$VERSION.tar.lz
+DOWNLOAD_SHA1=159fa28b8535a41ea70857d800e89c7175bb81b7
+DEPS="musl"
+
