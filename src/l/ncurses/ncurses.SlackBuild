@@ -94,7 +94,7 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$SVERSION
-tar xvzf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR
 cd $PRGNAM-$SVERSION
 chown -R root:root .
 find -L . \

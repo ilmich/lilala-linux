@@ -97,7 +97,7 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvzf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR
 cd $PRGNAM-$VERSION
 chown -R root:root .
 find -L . \
@@ -109,7 +109,7 @@ find -L . \
 # Fix paths in manual pages
 sed -i "s,/usr/lib,/lib,g" man/*
 
-CFLAGS="$SLKCFLAGS $SYSROOT -s " \
+CFLAGS="$SLKCFLAGS $SYSROOT -s" \
 CXXFLAGS="$SLKCFLAGS $SYSROOT -s " \
 ./configure \
   --prefix=/usr \

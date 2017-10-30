@@ -101,7 +101,7 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvzf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR
 cd $PRGNAM-$VERSION
 chown -R root:root .
 find -L . \
