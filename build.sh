@@ -51,6 +51,7 @@ n/iptables \
 n/wpa_supplicant \
 n/iw \
 n/hostapd \
+n/dnsmasq \
 n/wireless-tools;
 do
     PKG_DIR=$OUTPUT_PKGS/`dirname $i`
