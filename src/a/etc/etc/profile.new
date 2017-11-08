@@ -19,4 +19,9 @@ export EDITOR='/bin/vi'
 export MANPATH='/usr/local/man:/usr/man:/usr/share/man'
 export PS1='\u@\h:\w\$ '
 
+#set timezone
+if [ -e /etc/localtime ]; then
+    export TZ=`cat /etc/localtime`
+fi
+
 # End /etc/profile
