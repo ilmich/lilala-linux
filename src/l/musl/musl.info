@@ -1,7 +1,7 @@
 PRGNAM=musl
 VERSION=1.1.17
 BUILD=1
-DOWNLOAD_URL=https://www.musl-libc.org/releases/musl-1.1.17.tar.gz
+DOWNLOAD_URL=https://www.musl-libc.org/releases/musl-$VERSION.tar.gz
 DOWNLOAD_SHA1=0f8ec8cd44c9d3c8a5138e85a867644497f061fc
 DEPS=
 

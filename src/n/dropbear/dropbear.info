@@ -1,6 +1,6 @@
 PRGNAM=dropbear
 VERSION=2017.75
 BUILD=1
-DOWNLOAD_URL=https://matt.ucc.asn.au/dropbear/releases/dropbear-2017.75.tar.bz2
+DOWNLOAD_URL=https://matt.ucc.asn.au/dropbear/releases/dropbear-$VERSION.tar.bz2
 DOWNLOAD_SHA1=c30c64dda9db228592e3a97313078ca71d9d283f
 DEPS="musl"

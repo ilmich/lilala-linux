@@ -1,6 +1,6 @@
 PRGNAM=busybox
 VERSION=1.27.2
 BUILD=2
-DOWNLOAD_URL=https://busybox.net/downloads/busybox-1.27.2.tar.bz2
+DOWNLOAD_URL=https://busybox.net/downloads/busybox-$VERSION.tar.bz2
 DOWNLOAD_SHA1=11669e223cc38de646ce26080e91ca29b8d42ad9
 DEPS="musl"

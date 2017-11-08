@@ -2,6 +2,6 @@ PRGNAM=wireless-tools
 VERSION=29
 BUILD=1
 SRC_NAME=wireless_tools.$VERSION
-DOWNLOAD_URL=https://hewlettpackard.github.io/wireless-tools/wireless_tools.29.tar.gz
+DOWNLOAD_URL=https://hewlettpackard.github.io/wireless-tools/wireless_tools.$VERSION.tar.gz
 DOWNLOAD_SHA1=22040ac1497f4c5f8ddeca365591b01ae3475710
 DEPS="musl"

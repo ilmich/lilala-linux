@@ -1,6 +1,6 @@
 PRGNAM=kmod
 VERSION=24
 BUILD=1
-DOWNLOAD_URL=https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-24.tar.gz
+DOWNLOAD_URL=https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-$VERSION.tar.gz
 DOWNLOAD_SHA1=718c5907785d4067fb8d1536d794585e8f37a352
 DEPS="musl zlib"
