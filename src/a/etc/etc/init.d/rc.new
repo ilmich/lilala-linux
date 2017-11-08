@@ -80,8 +80,10 @@ on_boot() {
     echo starting supervisor
     /bin/runsvdir /var/services/ &
 
-    echo load keyboard
-    loadkmap < /etc/keymap
+    if [ -e "/etc/keymap" ]; then
+        echo load keyboard
+        loadkmap < /etc/keymap
+    fi
 
     #===================
     # load /etc/init.d/rc.local
