@@ -7,4 +7,4 @@
         \/               \/       Linux\/  
 ```
 
-Minimal linux for embedded devices
+Minimal linux for single board computer
