@@ -121,6 +121,11 @@ make INSTALL_DIR=$PKG/sbin INSTALL_INC=$PKG/usr/include \
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a CHANGELOG.h README *.txt $PKG/usr/doc/$PRGNAM-$VERSION
 
+if [ ! -z "$STAGING" ]; then
+    cp -a $PKG/* $STAGING # is with staging means that we want no dev package build    
+    rm -r $PKG/usr/{include,man}
+fi
+
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 

@@ -126,6 +126,11 @@ make DESTDIR=$PKG install
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a COPYING $PKG/usr/doc/$PRGNAM-$VERSION
 
+if [ ! -z "$STAGING" ]; then
+    cp -a $PKG/* $STAGING # is with staging means that we want no dev package build
+    rm -r $PKG/usr/{include,lib$LIBDIRSUFFIX/pkgconfig}
+fi
+
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 

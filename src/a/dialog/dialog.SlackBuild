@@ -141,6 +141,10 @@ cd po
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a CHANGES COPYING README VERSION $PKG/usr/doc/$PRGNAM-$VERSION
 
+if [ ! -z "$STAGING" ]; then
+    cp -a $PKG/* $STAGING # is with staging means that we want no dev package build
+fi
+
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 

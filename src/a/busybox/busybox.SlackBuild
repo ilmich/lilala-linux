@@ -145,6 +145,10 @@ install -D -m 0700 $CWD/ntpd.runit $PKG/etc/runit.d/ntpd/run
 # Also, include the SlackBuild script in the documentation directory
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 
+if [ ! -z "$STAGING" ]; then
+    cp -a $PKG/* $STAGING # is with staging means that we want no dev package build
+fi
+
 # Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
 mkdir -p $PKG/install
 cat $CWD/doinst.sh > $PKG/install/doinst.sh
