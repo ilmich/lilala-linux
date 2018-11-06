@@ -6,5 +6,7 @@
 |_______ \|__||____/(____  /|____/(____  / 
         \/               \/       Linux\/  
 ```
-
 Minimal linux for single board computer
+
+# About
+# Build
