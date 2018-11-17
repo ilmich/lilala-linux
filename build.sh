@@ -54,24 +54,20 @@ core/tzdb \
 core/keymaps \
 core/musl \
 core/zlib \
+core/sinit \
+core/ubase \
+core/sbase \
+core/mksh \
+core/kmod \
 core/libmnl \
 core/libnftnl \
 core/libpcap \
 core/openssl \
-core/libnl \
-core/ncurses \
-core/busybox \
 core/e2fsprogs \
-core/kmod \
-core/dialog \
 core/openssh \
-core/iptables \
-core/wpa_supplicant \
-core/iw \
-core/hostapd \
-core/dnsmasq \
-core/wireless-tools;
+core/iptables
 do
+
     PKG_DIR=$OUTPUT_PKGS/`dirname $i`
     PKG_LOGS=$OUTPUT_LOGS/`dirname $i`
     PKG_NAME=`basename $i`
@@ -90,7 +86,7 @@ do
         mkdir -p $PKG_DIR
 	mkdir -p $PKG_LOGS
         SLK_TARGET=$SLK_TARGET SLK_SYSROOT=$STAGINGFS \
-        TAG=$TAG PKGTYPE=$PKGTYPE OUTPUT=$PKG_DIR STAGING=$STAGINGFS ./$PKG_NAME.SlackBuild &> $PKG_LOGS/$PKG_NAME.log
+        TAG=$TAG PKGTYPE=$PKGTYPE OUTPUT=$PKG_DIR STAGING=$STAGINGFS ./$PKG_NAME.SlackBuild # &> $PKG_LOGS/$PKG_NAME.log
 
         if [ $? -ne 0 ]; then
             echo "Error in $PKG_NAME.SlackBuild"
@@ -98,7 +94,7 @@ do
         fi
         if [ -e $PKGFINAL ]; then
             echo "Installing $i"
-            ROOT=$ROOTFS upgradepkg --reinstall --install-new $PKGFINAL &> $PKG_LOGS/$PKG_NAME.install.log
+            ROOT=$ROOTFS upgradepkg --reinstall --install-new $PKGFINAL #&> $PKG_LOGS/$PKG_NAME.install.log
         fi
     else
         echo "Skipping $i"
