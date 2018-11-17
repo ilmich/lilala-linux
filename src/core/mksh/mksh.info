@@ -1,0 +1,7 @@
+PRGNAM=mksh
+VERSION=R56c
+BUILD=1
+DOWNLOAD_URL=http://www.mirbsd.org/MirOS/dist/mir/mksh/$PRGNAM-$VERSION.tgz
+DOWNLOAD_SHA1=9ece178a2da2ed7e6fec86b0663b4fee0482d3c5
+DEPS=musl
+
