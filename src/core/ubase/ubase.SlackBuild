@@ -128,9 +128,11 @@ make DESTDIR=$PKG PREFIX=/ MANPREFIX=/usr/share/man install
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a README LICENSE TODO $PKG/usr/doc/$PRGNAM-$VERSION
 
-rm $PKG/bin/insmod
-rm $PKG/bin/lsmod
-rm $PKG/bin/rmmod
+rm $PKG/bin/{insmod,lsmod,rmmod}
+
+#move some binary to /sbin
+mkdir -p $PKG/sbin
+mv $PKG/bin/{blkdiscard,ctrlaltdel,fsfreeze,getty,halt,hwclock,killall5,mkswap,nologin,pidof,pivot_root,swaplabel,swapoff,swapon,switch_root,sysctl} $PKG/sbin
 
 if [ ! -z "$STAGING" ]; then
     cp -a $PKG/* $STAGING # is with staging means that we want no dev package build
