@@ -115,6 +115,12 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
+for i in `find $CWD/patches -name *.patch | sort - `; do
+    patch -p1 < $i
+done
+
+touch numfmt.1
+
 make AR=$AR_CMD RANLIB=$RANLIB_CMD CC=$CC_CMD CFLAGS="$SLKCFLAGS $SYSROOT -s "
 make DESTDIR=$PKG PREFIX=/ MANPREFIX=/usr/share/man install
 
