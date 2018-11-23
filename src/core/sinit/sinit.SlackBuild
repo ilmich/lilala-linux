@@ -116,6 +116,11 @@ cp $CWD/config.h .
 make CC=$CC_CMD CFLAGS="$SLKCFLAGS $SYSROOT -s "
 make DESTDIR=$PKG PREFIX=/ MANPREFIX=/usr/share/man install
 
+(
+  cd $PKG/bin
+  ln -s sinit init
+)
+
 #strip binaries
 ( cd $PKG
   find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
