@@ -8,7 +8,7 @@
     |-----handy-ruler------------------------------------------------------|
 keymaps: keymaps
 keymaps:
-keymaps: This package contains binary keyboard maps for busybox
+keymaps: This package contains keyboard maps
 keymaps:
 keymaps:
 keymaps:

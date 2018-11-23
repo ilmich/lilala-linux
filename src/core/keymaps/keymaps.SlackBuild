@@ -27,12 +27,6 @@ if [ $UID != "0" ]; then
     exit 1
 fi
 
-LOADKEYS=`which loadkeys`
-if [ -z $LOADKEYS ]; then
-    echo "Command loadkeys not found on build system"
-    exit 1
-fi
-
 PRGNAM=keymaps
 CWD=$(pwd)
 TMP=${TMP:-/tmp}
@@ -66,7 +60,6 @@ if [ -z "$ARCH" ]; then
        *) ARCH=$( uname -m ) ;;
   esac
 fi
-
 
 if [ "$ARCH" = "i486" ]; then
   SLKCFLAGS="-O2 -march=i486 -mtune=i686"
@@ -110,22 +103,25 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-#rm -r data/keymaps/i386/dvorak/
+CFLAGS="$SLKCFLAGS $SYSROOT -s" \
+CXXFLAGS="$SLKCFLAGS $SYSROOT -s " \
+./configure \
+  --prefix=/usr \
+  --libdir=/lib$LIBDIRSUFFIX \
+  --bindir=/bin \
+  --sbindir=/sbin \
+  --sysconfdir=/etc \
+  --localstatedir=/var \
+  --mandir=/usr/man \
+  --docdir=/usr/doc/$PKGNAM-$VERSION \
+  --includedir=/usr/include \
+  --disable-nls \
+  --disable-vlock \
+  $TARGET
 
-set +e
-echo "Generating binary keymap"
-#convert key in binary format
-(
-    cd data/
-    for i in `find keymaps/ -name *.map`; do
-	OUTPUT=`dirname $i`/`basename $i .map`.bmap
-	mkdir -p $PKG/usr/share/kbd/`dirname $i`
-	$LOADKEYS -b -q $i > $PKG/usr/share/kbd/$OUTPUT
-	if [ $? != "0" ]; then
-		echo "Error $i"
-	fi
-    done
-)
+make -j2
+make DESTDIR=$PKG install 
+
 set -e
 #strip binaries
 ( cd $PKG
