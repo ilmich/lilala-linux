@@ -17,7 +17,7 @@ export HISTFILESIZE=1000
 export PAGER='/bin/less'
 export EDITOR='/bin/vi'
 export MANPATH='/usr/local/man:/usr/man:/usr/share/man'
-export PS1='\u@\h:\w\$ '
+export PS1='${USER:=$(id -un)}'"@${HOSTNAME:=$(hostname)}:\$PWD$( if ((USER_ID)); then print \$; else print \#; fi) "
 
 #set timezone
 if [ -e /etc/localtime ]; then
