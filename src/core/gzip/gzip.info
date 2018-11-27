@@ -1,0 +1,6 @@
+PRGNAM=gzip
+VERSION=1.9
+BUILD=1
+DOWNLOAD_URL=https://ftp.gnu.org/gnu/gzip/$PRGNAM-$VERSION.tar.xz
+DOWNLOAD_SHA1=0249ad4c4ca1f144714e8e21b6d0db24651fc122
+DEPS="zlib"

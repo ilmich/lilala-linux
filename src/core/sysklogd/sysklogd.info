@@ -1,0 +1,8 @@
+PRGNAM=sysklogd
+VERSION=1.6
+BUILD=1
+DOWNLOAD_URL=https://github.com/troglobit/sysklogd/releases/download/v$VERSION/$PRGNAM-$VERSION.tar.gz
+DOWNLOAD_SHA1=90b13e53f0fad959b4acc0316ffe2c9fec0fbe88
+DEPS=""
+
+
