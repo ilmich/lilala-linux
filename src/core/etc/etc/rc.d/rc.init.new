@@ -11,7 +11,7 @@ on_boot() {
     #===================
     # mount the API filesystem
     # /proc, /sys, /run, /dev, /run/lock, /dev/pts, /dev/shm
-    echo mounting filesystem...
+    echo_color 2 "mounting filesystem..."
     mountpoint -q /proc    || mount -t proc proc /proc -o nosuid,noexec,nodev
     mountpoint -q /sys     || mount -t sysfs sys /sys -o nosuid,noexec,nodev
     mountpoint -q /run     || mount -t tmpfs run /run -o mode=0755,nosuid,nodev
@@ -22,7 +22,7 @@ on_boot() {
 
     #===================
     # initialize system
-    echo setting up loopback device...
+    echo_color 2 "setting up loopback device..."
     /sbin/ip link set up dev lo
 
     # Determine the version of the running kernel:
@@ -32,10 +32,10 @@ on_boot() {
 
     # Update kernel module dependencies:
     if [ -e "/lib/modules/$RELEASE/modules.dep" ]; then 
-	echo "Updating module dependency list for $RELEASE:  /sbin/depmod --quick"
+	echo_color 2 "Updating module dependency list for $RELEASE:  /sbin/depmod --quick"
 	/sbin/depmod --quick
     else 
-	echo "Creating module dependency list for $RELEASE:  /sbin/depmod --all"
+	echo_color 2 "Creating module dependency list for $RELEASE:  /sbin/depmod --all"
 	/sbin/depmod --all
     fi
 
@@ -43,66 +43,68 @@ on_boot() {
 	/etc/init.d/rc.modules
     fi
 
-    if [ "$UDEV" = eudev ]; then
-	echo initializing udev...
-        /usr/bin/udevd --daemon
-        /usr/bin/udevadm trigger --action=add --type=subsystems
-        /usr/bin/udevadm trigger --action=add --type=devices
-    else # use busybox mdev as fallback:
-	echo loading modules...
-	find /sys -name modalias | xargs sort -u | xargs modprobe
-	MODULE=`find /sys -name modalias | xargs sort -u | xargs echo`
-	for i in $MODULE; do
-		modprobe $i >/dev/null 2>/dev/null
-	done
-	
-	echo initializing mdev...
-        echo /sbin/mdev > /proc/sys/kernel/hotplug
-        busybox mdev -s
-    fi
+#    if [ "$UDEV" = eudev ]; then
+#	echo initializing udev...
+#        /usr/bin/udevd --daemon
+#        /usr/bin/udevadm trigger --action=add --type=subsystems
+#        /usr/bin/udevadm trigger --action=add --type=devices
+#    else # use busybox mdev as fallback:
+#	echo loading modules...
+#	find /sys -name modalias | xargs sort -u | xargs modprobe
+#	MODULE=`find /sys -name modalias | xargs sort -u | xargs echo`
+#	for i in $MODULE; do
+#		modprobe $i >/dev/null 2>/dev/null
+#	done
+#	
+#	echo initializing mdev...
+#        echo /sbin/mdev > /proc/sys/kernel/hotplug
+#        busybox mdev -s
+#    fi
 
-    echo setting hostname...
+    echo_color 2 "setting hostname..."
     echo "$HOSTNAME" >| /proc/sys/kernel/hostname
 
-    echo mounting...
+    echo_color 2 "mounting..."
     mount -a
 
     echo start syslogd
-    syslogd
+    /sbin/syslogd
 
     #===================
     # load /etc/init.d/rc.network
     if [ -x /etc/init.d/rc.network ]; then
-        echo loading /etc/init.d/rc.network...
+        echo_color 2 "loading /etc/init.d/rc.network..."
         /etc/init.d/rc.network
     fi
 
-    echo starting supervisor
-    /bin/runsvdir /var/services/ &
+#    echo starting supervisor
+#    /bin/runsvdir /var/services/ &
 
-    if [ -e "/etc/keymap" ]; then
-        echo load keyboard
-        loadkmap < /etc/keymap
-    fi
+#    if [ -e "/etc/keymap" ]; then
+#        echo load keyboard
+#        loadkmap < /etc/keymap
+#    fi
 
     #===================
     # load /etc/init.d/rc.local
     if [ -x /etc/init.d/rc.local ]; then
-        echo loading /etc/init.d/rc.local...
+        echo_color 2 "loading /etc/init.d/rc.local..."
         /etc/init.d/rc.local
     fi
 
     dmesg > /var/log/dmesg
 
-    echo ""
-    echo "Welcome to"
-    echo ""
-    echo " ____      __  __            __            "
-    echo "|    |    |__||  |  _____   |  |  _____    "
-    echo "|    |    |  ||  |  \__  \  |  |  \__  \   "
-    echo "|    |___ |  ||  |__ / __ \_|  |__ / __ \_ "
-    echo "|_______ \|__||____/(____  /|____/(____  / "
-    echo "        \/               \/       Linux\/  "
+    echo_color 2 ""
+    echo_color 2 "Welcome to"
+    echo_color 2 ""
+    echo_color 2 " ____      __  __            __            "
+    echo_color 2 "|    |    |__||  |  _____   |  |  _____    "
+    echo_color 2 "|    |    |  ||  |  \__  \  |  |  \__  \   "
+    echo_color 2 "|    |___ |  ||  |__ / __ \_|  |__ / __ \_ "
+    echo_color 2 "|_______ \|__||____/(____  /|____/(____  / "
+    echo_color 2 "        \/               \/       Linux\/  "
+
+    /bin/respawn /sbin/getty /dev/tty1
 
 }
 

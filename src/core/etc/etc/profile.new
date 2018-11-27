@@ -9,8 +9,6 @@ if [ `id -u` -eq 0 ] ; then
 fi
 
 # Setup some environment variables.
-export USER=`id -un`
-export LOGNAME=$USER
 export HOSTNAME=`/bin/hostname`
 export HISTSIZE=1000
 export HISTFILESIZE=1000
