@@ -11,4 +11,5 @@ Minimal linux for single board computer
 
 
 # About
+![Lilala Screenshot](assets/screenshot.jpg)
 # Build
