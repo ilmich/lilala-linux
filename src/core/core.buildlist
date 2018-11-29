@@ -13,5 +13,4 @@ kmod
 e2fsprogs
 gzip
 sysklogd
-libmnl
-iproute2
+net-tools
