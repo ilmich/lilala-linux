@@ -12,23 +12,23 @@ on_boot() {
     # mount the API filesystem
     # /proc, /sys, /run, /dev, /run/lock, /dev/pts, /dev/shm
     echo_color 2 "mounting filesystem..."
-    mountpoint -q /proc    || mount -t proc proc /proc -o nosuid,noexec,nodev
-    mountpoint -q /sys     || mount -t sysfs sys /sys -o nosuid,noexec,nodev
-    mountpoint -q /run     || mount -t tmpfs run /run -o mode=0755,nosuid,nodev
-    mountpoint -q /dev     || mount -t devtmpfs dev /dev -o mode=0755,nosuid
-    mkdir -p /dev/pts /dev/shm
-    mountpoint -q /dev/pts || mount -t devpts devpts /dev/pts -o mode=0620,gid=5,nosuid,noexec
-    mountpoint -q /dev/shm || mount -t tmpfs shm /dev/shm -o mode=1777,nosuid,nodev
+    /bin/mountpoint -q /proc    || /bin/mount -t proc proc /proc -o nosuid,noexec,nodev
+    /bin/mountpoint -q /sys     || /bin/mount -t sysfs sys /sys -o nosuid,noexec,nodev
+    /bin/mountpoint -q /run     || /bin/mount -t tmpfs run /run -o mode=0755,nosuid,nodev
+    /bin/mountpoint -q /dev     || /bin/mount -t devtmpfs dev /dev -o mode=0755,nosuid
+    /bin/mkdir -p /dev/pts /dev/shm
+    /bin/mountpoint -q /dev/pts || /bin/mount -t devpts devpts /dev/pts -o mode=0620,gid=5,nosuid,noexec
+    /bin/mountpoint -q /dev/shm || /bin/mount -t tmpfs shm /dev/shm -o mode=1777,nosuid,nodev
 
     #===================
     # initialize system
     echo_color 2 "setting up loopback device..."
-    /sbin/ip link set up dev lo
+    /bin/ifconfig lo 127.0.0.1
 
     # Determine the version of the running kernel:
     RELEASE=$(uname -r)
-    
-    mount -o remount,rw /
+
+    /bin/mount -o remount,rw /
 
     # Update kernel module dependencies:
     if [ -e "/lib/modules/$RELEASE/modules.dep" ]; then 
@@ -65,7 +65,7 @@ on_boot() {
     echo "$HOSTNAME" >| /proc/sys/kernel/hostname
 
     echo_color 2 "mounting..."
-    mount -a
+    /bin/mount -a
 
     echo start syslogd
     /sbin/syslogd
@@ -92,7 +92,7 @@ on_boot() {
         /etc/init.d/rc.local
     fi
 
-    dmesg > /var/log/dmesg
+    /bin/dmesg > /var/log/dmesg
 
     echo_color 2 ""
     echo_color 2 "Welcome to"
@@ -104,7 +104,7 @@ on_boot() {
     echo_color 2 "|_______ \|__||____/(____  /|____/(____  / "
     echo_color 2 "        \/               \/       Linux\/  "
 
-    /bin/respawn /sbin/getty /dev/tty1
+    /bin/respawn -d 2 /sbin/getty /dev/tty1
 
 }
 
