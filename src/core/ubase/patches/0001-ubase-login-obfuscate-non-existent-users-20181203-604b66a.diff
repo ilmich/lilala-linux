@@ -1,0 +1,55 @@
+From 760f75c75a99b8347f96f9cc3b703542c44282c2 Mon Sep 17 00:00:00 2001
+From: Michele Zuccala <ardutu@gmail.com>
+Date: Mon, 3 Dec 2018 07:39:12 +0100
+Subject: [PATCH] login: obfuscate non-existent users
+
+---
+ login.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/login.c b/login.c
+index 25a59e4..9e1b08f 100644
+--- a/login.c
++++ b/login.c
+@@ -76,6 +76,7 @@ main(int argc, char *argv[])
+ 	uid_t uid;
+ 	gid_t gid;
+ 	int pflag = 0;
++	int fakelogin = 0;
+ 
+ 	ARGBEGIN {
+ 	case 'p':
+@@ -97,22 +98,24 @@ main(int argc, char *argv[])
+ 	if (!pw) {
+ 		if (errno)
+ 			eprintf("getpwnam %s:", user);
+-		else
+-			eprintf("who are you?\n");
++		else {
++			/* eprintf("who are you?\n"); fake login instead of prompting for unknown user */
++			fakelogin = 1;
++		}
+ 	}
+ 
+-	uid = pw->pw_uid;
+-	gid = pw->pw_gid;
+-
+ 	/* Flush pending input */
+ 	ioctl(0, TCFLSH, (void *)0);
+ 
+ 	pass = getpass("Password: ");
+ 	if (!pass)
+ 		eprintf("getpass:");
+-	if (pw_check(pw, pass) <= 0)
++	if (fakelogin || pw_check(pw, pass) <= 0)
+ 		exit(1);
+ 
++	uid = pw->pw_uid;
++	gid = pw->pw_gid;
++
+ 	tty = ttyname(0);
+ 	if (!tty)
+ 		eprintf("ttyname:");
+-- 
+2.14.5
+

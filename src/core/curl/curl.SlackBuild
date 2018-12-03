@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Slackware build script for ubase
+# Slackware build script for curl
 
-# Copyright 2018 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -27,7 +27,7 @@ if [ $UID != "0" ]; then
     exit 1
 fi
 
-PRGNAM=ubase
+PRGNAM=curl
 CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
@@ -41,16 +41,10 @@ fi
 . $CWD/$PRGNAM.info
 
 STRIP_CMD=strip
-CC_CMD=gcc
-AR_CMD=ar
-RANLIB_CMD=ranlib
 if [ ! -z "$SLK_TARGET" ]; then
-    TARGET=" --target=$SLK_TARGET "
+    TARGET=" --host=$SLK_TARGET "
     ARCH=` echo $SLK_TARGET | cut -d - -f 1 -`
     STRIP_CMD=$SLK_TARGET-strip
-    CC_CMD=$SLK_TARGET-gcc
-    AR_CMD=$SLK_TARGET-ar
-    RANLIB_CMD=$SLK_TARGET-ranlib
 fi
 
 if [ ! -z "$SLK_SYSROOT" ]; then
@@ -66,7 +60,6 @@ if [ -z "$ARCH" ]; then
        *) ARCH=$( uname -m ) ;;
   esac
 fi
-
 
 if [ "$ARCH" = "i486" ]; then
   SLKCFLAGS="-O2 -march=i486 -mtune=i686"
@@ -87,20 +80,15 @@ fi
 
 set -e
 
-if [ ! -z $DOWNLOAD_URL ]; then
-    SOURCE_TAR=`basename $DOWNLOAD_URL`
-    if [ ! -e ${CWD}/$SOURCE_TAR ]; then
-      wget -c $DOWNLOAD_URL
-    fi
-
-    if [ ! $DOWNLOAD_SHA1 == `sha1sum $SOURCE_TAR | cut -d " " -f 1` ]; then
-	echo "SHA1 did not match"
-	exit 1
-    fi
-else
-    SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+if [ ! -e ${CWD}/$SOURCE_TAR ]; then
+  wget -c $DOWNLOAD_URL
 fi
 
+if [ ! $DOWNLOAD_SHA1 == `sha1sum $SOURCE_TAR | cut -d " " -f 1` ]; then
+    echo "SHA1 did not match"
+    exit 1
+fi
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
@@ -115,14 +103,32 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-#apply patches
-for i in `find $CWD/patches/ -name *.diff | sort -`; do
-    patch -p1 < $i
-done
+CFLAGS="$SLKCFLAGS $SYSROOT -s" \
+CXXFLAGS="$SLKCFLAGS $SYSROOT -s " \
+./configure \
+  --prefix=/usr \
+  --libdir=/usr/lib$LIBDIRSUFFIX \
+  --bindir=/usr/bin \
+  --sbindir=/usr/sbin \
+  --sysconfdir=/etc \
+  --localstatedir=/var \
+  --mandir=/usr/man \
+  --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --includedir=/usr/include \
+  --with-ca-path=/etc/ssl/certs \
+  --disable-pop3 \
+  --disable-imap \
+  --disable-smb \
+  --disable-smtp \
+  --disable-dict \
+  --disable-telnet \
+  --disable-rtsp \
+  $TARGET
 
-make AR=$AR_CMD RANLIB=$RANLIB_CMD CC=$CC_CMD CFLAGS="$SLKCFLAGS $SYSROOT -s "
-make DESTDIR=$PKG PREFIX=/ MANPREFIX=/usr/share/man install
+make -j2
+make DESTDIR=$PKG install 
 
+set -e
 #strip binaries
 ( cd $PKG
   find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
@@ -130,19 +136,13 @@ make DESTDIR=$PKG PREFIX=/ MANPREFIX=/usr/share/man install
   find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
 )
 
+# install docs
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a README LICENSE TODO $PKG/usr/doc/$PRGNAM-$VERSION
-
-rm $PKG/bin/{insmod,lsmod,rmmod}
-
-#move some binary to /sbin
-mkdir -p $PKG/sbin
-mv $PKG/bin/{blkdiscard,ctrlaltdel,fsfreeze,getty,halt,hwclock,killall5,mkswap,nologin,pidof,pivot_root,swaplabel,swapoff,swapon,switch_root,sysctl} $PKG/sbin
+cp -a CHANGES COPYING README $PKG/usr/doc/$PRGNAM-$VERSION
 
 if [ ! -z "$STAGING" ]; then
     cp -a $PKG/* $STAGING # is with staging means that we want no dev package build
-    rm -r $PKG/usr/doc
-    rm -r $PKG/usr/share
+    rm -r $PKG/usr/{include,lib$LIBDIRSUFFIX/*.a,lib$LIBDIRSUFFIX/*.la,lib$LIBDIRSUFFIX/pkgconfig,share,doc}
 fi
 
 mkdir -p $PKG/install

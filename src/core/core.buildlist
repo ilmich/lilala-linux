@@ -4,6 +4,7 @@ tzdb
 keymaps
 musl
 zlib
+openssl
 sinit
 ubase
 sbase
@@ -14,3 +15,5 @@ e2fsprogs
 gzip
 sysklogd
 net-tools
+sdhcp
+curl

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Slackware build script for ubase
+# Slackware build script for sdhcp
 
 # Copyright 2018 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
@@ -27,7 +27,7 @@ if [ $UID != "0" ]; then
     exit 1
 fi
 
-PRGNAM=ubase
+PRGNAM=sdhcp
 CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
@@ -115,11 +115,6 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-#apply patches
-for i in `find $CWD/patches/ -name *.diff | sort -`; do
-    patch -p1 < $i
-done
-
 make AR=$AR_CMD RANLIB=$RANLIB_CMD CC=$CC_CMD CFLAGS="$SLKCFLAGS $SYSROOT -s "
 make DESTDIR=$PKG PREFIX=/ MANPREFIX=/usr/share/man install
 
@@ -131,13 +126,7 @@ make DESTDIR=$PKG PREFIX=/ MANPREFIX=/usr/share/man install
 )
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a README LICENSE TODO $PKG/usr/doc/$PRGNAM-$VERSION
-
-rm $PKG/bin/{insmod,lsmod,rmmod}
-
-#move some binary to /sbin
-mkdir -p $PKG/sbin
-mv $PKG/bin/{blkdiscard,ctrlaltdel,fsfreeze,getty,halt,hwclock,killall5,mkswap,nologin,pidof,pivot_root,swaplabel,swapoff,swapon,switch_root,sysctl} $PKG/sbin
+cp -a LICENSE TODO $PKG/usr/doc/$PRGNAM-$VERSION
 
 if [ ! -z "$STAGING" ]; then
     cp -a $PKG/* $STAGING # is with staging means that we want no dev package build
