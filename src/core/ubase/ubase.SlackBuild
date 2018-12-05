@@ -139,6 +139,23 @@ rm $PKG/bin/{insmod,lsmod,rmmod}
 mkdir -p $PKG/sbin
 mv $PKG/bin/{blkdiscard,ctrlaltdel,fsfreeze,getty,halt,hwclock,killall5,mkswap,nologin,pidof,pivot_root,swaplabel,swapoff,swapon,switch_root,sysctl} $PKG/sbin
 
+cat > $PKG/sbin/reboot << EOF
+#!/bin/sh
+exec /bin/kill -s INT 1
+EOF
+
+cat > $PKG/sbin/poweroff << EOF
+#!/bin/sh
+exec /sbin/halt -p
+EOF
+
+cat > $PKG/sbin/shutdown << EOF
+#!/bin/sh
+exec /bin/kill -s USR1 1
+EOF
+
+chmod 0755 $PKG/sbin/{reboot,shutdown,poweroff}
+
 if [ ! -z "$STAGING" ]; then
     cp -a $PKG/* $STAGING # is with staging means that we want no dev package build
     rm -r $PKG/usr/doc
