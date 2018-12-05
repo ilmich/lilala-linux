@@ -40,22 +40,16 @@ on_boot() {
     fi
 
     if [ -x "/etc/init.d/rc.modules" ]; then
-	/etc/init.d/rc.modules
+	/etc/rc.d/rc.modules
     fi
 
-#    if [ "$UDEV" = eudev ]; then
-#	echo initializing udev...
-#        /usr/bin/udevd --daemon
-#        /usr/bin/udevadm trigger --action=add --type=subsystems
-#        /usr/bin/udevadm trigger --action=add --type=devices
-#    else # use busybox mdev as fallback:
-#	echo loading modules...
-#	find /sys -name modalias | xargs sort -u | xargs modprobe
-#	MODULE=`find /sys -name modalias | xargs sort -u | xargs echo`
-#	for i in $MODULE; do
-#		modprobe $i >/dev/null 2>/dev/null
-#	done
-#	
+    echo loading modules...
+    find /sys -name modalias | xargs sort -u | xargs /sbin/modprobe
+    MODULE=`find /sys -name modalias | xargs sort -u | xargs echo`
+    for i in $MODULE; do
+	/sbin/modprobe $i >/dev/null 2>/dev/null
+    done
+#
 #	echo initializing mdev...
 #        echo /sbin/mdev > /proc/sys/kernel/hotplug
 #        busybox mdev -s
@@ -67,18 +61,18 @@ on_boot() {
     echo_color 2 "mounting..."
     /bin/mount -a
 
-    echo start syslogd
+    echo_color 2 "start syslogd..."
     /sbin/syslogd
 
     #===================
     # load /etc/init.d/rc.network
-    if [ -x /etc/init.d/rc.network ]; then
+    if [ -x /etc/rc.d/rc.network ]; then
         echo_color 2 "loading /etc/init.d/rc.network..."
-        /etc/init.d/rc.network
+        /etc/rc.d/rc.network
     fi
 
-#    echo starting supervisor
-#    /bin/runsvdir /var/services/ &
+    echo_color 2 "start all services..."
+    /sbin/svc -s
 
 #    if [ -e "/etc/keymap" ]; then
 #        echo load keyboard
@@ -112,22 +106,23 @@ on_shutdown() {
 
     #===================
     # load /etc/init.d/rc.local_shutdown
-    if [ -x /etc/init.d/rc.local_shutdown ]; then
-        echo loading /etc/init.d/rc.local_shutdown...
-        /etc/init.d/rc.local_shutdown
+    if [ -x /etc/rc.d/rc.local_shutdown ]; then
+        echo loading /etc/rc.d/rc.local_shutdown...
+        /etc/rc.d/rc.local_shutdown
     fi
 
     echo stopping services
-    sv stop /var/services/*
+    /sbin/svc -k
+
 
     #===================
     # shut down udev
-    echo shutting down udev...
-    if [ "$UDEV" = systemd ]; then
-        killall systemd-udevd
-    elif [ "$UDEV" = eudev ]; then
-        killall udevd
-    fi
+#    echo shutting down udev...
+#    if [ "$UDEV" = systemd ]; then
+#        killall systemd-udevd
+#    elif [ "$UDEV" = eudev ]; then
+#        killall udevd
+#    fi
 
     #===================
     # umount the API filesystem
@@ -148,7 +143,15 @@ case "$1" in
 init)
     on_boot;;
 shutdown)
-    on_shutdown;;
+    on_shutdown
+    echo "poweroff system..."
+    /sbin/halt -p
+    ;;
+reboot)
+    on_shutdown
+    echo "reboot system..."
+    /sbin/halt -r
+    ;;
 *)
     echo "This is an init script! Don't run as normal program"
 esac
