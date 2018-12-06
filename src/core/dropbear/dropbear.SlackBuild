@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Slackware build script for mksh
+# Slackware build script for dropbear
 
 # Copyright 2018 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
@@ -27,7 +27,7 @@ if [ $UID != "0" ]; then
     exit 1
 fi
 
-PRGNAM=mksh
+PRGNAM=dropbear
 CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
@@ -41,16 +41,10 @@ fi
 . $CWD/$PRGNAM.info
 
 STRIP_CMD=strip
-CC_CMD=gcc
-AR_CMD=ar
-RANLIB_CMD=ranlib
 if [ ! -z "$SLK_TARGET" ]; then
-    TARGET=" --target=$SLK_TARGET "
+    TARGET=" --host=$SLK_TARGET "
     ARCH=` echo $SLK_TARGET | cut -d - -f 1 -`
     STRIP_CMD=$SLK_TARGET-strip
-    CC_CMD=$SLK_TARGET-gcc
-    AR_CMD=$SLK_TARGET-ar
-    RANLIB_CMD=$SLK_TARGET-ranlib
 fi
 
 if [ ! -z "$SLK_SYSROOT" ]; then
@@ -86,27 +80,22 @@ fi
 
 set -e
 
-if [ ! -z $DOWNLOAD_URL ]; then
-    SOURCE_TAR=`basename $DOWNLOAD_URL`
-    if [ ! -e ${CWD}/$SOURCE_TAR ]; then
-      wget -c $DOWNLOAD_URL
-    fi
-
-    if [ ! $DOWNLOAD_SHA1 == `sha1sum $SOURCE_TAR | cut -d " " -f 1` ]; then
-	echo "SHA1 did not match"
-	exit 1
-    fi
-else
-    SOURCE_TAR=$PRGNAM-$VERSION.tgz
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+if [ ! -e ${CWD}/$SOURCE_TAR ]; then
+  wget -c $DOWNLOAD_URL
 fi
 
+if [ ! $DOWNLOAD_SHA1 == `sha1sum $SOURCE_TAR | cut -d " " -f 1` ]; then
+    echo "SHA1 did not match"
+    exit 1
+fi
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
 tar xvf $CWD/$SOURCE_TAR
-cd $PRGNAM
+cd $PRGNAM-$VERSION
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -114,13 +103,40 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-chmod +x ./Build.sh
-CC=$CC_CMD CFLAGS="$SLKCFLAGS $SYSROOT -s " ./Build.sh
+patch -p1 < $CWD/fix-compile.patch
 
-install -c -D -o root -g bin -m 555 mksh $PKG/bin/mksh
-cd $PKG/bin
-ln -s mksh sh
+autoreconf
 
+CFLAGS=" $SLKCFLAGS $SYSROOT -s" \
+CXXFLAGS=" $SLKCFLAGS $SYSROOT -s " \
+LDFLAGS=" $SYSROOT -s" \
+./configure \
+  --prefix=/usr \
+  --libdir=/lib$LIBDIRSUFFIX \
+  --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --includedir=/usr/include \
+  --disable-lastlog \
+  --disable-utmp \
+  --disable-utmpx \
+  --disable-wtmp \
+  --disable-wtmpx \
+  --disable-harden \
+  $TARGET
+
+make V=1 PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" DESTDIR=$PKG install
+
+mkdir -p $PKG/etc/rc.d/{avail,run}
+mkdir -p $PKG/etc/dropbear
+
+install -D -m=0600 $CWD/dropbear.conf $PKG/etc/dropbear.conf
+install -D -m=0755 $CWD/dropbear.rc $PKG/etc/rc.d/avail/dropbear
+
+(
+    cd $PKG/etc/rc.d/run
+    ln -s ../avail/dropbear dropbear
+)
+
+set -e
 #strip binaries
 ( cd $PKG
   find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
@@ -128,9 +144,9 @@ ln -s mksh sh
   find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
 )
 
-if [ ! -z "$STAGING" ]; then
-    cp -a $PKG/* $STAGING # is with staging means that we want no dev package build
-fi
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a LICENSE CHANGES SMALL README MULTI INSTALL $PKG/usr/doc/$PRGNAM-$VERSION
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc

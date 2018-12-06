@@ -2,7 +2,7 @@
 
 # Slackware build script for etc
 
-# Copyright 2017 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -56,7 +56,6 @@ fi
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
     i?86) ARCH=i486 ;;
-   armv6) ARCH=armv6 ;;
     arm*) ARCH=arm ;;
        *) ARCH=$( uname -m ) ;;
   esac
@@ -66,19 +65,6 @@ CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
-
-if [ "$ARCH" = "i486" ]; then
-  SLKCFLAGS="-O2 -march=i486 -mtune=i686"
-elif [ "$ARCH" = "i686" ]; then
-  SLKCFLAGS="-O2 -march=i686 -mtune=i686"
-elif [ "$ARCH" = "x86_64" ]; then
-  SLKCFLAGS="-O2 -fPIC"
-elif [ "$ARCH" = "armv6" ]; then
-  SLKCFLAGS="-O2 -march=armv6 -mfpu=vfp -mfloat-abi=hard"
-  LIBDIRSUFFIX=""
-else
-  SLKCFLAGS="-O2"
-fi
 
 set -e # Exit on most errors
 

@@ -1,0 +1,18 @@
+diff -rupN dropbear-2018.76/configure.ac dropbear-2018.76.new/configure.ac
+--- dropbear-2018.76/configure.ac	2018-02-27 15:25:10.000000000 +0100
++++ dropbear-2018.76.new/configure.ac	2018-12-04 07:15:07.919824326 +0100
+@@ -29,10 +29,10 @@ AC_DEFUN(DB_TRYADDCFLAGS,
+ }])
+ 
+ # set compile flags prior to other tests
+-if test -z "$OLDCFLAGS" && test "$GCC" = "yes"; then
+-	AC_MSG_NOTICE(No \$CFLAGS set... using "-Os -W -Wall" for GCC)
+-	CFLAGS="-Os -W -Wall"
+-fi
++#if test -z "$OLDCFLAGS" && test "$GCC" = "yes"; then
++#	AC_MSG_NOTICE(No \$CFLAGS set... using "-Os -W -Wall" for GCC)
++#	CFLAGS="-Os -W -Wall"
++#fi
+ 
+ AC_MSG_NOTICE([Checking if compiler '$CC' supports -Wno-pointer-sign])
+ DB_TRYADDCFLAGS([-Wno-pointer-sign])

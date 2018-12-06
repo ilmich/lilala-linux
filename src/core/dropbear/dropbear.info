@@ -1,0 +1,9 @@
+PRGNAM=dropbear
+VERSION=2018.76
+BUILD=1
+DOWNLOAD_URL=https://matt.ucc.asn.au/dropbear/releases/dropbear-$VERSION.tar.bz2
+DOWNLOAD_SHA1=bc47d3880eaf4f63a53e0488136aea30fcc11397
+DEPS=""
+
+
+
