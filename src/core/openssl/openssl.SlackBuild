@@ -151,6 +151,7 @@ if [ ! -z "$STAGING" ]; then
 fi
 
 mkdir -p $PKG/install
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 #generate slack-required
