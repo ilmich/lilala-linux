@@ -79,7 +79,7 @@ done
 # change permission for special files
 chmod 0644 $PKG/etc/passwd.new
 chmod 0700 $PKG/etc/rc.d/rc.init.new
-chmod 0600 $PKG/etc/shadow.new
+chmod 0660 $PKG/etc/shadow.new
 
 # Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
 mkdir -p $PKG/install
