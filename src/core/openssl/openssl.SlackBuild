@@ -54,9 +54,16 @@ fi
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
-    i?86) ARCH=i486 ;;
-    arm*) ARCH=arm ;;
+    i?86) ARCH=i486 ; BUILD_TARGET=linux-generic32 ;;
+    arm*) ARCH=arm ; BUILD_TARGET=linux-armv4 ;;
+    x86_64) ARCH=x86_64: BUILD_TARGET=linux-generic64 ;;
        *) ARCH=$( uname -m ) ;;
+  esac
+else
+  case $ARCH in
+    i?86) BUILD_TARGET=linux-generic32 ;;
+    arm*) BUILD_TARGET=linux-armv4 ;;
+    x86_64) BUILD_TARGET=linux-generic64 ;;
   esac
 fi
 
@@ -164,7 +171,11 @@ fi
 
 cd $PKG
 mkdir -p $OUTPUT
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+if [ -z $SLK_ARCH ]; then
+    /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+else
+    /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$SLK_ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+fi
 
 # Clean up the extra stuff:
 if [ "$1" = "--cleanup" ]; then

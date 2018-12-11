@@ -5,7 +5,9 @@ function deletepkg() {
     PKG_NAME=`basename $1`
     PKGTYPE=tgz
     TAG=lilala
-    SLK_ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
+    if [ -z $SLK_ARCH ]; then
+        SLK_ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
+    fi
 
     if [ -e platforms/$PLATFORM_NAME/src/$1 ]; then
         cd platforms/$PLATFORM_NAME/src/$1
@@ -14,12 +16,10 @@ function deletepkg() {
     fi
 
     . ./$PKG_NAME.info
-    PKGFINAL=$PKG_DIR/$PKG_NAME-$VERSION-$SLK_ARCH-$BUILD$TAG.$PKGTYPE
+    PKGFINAL=$PKG_DIR/$PKG_NAME-*$TAG.*
 
-    if [ -e $PKGFINAL ]; then
-	rm $PKGFINAL
-	echo "deleted pkg $PKGFINAL"
-    fi
+    rm $PKGFINAL
+    echo "deleted pkg $PKGFINAL"
 
     cd $MAIN_DIR
 }
@@ -38,23 +38,25 @@ function buildpkg() {
         cd src/$1
     fi
     . ./$PKG_NAME.info
-    SLK_ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
+    if [ -z $SLK_ARCH ]; then
+        SLK_ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
+    fi
     PKGFINAL=$PKG_DIR/$PKG_NAME-$VERSION-$SLK_ARCH-$BUILD$TAG.$PKGTYPE
+
     if [ ! -e $PKGFINAL ]; then
         echo "Building $1"
         mkdir -p $PKG_DIR
-#	mkdir -p $PKG_LOGS
-        SLK_TARGET=$SLK_TARGET SLK_CFLAGS=$SLK_CFLAGS SLK_SYSROOT=$STAGINGFS \
+        SLK_TARGET=$SLK_TARGET SLK_CFLAGS=$SLK_CFLAGS SLK_SYSROOT=$STAGINGFS SLK_ARCH=$SLK_ARCH \
         TAG=$TAG PKGTYPE=$PKGTYPE OUTPUT=$PKG_DIR STAGING=$STAGINGFS ./$PKG_NAME.SlackBuild # &> $PKG_LOGS/$PKG_NAME.log
 
         if [ $? -ne 0 ]; then
             echo "Error in $PKG_NAME.SlackBuild"
             exit 1
         fi
-        #if [ -e $PKGFINAL ]; then
-        #    echo "Installing $i"
-        #    ROOT=$ROOTFS upgradepkg --reinstall --install-new $PKGFINAL #&> $PKG_LOGS/$PKG_NAME.install.log
-        #fi
+        if [ -e $PKGFINAL ]; then
+            echo "Installing $i"
+            ROOT=$ROOTFS upgradepkg --reinstall --install-new $PKGFINAL #&> $PKG_LOGS/$PKG_NAME.install.log
+        fi
     else
         echo "Skipping $1"
     fi
@@ -147,6 +149,7 @@ esac
 echo "Building Lilala linux for $PLATFORM_NAME"
 echo "----------------------------------------"
 echo "Target :$SLK_TARGET"
+echo "Targhet arch: $SLK_ARCH"
 echo "Toolchain path: $SLK_TOOLCHAIN_PATH"
 echo "Compiler flags: $SLK_CFLAGS"
 echo "Final rootfs: $ROOTFS"
@@ -159,8 +162,8 @@ read
 
 
 while [ $# -gt 0 ] ; do
-    # scan for set of packages
-    COUNT=`find src/ -name $1.buildlist -printf '.' | wc -c `    
+    # scan for buildlist first
+    COUNT=`find src/ -name $1.buildlist -printf '.' | wc -c `
     if [ $(($COUNT)) -eq 1 ]; then
         BUILDLIST=`find src/ -name $1.buildlist`
 	for i in `cat $BUILDLIST`; do
@@ -172,6 +175,7 @@ while [ $# -gt 0 ] ; do
 	    fi
 	done
     else 
+    # scan for single package
 	if [ ! -z $1 ]; then
     	    COUNT=`find src/ -name $1.SlackBuild -printf '.' | wc -c `
 	    if [ $(($COUNT)) -eq 1 ]; then

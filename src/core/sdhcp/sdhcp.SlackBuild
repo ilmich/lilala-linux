@@ -146,7 +146,11 @@ fi
 
 cd $PKG
 mkdir -p $OUTPUT
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+if [ -z $SLK_ARCH ]; then
+    /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+else
+    /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$SLK_ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+fi
 
 # Clean up the extra stuff:
 if [ "$1" = "--cleanup" ]; then
