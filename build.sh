@@ -47,7 +47,8 @@ function buildpkg() {
         echo "Building $1"
         mkdir -p $PKG_DIR
         SLK_TARGET=$SLK_TARGET SLK_CFLAGS=$SLK_CFLAGS SLK_SYSROOT=$STAGINGFS SLK_ARCH=$SLK_ARCH \
-        TAG=$TAG PKGTYPE=$PKGTYPE OUTPUT=$PKG_DIR STAGING=$STAGINGFS ./$PKG_NAME.SlackBuild # &> $PKG_LOGS/$PKG_NAME.log
+        SLK_TOOLCHAIN_PATH=$SLK_TOOLCHAIN_PATH TAG=$TAG PKGTYPE=$PKGTYPE OUTPUT=$PKG_DIR \
+        STAGING=$STAGINGFS ./$PKG_NAME.SlackBuild # &> $PKG_LOGS/$PKG_NAME.log
 
         if [ $? -ne 0 ]; then
             echo "Error in $PKG_NAME.SlackBuild"
@@ -102,7 +103,7 @@ OUTPUT_LOGS=$OUTPUT_DIR/logs
 mkdir -p $ROOTFS
 mkdir -p $STAGINGFS
 
-export PATH=$PWD/tools/:$SLK_TOOLCHAIN_PATH:$PATH
+export PATH=$PWD/tools/:$SLK_TOOLCHAIN_PATH/bin:$PATH
 export PKG_CONFIG_PATH= 
 export PKG_CONFIG_LIBDIR=$STAGINGFS/usr/lib/pkgconfig:$STAGINGFS/usr/lib64/pkgconfig
 
