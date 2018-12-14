@@ -111,7 +111,7 @@ find -L . \
 
 cp $CWD/config.h .
 
-CC=$CC_CMD make HAVE_ARP_TOOLS=1 HAVE_MII=1 DESTDIR=$PKG install
+CC=$CC_CMD CFLAGS=$SLKCFLAGS make HAVE_ARP_TOOLS=1 HAVE_MII=1 DESTDIR=$PKG install
 
 set -e
 #strip binaries

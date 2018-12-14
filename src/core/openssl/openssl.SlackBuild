@@ -85,17 +85,6 @@ else
 	SLKCFLAGS=$SLK_CFLAGS
 fi
 
-if [ "$ARCH" = "i486" ]; then
-    BUILD_TARGET="linux-generic32"
-elif [ "$ARCH" = "armv6" ]; then
-    BUILD_TARGET="linux-armv4"
-elif [ "$ARCH" = "x86_64" ]; then
-    BUILD_TARGET="linux-x86_64"    
-else
-  SLKCFLAGS="-O2"
-  LIBDIRSUFFIX=""
-fi
-
 set -e
 
 SOURCE_TAR=`basename $DOWNLOAD_URL`
