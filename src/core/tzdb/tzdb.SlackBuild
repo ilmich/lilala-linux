@@ -68,7 +68,7 @@ if [ -z "$SLK_CFLAGS" ]; then
 	  SLKCFLAGS="-O2 -march=i686 -mtune=i686"
 	  LIBDIRSUFFIX=""
 	elif [ "$ARCH" = "x86_64" ]; then
-	  SLKCFLAGS="-O2 -fPIC"
+	  SLKCFLAGS="-O3 -fPIC"
 	  LIBDIRSUFFIX="64"
 	else
 	  SLKCFLAGS="-O2"
@@ -103,7 +103,7 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-make TOPDIR=$PKG TZDIR=$PKG/usr/share/zoneinfo install
+make zic=zic CC=$SLK_TARGET-gcc TOPDIR=$PKG TZDIR=$PKG/usr/share/zoneinfo install
 
 #move tzselect inside /usr/sbin/
 mkdir -p $PKG/usr/sbin/
