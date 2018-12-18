@@ -1,5 +1,41 @@
 #!/bin/sh
 
+function findbuildscript() {
+	COUNT=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild | wc -l`
+	if [ $(($COUNT)) -eq 1 ]; then
+		PKGBUILD=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild`
+		PKGBUILD=`dirname $PKGBUILD`
+		echo ${PKGBUILD#src/} >> $2
+	else
+		return 1
+	fi
+	return 0
+}
+
+function findbuildlist() {
+    COUNT=`ls -1 src/*/*.buildlist | grep $1.buildlist | wc -l `
+    if [ $(($COUNT)) -eq 1 ]; then
+	BUILDLIST=`ls -1 src/*/*.buildlist | grep $1.buildlist`
+	while read CMD; do
+		#skip comments in buildlist
+		if [[ $CMD == \#* ]]; then
+			continue;
+		fi
+		#include another buildlist
+		if [[ $CMD == \+* ]]; then
+			SUBSTRING=$(echo $CMD | cut -c 2-)
+			findbuildlist $SUBSTRING $2
+			continue;
+		fi
+		echo $CMD >> $2
+	done < $BUILDLIST
+    else
+	return 1
+    fi
+
+    return 0
+}
+
 function deletepkg() {
     PKG_DIR=$OUTPUT_PKGS/`dirname $1`
     PKG_NAME=`basename $1`
@@ -161,36 +197,23 @@ echo "Check and press enter to start"
 read
 
 while [ $# -gt 0 ] ; do
-    # scan for buildlist first
-    COUNT=`ls -1 src/*/*.buildlist | grep $1.buildlist | wc -l `
-    if [ $(($COUNT)) -eq 1 ]; then
-        BUILDLIST=`ls -1 src/*/*.buildlist | grep $1.buildlist`
-	for i in `cat $BUILDLIST`; do
-	    if [ ! -z $DELETEPKG ]; then
-		deletepkg $i
-	    fi
-	    if [ ! -z $BUILDPKG ]; then
-		buildpkg $i
-	    fi
-	done
-    else 
-    # scan for single package
-	if [ ! -z $1 ]; then
-    	    COUNT=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild | wc -l`
-	    if [ $(($COUNT)) -eq 1 ]; then
-		PKGBUILD=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild`
-		PKGBUILD=`dirname $PKGBUILD`
-		if [ ! -z $DELETEPKG ]; then
-		    deletepkg ${PKGBUILD#src/}
-		fi
-    		if [ ! -z $BUILDPKG ]; then
-		    buildpkg ${PKGBUILD#src/}
-    		fi
-    	    else
-		echo "Package $1 not fount"
+    rm -f $OUTPUT_DIR/buildlist
+    findbuildlist $1 $OUTPUT_DIR/buildlist
+    if [ "$?" == 1 ]; then
+	findbuildscript $1 $OUTPUT_DIR/buildlist
+	if [ $? -eq 1 ]; then
+		echo "package or buildlist $1 not exists"
 		exit 1
-	    fi
 	fi
     fi
     shift
+done
+
+for i in `cat $OUTPUT_DIR/buildlist`; do
+	if [ ! -z $DELETEPKG ]; then
+		deletepkg $i
+	fi
+	if [ ! -z $BUILDPKG ]; then
+		buildpkg $i
+	fi
 done
