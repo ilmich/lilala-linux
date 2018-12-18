@@ -160,13 +160,11 @@ echo "----------------------------------------"
 echo "Check and press enter to start"
 read
 
-
-
 while [ $# -gt 0 ] ; do
     # scan for buildlist first
-    COUNT=`find src/ -name $1.buildlist -printf '.' | wc -c `
+    COUNT=`ls -1 src/*/*.buildlist | grep $1.buildlist | wc -l `
     if [ $(($COUNT)) -eq 1 ]; then
-        BUILDLIST=`find src/ -name $1.buildlist`
+        BUILDLIST=`ls -1 src/*/*.buildlist | grep $1.buildlist`
 	for i in `cat $BUILDLIST`; do
 	    if [ ! -z $DELETEPKG ]; then
 		deletepkg $i
@@ -178,9 +176,9 @@ while [ $# -gt 0 ] ; do
     else 
     # scan for single package
 	if [ ! -z $1 ]; then
-    	    COUNT=`find src/ -name $1.SlackBuild -printf '.' | wc -c `
+    	    COUNT=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild | wc -l`
 	    if [ $(($COUNT)) -eq 1 ]; then
-		PKGBUILD=`find src/ -name $1.SlackBuild`
+		PKGBUILD=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild`
 		PKGBUILD=`dirname $PKGBUILD`
 		if [ ! -z $DELETEPKG ]; then
 		    deletepkg ${PKGBUILD#src/}
