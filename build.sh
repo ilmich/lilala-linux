@@ -13,31 +13,32 @@ function findbuildscript() {
 }
 
 function findbuildlist() {
-    COUNT=`ls -1 src/*/*.buildlist | grep $1.buildlist | wc -l `
-    if [ $(($COUNT)) -eq 1 ]; then
-	BUILDLIST=`ls -1 src/*/*.buildlist | grep $1.buildlist`
-	while read CMD; do
-		#skip comments in buildlist
-		if [[ $CMD == \#* ]]; then
-			continue;
-		fi
-		#include another buildlist
-		if [[ $CMD == \+* ]]; then
-			SUBSTRING=$(echo $CMD | cut -c 2-)
-			findbuildlist $SUBSTRING $2
-			continue;
-		fi
-		echo $CMD >> $2
-	done < $BUILDLIST
-    else
-	return 1
-    fi
+	COUNT=`ls -1 src/*/*.buildlist | grep $1.buildlist | wc -l `
+	if [ $(($COUNT)) -eq 1 ]; then
+		BUILDLIST=`ls -1 src/*/*.buildlist | grep $1.buildlist`
+		while read CMD; do
+			#skip comments in buildlist
+			if [[ $CMD == \#* ]]; then
+				continue;
+			fi
+			#include another buildlist
+			if [[ $CMD == \+* ]]; then
+				SUBSTRING=$(echo $CMD | cut -c 2-)
+				findbuildlist $SUBSTRING $2
+				continue;
+			fi
+			echo $CMD >> $2
+		done < $BUILDLIST
+	else
+		return 1
+	fi
 
-    return 0
+	return 0
 }
 
 function deletepkg() {
     PKG_DIR=$OUTPUT_PKGS/`dirname $1`
+    STAGING_PKG_DIR=$OUTPUT_STAGING_PKGS/`dirname $1`
     PKG_NAME=`basename $1`
     PKGTYPE=tgz
     TAG=lilala
@@ -53,8 +54,10 @@ function deletepkg() {
 
     . ./$PKG_NAME.info
     PKGFINAL=$PKG_DIR/$PKG_NAME-*$TAG.*
+    PKGSTAGING=$STAGING_PKG_DIR/$PKG_NAME-*$TAG.*
 
     rm $PKGFINAL
+    rm $PKGSTAGING
     echo "deleted pkg $PKGFINAL"
 
     cd $MAIN_DIR
@@ -63,6 +66,7 @@ function deletepkg() {
 function buildpkg() {
 
     PKG_DIR=$OUTPUT_PKGS/`dirname $1`
+    STAGING_PKG_DIR=$OUTPUT_STAGING_PKGS/`dirname $1`
     PKG_LOGS=$OUTPUT_LOGS/`dirname $1`
     PKG_NAME=`basename $1`
     PKGTYPE=tgz
@@ -74,26 +78,53 @@ function buildpkg() {
         cd src/$1
     fi
     . ./$PKG_NAME.info
+    ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
     if [ -z $SLK_ARCH ]; then
-        SLK_ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
+        SLK_ARCH=$ARCH
     fi
     PKGFINAL=$PKG_DIR/$PKG_NAME-$VERSION-$SLK_ARCH-$BUILD$TAG.$PKGTYPE
+    PKGFINALDEV=$STAGING_PKG_DIR/$PKG_NAME-$VERSION-$SLK_ARCH-$BUILD$TAG.$PKGTYPE
 
-    if [ ! -e $PKGFINAL ]; then
+    if [ ! -e $PKGFINALDEV ]; then
         echo "Building $1"
         mkdir -p $PKG_DIR
-        SLK_TARGET=$SLK_TARGET SLK_CFLAGS=$SLK_CFLAGS SLK_SYSROOT=$STAGINGFS SLK_ARCH=$SLK_ARCH \
-        SLK_TOOLCHAIN_PATH=$SLK_TOOLCHAIN_PATH TAG=$TAG PKGTYPE=$PKGTYPE OUTPUT=$PKG_DIR \
+        mkdir -p $STAGING_PKG_DIR
+        SLK_TARGET=$SLK_TARGET SLK_CFLAGS=$SLK_CFLAGS SLK_SYSROOT=$STAGINGFS ARCH=$ARCH SLK_ARCH=$SLK_ARCH \
+        SLK_TOOLCHAIN_PATH=$SLK_TOOLCHAIN_PATH TAG=$TAG PKGTYPE=$PKGTYPE OUTPUT=$STAGING_PKG_DIR \
         STAGING=$STAGINGFS ./$PKG_NAME.SlackBuild # &> $PKG_LOGS/$PKG_NAME.log
 
         if [ $? -ne 0 ]; then
             echo "Error in $PKG_NAME.SlackBuild"
             exit 1
         fi
-        if [ -e $PKGFINAL ]; then
-            echo "Installing $i"
-            ROOT=$ROOTFS upgradepkg --reinstall --install-new $PKGFINAL #&> $PKG_LOGS/$PKG_NAME.install.log
-        fi
+#       if [ -e $PKGFINAL ]; then
+#           echo "Installing $i"
+#           ROOT=$ROOTFS upgradepkg --reinstall --install-new $PKGFINAL #&> $PKG_LOGS/$PKG_NAME.install.log
+#       fi
+
+	if [ -z $SLK_STRIP_PKG ]; then
+	    cp $PKGFINALDEV $PKGFINAL
+	else
+	    # strip pkg
+	    echo "stripping pkg"
+	    mkdir -p /tmp/strip-$PKG_NAME
+	    (
+		cd /tmp/strip-$PKG_NAME
+		explodepkg $PKGFINALDEV > /dev/null
+		tar --exclude='usr/man'	\
+		    --exclude='usr/include' \
+		    --exclude='usr/doc' \
+		    --exclude='usr/lib64/pkgconfig' \
+		    --exclude='usr/lib/pkgconfig' \
+		    -czf $PKGFINAL .
+	    )
+	    rm -rf /tmp/strip-$PKG_NAME
+	fi
+
+	if [ -e $PKGFINALDEV ]; then
+	    echo "Installing on staging $i"
+	    ROOT=$STAGINGFS upgradepkg --reinstall --install-new $PKGFINALDEV #&> $PKG_LOGS/$PKG_NAME.install.log
+	fi
     else
         echo "Skipping $1"
     fi
@@ -134,6 +165,7 @@ ROOTFS=$OUTPUT_DIR/rootfs
 STAGINGFS=$OUTPUT_DIR/staging
 KERNEL_DIR=$PLATFORM_DIR/kernel
 OUTPUT_PKGS=$OUTPUT_DIR/pkgs
+OUTPUT_STAGING_PKGS=$OUTPUT_DIR/staging_pkgs
 OUTPUT_LOGS=$OUTPUT_DIR/logs
 
 mkdir -p $ROOTFS
