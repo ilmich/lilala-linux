@@ -2,7 +2,7 @@
 
 # Slackware build script for sysklogd
 
-# Copyright 2017,2018 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -32,6 +32,7 @@ CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-$PWD}
+ARCH=${ARCH:-`uname -m`}
 
 if [ ! -e $CWD/$PRGNAM.info ]; then
     echo "File $PRGNAM.info not found"
@@ -43,7 +44,6 @@ fi
 STRIP_CMD=strip
 if [ ! -z "$SLK_TARGET" ]; then
     TARGET=" --host=$SLK_TARGET "
-    ARCH=` echo $SLK_TARGET | cut -d - -f 1 -`
     STRIP_CMD=$SLK_TARGET-strip
 fi
 
@@ -51,30 +51,23 @@ if [ ! -z "$SLK_SYSROOT" ]; then
     SYSROOT=" --sysroot=$SLK_SYSROOT "
 fi
 
-if [ -z "$ARCH" ]; then
-  case "$( uname -m )" in
+case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-       *) ARCH=$( uname -m ) ;;
-  esac
-fi
+    x86_64) LIBDIRSUFFIX="64" ;;
+    *) ARCH=$( uname -m ) ;;
+esac
 
 if [ -z "$SLK_CFLAGS" ]; then
 	if [ "$ARCH" = "i486" ]; then
-	  SLKCFLAGS="-O2 -march=i486 -mtune=i686"
-	  LIBDIRSUFFIX=""
+	  SLK_CFLAGS="-O2 -march=i486 -mtune=i686"
 	elif [ "$ARCH" = "i686" ]; then
-	  SLKCFLAGS="-O2 -march=i686 -mtune=i686"
-	  LIBDIRSUFFIX=""
+	  SLK_CFLAGS="-O2 -march=i686 -mtune=i686"
 	elif [ "$ARCH" = "x86_64" ]; then
-	  SLKCFLAGS="-O2 -fPIC"
-	  LIBDIRSUFFIX="64"
+	  SLK_CFLAGS="-O2 -fPIC"
 	else
-	  SLKCFLAGS="-O2"
-	  LIBDIRSUFFIX=""
+	  SLK_CFLAGS="-O2"
 	fi
-else
-	SLKCFLAGS=$SLK_CFLAGS
 fi
 
 set -e
@@ -102,8 +95,8 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-CFLAGS="$SLKCFLAGS $SYSROOT -s" \
-CXXFLAGS="$SLKCFLAGS $SYSROOT -s " \
+CFLAGS="$SLK_CFLAGS $SYSROOT -s" \
+CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 ./configure \
   --prefix=/usr \
   --libdir=/lib$LIBDIRSUFFIX \
@@ -116,7 +109,7 @@ CXXFLAGS="$SLKCFLAGS $SYSROOT -s " \
   --includedir=/usr/include \
   $TARGET
 
-make -j2
+make -j2 V=1
 make DESTDIR=$PKG install 
 
 set -e
