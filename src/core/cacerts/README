@@ -1,0 +1,9 @@
+ca certificates generated like Linux From Scratch
+
+ http://www.linuxfromscratch.org/blfs/view/8.1/postlfs/cacerts.html
+
+with this certdata
+
+ http://anduin.linuxfromscratch.org/BLFS/other/certdata.txt
+ 
+resulting certificates are reduced/reorganized into an archive in order to make Slackbuild more simpler.
