@@ -1,5 +1,6 @@
 core/aaa_base
 core/etc
+core/cacerts
 core/svc
 core/tzdb
 core/keymaps
