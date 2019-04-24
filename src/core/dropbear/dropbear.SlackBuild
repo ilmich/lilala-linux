@@ -95,10 +95,6 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-patch -p1 < $CWD/fix-compile.patch
-
-autoreconf
-
 CFLAGS=" $SLK_CFLAGS $SYSROOT -s" \
 CXXFLAGS=" $SLK_CFLAGS $SYSROOT -s " \
 LDFLAGS=" $SYSROOT -s" \
@@ -120,8 +116,8 @@ make V=1 PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" DESTDIR=$P
 mkdir -p $PKG/etc/rc.d/{avail,run}
 mkdir -p $PKG/etc/dropbear
 
-install -D -m=0600 $CWD/dropbear.conf $PKG/etc/dropbear.conf
-install -D -m=0755 $CWD/dropbear.rc $PKG/etc/rc.d/avail/dropbear
+install -D -m=0600 $CWD/dropbear.conf $PKG/etc/dropbear/dropbear.conf.new
+install -D -m=0755 $CWD/dropbear.rc $PKG/etc/rc.d/avail/dropbear.new
 
 (
     cd $PKG/etc/rc.d/run
@@ -141,6 +137,7 @@ mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a LICENSE CHANGES SMALL README MULTI INSTALL $PKG/usr/doc/$PRGNAM-$VERSION
 
 mkdir -p $PKG/install
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 #generate slack-required
