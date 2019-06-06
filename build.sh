@@ -120,12 +120,16 @@ function buildpkg() {
 	    (
 		cd /tmp/strip-$PKG_NAME
 		explodepkg $PKGFINALDEV > /dev/null
-		tar --exclude='usr/man'	\
-		    --exclude='usr/include' \
-		    --exclude='usr/doc' \
-		    --exclude='usr/lib64/pkgconfig' \
-		    --exclude='usr/lib/pkgconfig' \
-		    -czf $PKGFINAL .
+		rm -rf usr/man \
+		       usr/share/man \
+		       usr/include \
+		       usr/share/locale \
+		       usr/share/info \
+		       usr/doc \
+		       usr/lib64/pkgconfig \
+		       usr/lib/pkgconfig \
+		       usr/share/aclocal
+		makepkg -l y -c n $PKGFINAL > /dev/null
 	    )
 	    rm -rf /tmp/strip-$PKG_NAME
 	fi
@@ -145,6 +149,11 @@ function buildrootfs() {
     for i in `find $OUTPUT_PKGS -name *.t?z`; do
 	ROOT=$ROOTFS upgradepkg --reinstall --install-new $i
     done
+}
+
+function usage() {
+    echo "usage: $0 [build|rebuild|delete|cleanfs|buildfs|rebuildfs]"
+    exit 1
 }
 
 MAIN_DIR=$PWD
@@ -220,6 +229,7 @@ case $1 in
 	;;
     *) 
 	echo "Command $1 not recognized"
+	usage
 	exit 1
 	;;
 esac
