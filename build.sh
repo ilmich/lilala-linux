@@ -13,25 +13,34 @@ function findbuildscript() {
 }
 
 function findbuildlist() {
-	COUNT=`ls -1 src/*/*.buildlist | grep $1.buildlist | wc -l `
+	# scan platforms buildlist
+	COUNT=`ls -1 platforms/$PLATFORM_NAME/*.buildlist | grep $1.buildlist | wc -l `
 	if [ $(($COUNT)) -eq 1 ]; then
-		BUILDLIST=`ls -1 src/*/*.buildlist | grep $1.buildlist`
-		while read CMD; do
-			#skip comments in buildlist
-			if [[ $CMD == \#* ]]; then
-				continue;
-			fi
-			#include another buildlist
-			if [[ $CMD == \+* ]]; then
-				SUBSTRING=$(echo $CMD | cut -c 2-)
-				findbuildlist $SUBSTRING $2
-				continue;
-			fi
-			echo $CMD >> $2
-		done < $BUILDLIST
+		BUILDLIST=`ls -1 platforms/$PLATFORM_NAME/*.buildlist | grep $1.buildlist`
 	else
-		return 1
+		# scan source tree buildlist
+		COUNT=`ls -1 src/*/*.buildlist | grep $1.buildlist | wc -l `
+		if [ $(($COUNT)) -eq 1 ]; then
+			BUILDLIST=`ls -1 src/*/*.buildlist | grep $1.buildlist`
+		else
+		    return 1
+		fi
 	fi
+	
+	#parsing buildlist line by line
+	while read CMD; do
+	#skip comments in buildlist
+	if [[ $CMD == \#* ]]; then
+		continue;
+	fi
+	#include another buildlist
+	if [[ $CMD == \+* ]]; then
+		SUBSTRING=$(echo $CMD | cut -c 2-)
+		findbuildlist $SUBSTRING $2
+		continue;
+	fi
+	echo $CMD >> $2
+	done < $BUILDLIST
 
 	return 0
 }
