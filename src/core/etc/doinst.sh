@@ -15,7 +15,6 @@ config etc/fstab.new
 config etc/group.new
 config etc/hosts.new
 config etc/rc.d/rc.init.new
-config etc/inittab.new
 config etc/mdev.conf.new
 config etc/passwd.new
 config etc/profile.new
