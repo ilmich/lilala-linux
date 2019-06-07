@@ -129,7 +129,7 @@ function buildpkg() {
 		       usr/lib64/pkgconfig \
 		       usr/lib/pkgconfig \
 		       usr/share/aclocal
-		makepkg -l y -c n $PKGFINAL > /dev/null
+		makepkg -l n -c n $PKGFINAL > /dev/null
 	    )
 	    rm -rf /tmp/strip-$PKG_NAME
 	fi
