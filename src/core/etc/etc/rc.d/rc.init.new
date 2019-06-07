@@ -74,10 +74,10 @@ on_boot() {
     echo_color 2 "start all services..."
     /sbin/svc -s
 
-#    if [ -e "/etc/keymap" ]; then
-#        echo load keyboard
-#        loadkmap < /etc/keymap
-#    fi
+    if [ -e "/etc/keymap" ]; then
+        echo load keyboard
+        loadkey `cat /etc/keymap`
+    fi
 
     #===================
     # load /etc/init.d/rc.local
