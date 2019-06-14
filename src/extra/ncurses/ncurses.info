@@ -1,9 +1,8 @@
 PRGNAM=ncurses
-VERSION=6.0_20170930
+VERSION=6.1
 SVERSION=${VERSION/_/-}
 BUILD=1
-DOWNLOAD_URL=http://invisible-mirror.net/archives/ncurses/current/ncurses-$SVERSION.tgz
-DOWNLOAD_SHA1=47570ccf60c7946ef1234875d084d0ce494557e5
+DOWNLOAD_URL=http://invisible-mirror.net/archives/ncurses/ncurses-$SVERSION.tar.gz
+DOWNLOAD_SHA1=57acf6bc24cacd651d82541929f726f4def780cc
 DEPS="musl"
-
 
