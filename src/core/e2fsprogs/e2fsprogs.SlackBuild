@@ -56,7 +56,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -103,7 +103,7 @@ CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
   --prefix=/usr \
   --sysconfdir=/etc \
   --enable-elf-shlibs \
-  --libdir=/usr/lib$LIBDIRSUFFIX \
+  --libdir=/usr/lib \
   --enable-libuuid \
   --enable-libblkid \
   --mandir=/usr/man \
@@ -115,7 +115,7 @@ make -j2 V=1
 make DESTDIR=$PKG install install-libs
 
 # remove static lib
-rm $PKG/usr/lib$LIBDIRSUFFIX/*.a
+rm $PKG/usr/lib/*.a
 
 # Don't clobber an existing config file
 mv $PKG/etc/mke2fs.conf $PKG/etc/mke2fs.conf.new

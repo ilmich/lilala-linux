@@ -54,7 +54,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -102,9 +102,9 @@ CFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 ./configure \
   --prefix=/usr \
-  --libdir=/usr/lib$LIBDIRSUFFIX \
+  --libdir=/usr/lib \
   --mandir=/usr/man \
-  --with-pkg-config-libdir=/usr/lib$LIBDIRSUFFIX/pkgconfig \
+  --with-pkg-config-libdir=/usr/lib/pkgconfig \
   --with-terminfo-dirs="/etc/terminfo:/usr/share/terminfo" \
   --without-static \
   --without-ada \
@@ -119,7 +119,7 @@ make -j2
 make DESTDIR=$PKG install
 
 #remove static libs
-rm $PKG/usr/lib$LIBDIRSUFFIX/*.a
+rm $PKG/usr/lib/*.a
 
 #strip binaries
 ( cd $PKG

@@ -63,7 +63,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
 

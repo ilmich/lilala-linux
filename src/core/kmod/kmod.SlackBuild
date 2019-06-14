@@ -56,7 +56,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -104,7 +104,7 @@ CFLAGS="$SLK_CFLAGS $SYSROOT -s" \
 CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 ./configure \
   --prefix=/usr \
-  --libdir=/lib$LIBDIRSUFFIX \
+  --libdir=/lib \
   --bindir=/sbin \
   --sbindir=/sbin \
   --sysconfdir=/etc \
@@ -130,11 +130,11 @@ mkdir -p $PKG/bin
 ( cd $PKG/bin ; ln -sf /sbin/lsmod . )
 
 mkdir -p $PKG/etc/modprobe.d
-mkdir -p $PKG/usr/lib${LIBDIRSUFFIX}
-mv $PKG/lib${LIBDIRSUFFIX}/pkgconfig $PKG/usr/lib${LIBDIRSUFFIX}
-rm -f $PKG/lib${LIBDIRSUFFIX}/{*.so,*.la}
-( cd $PKG/usr/lib${LIBDIRSUFFIX}
-  ln -sf ../../lib${LIBDIRSUFFIX}/libkmod.so.? libkmod.so
+mkdir -p $PKG/usr/lib
+mv $PKG/lib/pkgconfig $PKG/usr/lib
+rm -f $PKG/lib/{*.so,*.la}
+( cd $PKG/usr/lib
+  ln -sf ../../lib/libkmod.so.? libkmod.so
 )
 
 #strip binaries

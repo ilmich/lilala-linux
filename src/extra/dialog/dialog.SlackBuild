@@ -54,7 +54,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -100,7 +100,7 @@ CFLAGS="$SLK_CFLAGS $SYSROOT -s -DENABLE_NLS -DNLS_TEXTDOMAIN=PACKAGE" \
 CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 ./configure \
   --prefix=/usr/ \
-  --libdir=/usr/lib$LIBDIRSUFFIX \
+  --libdir=/usr/lib \
   --mandir=/usr/man \
   --with-ncursesw \
   --without-pkg-config \
@@ -112,7 +112,7 @@ make
 make DESTDIR=$PKG install
 
 #remove empty dir
-rm -r $PKG/usr/lib$LIBDIRSUFFIX
+rm -r $PKG/usr/lib
 
 #compile translations
 (

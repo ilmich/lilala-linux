@@ -54,7 +54,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -102,7 +102,7 @@ CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 CHOST=$SLK_TARGET \
 ./configure \
   --prefix=/ \
-  --libdir=/lib$LIBDIRSUFFIX \
+  --libdir=/lib \
   --mandir=/usr/man \
   --includedir=/usr/include
 
@@ -110,9 +110,9 @@ make -j2
 make DESTDIR=$PKG install
 
 #remove static
-rm $PKG/lib$LIBDIRSUFFIX/*.a
-mkdir -p $PKG/usr/lib$LIBDIRSUFFIX/
-mv $PKG/lib$LIBDIRSUFFIX/pkgconfig $PKG/usr/lib$LIBDIRSUFFIX/
+rm $PKG/lib/*.a
+mkdir -p $PKG/usr/lib/
+mv $PKG/lib/pkgconfig $PKG/usr/lib/
 
 #strip binaries
 ( cd $PKG

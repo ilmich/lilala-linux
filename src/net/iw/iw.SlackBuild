@@ -41,8 +41,6 @@ fi
 
 . $CWD/$PRGNAM.info
 
-#VERSION=${VERSION:-1.1.16}
-#BUILD=${BUILD:-1}
 STRIP_CMD=strip
 if [ ! -z "$SLK_TARGET" ]; then
     TARGET=" --target=$SLK_TARGET "
@@ -56,7 +54,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
 

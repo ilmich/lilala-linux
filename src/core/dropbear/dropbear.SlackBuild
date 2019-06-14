@@ -54,7 +54,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;; 
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -100,7 +100,7 @@ CXXFLAGS=" $SLK_CFLAGS $SYSROOT -s " \
 LDFLAGS=" $SYSROOT -s" \
 ./configure \
   --prefix=/usr \
-  --libdir=/lib$LIBDIRSUFFIX \
+  --libdir=/lib \
   --docdir=/usr/doc/$PRGNAM-$VERSION \
   --includedir=/usr/include \
   --disable-lastlog \

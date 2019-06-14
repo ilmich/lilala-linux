@@ -60,7 +60,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -110,7 +110,7 @@ mkdir -p $PKG/etc/ssl/certs
 for i in `ls certs/*`;do
     chmod 0644 $i
     cp -a $i $PKG/etc/ssl/$i
-    
+
 done
 install -D -m0644 ca-bundle.crt $PKG/etc/ssl/ca-bundle.crt
 

@@ -64,7 +64,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -109,7 +109,7 @@ CFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 ./configure \
   --prefix=/usr \
-  --libdir=/usr/lib$LIBDIRSUFFIX \
+  --libdir=/usr/lib \
   --includedir=/usr/include \
   --mandir=/usr/man \
   --enable-ipv6 \
@@ -125,7 +125,7 @@ make -j2
 make DESTDIR=$PKG install
 
 #remove static lib
-rm $PKG/usr/lib$LIBDIRSUFFIX/*.a
+rm $PKG/usr/lib/*.a
 
 #strip binaries
 ( cd $PKG

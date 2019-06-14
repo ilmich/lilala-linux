@@ -56,7 +56,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -99,7 +99,7 @@ find -L . \
 
 make CC="$SLK_CC $SLK_CFLAGS $SYSROOT"
 make INSTALL_DIR=$PKG/sbin INSTALL_INC=$PKG/usr/include \
-     INSTALL_LIB=$PKG/lib$LIBDIRSUFFIX INSTALL_MAN=$PKG/usr/man install
+     INSTALL_LIB=$PKG/lib INSTALL_MAN=$PKG/usr/man install
 
 #strip binaries
 ( cd $PKG

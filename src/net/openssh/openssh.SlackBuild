@@ -54,7 +54,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -97,11 +97,11 @@ find -L . \
 
 CFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
-LDFLAGS="-L$SLK_SYSROOT/usr/lib$LIBDIRSUFFIX -L$SLK_SYSROOT/lib$LIBDIRSUFFIX" \
+LDFLAGS="-L$SLK_SYSROOT/usr/lib -L$SLK_SYSROOT/lib" \
 ./configure \
   --prefix=/usr \
   --sysconfdir=/etc/ssh \
-  --libdir=/usr/lib$LIBDIRSUFFIX \
+  --libdir=/usr/lib \
   --mandir=/usr/man \
   --infodir=/usr/info \
   --disable-strip \

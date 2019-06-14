@@ -57,7 +57,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) LIBDIRSUFFIX="64" ;;
+    x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -106,7 +106,7 @@ done
 cd hostapd
 cp $CWD/dot.config .config
 
-make CC="$SLK_CC $SLK_CFLAGS $SYSROOT" V=1 LIBDIR=/usr/lib$LIBDIRSUFFIX BINDIR=/usr/sbin/ DESTDIR=$PKG/ install
+make CC="$SLK_CC $SLK_CFLAGS $SYSROOT" V=1 LIBDIR=/usr/lib BINDIR=/usr/sbin/ DESTDIR=$PKG/ install
 
 install -D -m=0644 hostapd.conf $PKG/etc/hostapd.conf.sample
 install -D -m=0644 hostapd.8 $PKG/usr/man/man8/hostapd.8
