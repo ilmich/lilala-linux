@@ -1,0 +1,7 @@
+PRGNAM=cryptopp
+VERSION=7.0.0
+BUILD=1
+DOWNLOAD_URL=https://www.cryptopp.com/cryptopp700.zip
+DOWNLOAD_SHA1=1288682ae2f3062ea3a82ca2e90bd06d147568a4
+DEPS="musl gcc_libs"
+

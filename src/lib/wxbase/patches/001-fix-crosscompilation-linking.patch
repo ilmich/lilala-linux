@@ -1,0 +1,31 @@
+diff -ruPN wxWidgets-3.0.4/Makefile.in wxWidgets-3.0.4-diff/Makefile.in
+--- wxWidgets-3.0.4/Makefile.in	2018-03-07 18:21:58.000000000 +0100
++++ wxWidgets-3.0.4-diff/Makefile.in	2019-06-17 14:17:52.737929377 +0200
+@@ -16182,7 +16182,7 @@
+ 	$(INSTALL_DIR) $(DESTDIR)$(bindir)
+ 	$(INSTALL_DIR) $(DESTDIR)$(libdir)/wx/config
+ 	$(INSTALL_PROGRAM) lib/wx/config/$(TOOLCHAIN_FULLNAME) $(DESTDIR)$(libdir)/wx/config
+-	(cd $(DESTDIR)$(bindir) && rm -f wx-config && $(LN_S) $(libdir)/wx/config/$(TOOLCHAIN_FULLNAME) wx-config || cp -p $(DESTDIR)$(libdir)/wx/config/$(TOOLCHAIN_FULLNAME) wx-config)
++	(cd $(DESTDIR)$(bindir) && rm -f wx-config && cp -p $(DESTDIR)$(libdir)/wx/config/$(TOOLCHAIN_FULLNAME) wx-config)
+ 
+ locale_install: 
+ 	$(INSTALL_DIR) $(DESTDIR)$(datadir)/locale
+diff -ruPN wxWidgets-3.0.4/wx-config.in wxWidgets-3.0.4-diff/wx-config.in
+--- wxWidgets-3.0.4/wx-config.in	2018-03-07 18:21:58.000000000 +0100
++++ wxWidgets-3.0.4-diff/wx-config.in	2019-06-17 14:17:08.617932226 +0200
+@@ -1283,12 +1283,12 @@
+ [ "$using_gui" = "yes" ] || _gui_cppflags="-DwxUSE_GUI=0"
+ 
+ if is_installed; then
+-    _include_cppflags="-I${includedir}/wx-@WX_RELEASE@@WX_FLAVOUR@"
++    _include_cppflags="-I=${includedir}/wx-@WX_RELEASE@@WX_FLAVOUR@"
+ else
+-    _include_cppflags="-I${includedir}"
++    _include_cppflags="-I=${includedir}"
+ fi
+ 
+-_cppflags=`echo "-I${libdir}/wx/include/@TOOLCHAIN_FULLNAME@" $_include_cppflags "@WXCONFIG_CPPFLAGS@" $_gui_cppflags`
++_cppflags=`echo "-I=${libdir}/wx/include/@TOOLCHAIN_FULLNAME@" $_include_cppflags "@WXCONFIG_CPPFLAGS@" $_gui_cppflags`
+ 
+ # now without further ado, we can answer these too.
+ [ -z "$output_option_cppflags" ] || echo $_cppflags

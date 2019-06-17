@@ -1,0 +1,25 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+       |-----handy-ruler------------------------------------------------------|
+libupnp: libupnp - A Portable Open Source UPnP Development 
+libupnp:
+libupnp: The Portable SDK for UPnP Devices is an SDK for development of UPnP 
+libupnp: device and control point applications.  It consists of the core  
+libupnp: UPnP protocols along with a UPnP-specific eXtensible Markup 
+libupnp: Language (XML) parser supporting the Document Object Model (DOM) 
+libupnp: Level 2 API and an optional, integrated mini web server for 
+libupnp: serving UPnP related documents.
+libupnp:
+libupnp: http://pupnp.sourceforge.net/
+libupnp:
+
+
+ 
+
+
+

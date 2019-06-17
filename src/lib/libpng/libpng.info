@@ -1,0 +1,6 @@
+PRGNAM=libpng
+VERSION=1.6.37
+BUILD=1
+DOWNLOAD_URL=https://downloads.sourceforge.net/libpng/$PRGNAM-$VERSION.tar.gz
+DOWNLOAD_SHA1=72f1eda17c84dcf4e6260f92ada27d863b7e9d36
+DEPS="musl"
