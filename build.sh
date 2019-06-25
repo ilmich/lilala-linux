@@ -1,7 +1,7 @@
 #!/bin/sh
 
 function findbuildscript() {
-	COUNT=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.SlackBuild | grep $1.SlackBuild | wc -l`
+	COUNT=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.SlackBuild 2> /dev/null | grep $1.SlackBuild | wc -l`
 	if [ $(($COUNT)) -eq 1 ]; then
 		PKGBUILD=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.SlackBuild | grep $1.SlackBuild`
 		PKGBUILD=`dirname $PKGBUILD`
@@ -21,7 +21,7 @@ function findbuildscript() {
 
 function findbuildlist() {
 	# scan platforms buildlist
-	COUNT=`ls -1 platforms/$PLATFORM_NAME/*.buildlist | grep $1.buildlist | wc -l `
+	COUNT=`ls -1 platforms/$PLATFORM_NAME/*.buildlist 2> /dev/null | grep $1.buildlist | wc -l `
 	if [ $(($COUNT)) -eq 1 ]; then
 		BUILDLIST=`ls -1 platforms/$PLATFORM_NAME/*.buildlist | grep $1.buildlist`
 	else
@@ -52,6 +52,7 @@ function findbuildlist() {
 	return 0
 }
 
+# TOOD better package removal based on some sort of metadata 
 function deletepkg() {
     PKG_DIR=$OUTPUT_PKGS/`dirname $1`
     STAGING_PKG_DIR=$OUTPUT_STAGING_PKGS/`dirname $1`
@@ -61,8 +62,8 @@ function deletepkg() {
     if [ -z $SLK_ARCH ]; then
         SLK_ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
     fi
-
-    if [ -e platforms/$PLATFORM_NAME/src/$1 ]; then
+    #check if there is a slackbuild
+    if [ -e platforms/$PLATFORM_NAME/src/$1/*.SlackBuild ]; then
         cd platforms/$PLATFORM_NAME/src/$1
     else
         cd src/$1
@@ -71,7 +72,7 @@ function deletepkg() {
     . ./$PKG_NAME.info
     PKGFINAL=$PKG_DIR/$PKG_NAME-*$TAG.*
     PKGSTAGING=$STAGING_PKG_DIR/$PKG_NAME-*$TAG.*
-    
+
     ROOT=$STAGINGFS removepkg $PKGSTAGING
     rm $PKGFINAL
     rm $PKGSTAGING
@@ -89,11 +90,19 @@ function buildpkg() {
     PKGTYPE=tgz
     TAG=lilala
 
-    if [ -e platforms/$PLATFORM_NAME/src/$1 ]; then
-        cd platforms/$PLATFORM_NAME/src/$1
-    else
-        cd src/$1
+    if [ -d $TMP/$1 ]; then
+	rm -r $TMP/$1
     fi
+    mkdir -p $TMP/$1
+    cp -r -a  src/$1/* $TMP/$1 2>/dev/null
+
+    # overlay platform source
+    if [ -d platforms/$PLATFORM_NAME/src/$1 ]; then
+        cp -r -a platforms/$PLATFORM_NAME/src/$1/* $TMP/$1
+    fi
+
+    cd $TMP/$1
+
     . ./$PKG_NAME.info
     ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
     if [ -z $SLK_ARCH ]; then
@@ -193,6 +202,7 @@ KERNEL_DIR=$PLATFORM_DIR/kernel
 OUTPUT_PKGS=$OUTPUT_DIR/pkgs
 OUTPUT_STAGING_PKGS=$OUTPUT_DIR/staging_pkgs
 OUTPUT_LOGS=$OUTPUT_DIR/logs
+TMP=/tmp
 
 mkdir -p $ROOTFS
 mkdir -p $STAGINGFS
