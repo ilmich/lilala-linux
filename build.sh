@@ -1,13 +1,20 @@
 #!/bin/sh
 
 function findbuildscript() {
-	COUNT=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild | wc -l`
+	COUNT=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.SlackBuild | grep $1.SlackBuild | wc -l`
 	if [ $(($COUNT)) -eq 1 ]; then
-		PKGBUILD=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild`
+		PKGBUILD=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.SlackBuild | grep $1.SlackBuild`
 		PKGBUILD=`dirname $PKGBUILD`
-		echo ${PKGBUILD#src/} >> $2
+		echo ${PKGBUILD#platforms/$PLATFORM_NAME/src/} >> $2
 	else
-		return 1
+		COUNT=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild | wc -l`
+		if [ $(($COUNT)) -eq 1 ]; then
+			PKGBUILD=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild`
+			PKGBUILD=`dirname $PKGBUILD`
+			echo ${PKGBUILD#src/} >> $2
+		else
+			return 1
+		fi
 	fi
 	return 0
 }
@@ -64,7 +71,8 @@ function deletepkg() {
     . ./$PKG_NAME.info
     PKGFINAL=$PKG_DIR/$PKG_NAME-*$TAG.*
     PKGSTAGING=$STAGING_PKG_DIR/$PKG_NAME-*$TAG.*
-
+    
+    ROOT=$STAGINGFS removepkg $PKGSTAGING
     rm $PKGFINAL
     rm $PKGSTAGING
     echo "deleted pkg $PKGFINAL"
@@ -98,7 +106,7 @@ function buildpkg() {
         echo "Building $1"
         mkdir -p $PKG_DIR
         mkdir -p $STAGING_PKG_DIR
-        SLK_TARGET=$SLK_TARGET SLK_CFLAGS=$SLK_CFLAGS SLK_SYSROOT=$STAGINGFS ARCH=$ARCH SLK_ARCH=$SLK_ARCH \
+        PATH=$STAGINGFS/usr/bin:$PATH SLK_TARGET=$SLK_TARGET SLK_CFLAGS=$SLK_CFLAGS SLK_SYSROOT=$STAGINGFS ARCH=$ARCH SLK_ARCH=$SLK_ARCH \
         SLK_TOOLCHAIN_PATH=$SLK_TOOLCHAIN_PATH TAG=$TAG PKGTYPE=$PKGTYPE OUTPUT=$STAGING_PKG_DIR \
         STAGING=$STAGINGFS ./$PKG_NAME.SlackBuild # &> $PKG_LOGS/$PKG_NAME.log
 
@@ -129,7 +137,7 @@ function buildpkg() {
 		       usr/lib64/pkgconfig \
 		       usr/lib/pkgconfig \
 		       usr/share/aclocal
-		makepkg -l n -c n $PKGFINAL > /dev/null
+		makepkg -l y -c n $PKGFINAL > /dev/null
 	    )
 	    rm -rf /tmp/strip-$PKG_NAME
 	fi
