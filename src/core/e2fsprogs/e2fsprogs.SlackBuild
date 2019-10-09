@@ -68,7 +68,7 @@ if [ -z "$SLK_CFLAGS" ]; then
 	elif [ "$ARCH" = "x86_64" ]; then
 	  SLK_CFLAGS="-O2 -fPIC"
 	else
-	  SLK_CFLAGS="-O2"	  
+	  SLK_CFLAGS="-O2"
 	fi
 fi
 
@@ -100,14 +100,16 @@ find -L . \
 CFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 ./configure \
-  --prefix=/usr \
+  --prefix=/ \
   --sysconfdir=/etc \
   --enable-elf-shlibs \
-  --libdir=/usr/lib \
+  --libdir=/lib \
   --enable-libuuid \
   --enable-libblkid \
+  --disable-defrag \
   --mandir=/usr/man \
   --infodir=/usr/info \
+  --datarootdir=/usr/share \
   --includedir=/usr/include \
   $TARGET
 
@@ -115,7 +117,7 @@ make -j2 V=1
 make DESTDIR=$PKG install install-libs
 
 # remove static lib
-rm $PKG/usr/lib/*.a
+rm $PKG/lib/*.a
 
 # Don't clobber an existing config file
 mv $PKG/etc/mke2fs.conf $PKG/etc/mke2fs.conf.new

@@ -1,7 +1,6 @@
 PRGNAM=openssl
-VERSION=1.0.2s
+VERSION=1.0.2t
 BUILD=1
 DOWNLOAD_URL=https://www.openssl.org/source/openssl-$VERSION.tar.gz
-DOWNLOAD_SHA1=cf43d57a21e4baf420b3628677ebf1723ed53bc1
+DOWNLOAD_SHA1=8ac3fd379cf8c8ef570abb51ec52a88fd526f88a
 DEPS="musl"
-
