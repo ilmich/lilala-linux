@@ -91,7 +91,7 @@ function buildpkg() {
     TAG=lilala
 
     if [ -d $TMP/$1 ]; then
-	rm -r $TMP/$1
+        rm -r $TMP/$1
     fi
     mkdir -p $TMP/$1
     cp -r -a  src/$1/* $TMP/$1 2>/dev/null
@@ -102,8 +102,16 @@ function buildpkg() {
     fi
 
     cd $TMP/$1
-
     . ./$PKG_NAME.info
+    
+    # download source code  
+    DOWNLOAD_FILE=`basename $DOWNLOAD_URL`
+    if [ ! -e $CACHE_DIR/$DOWNLOAD_FILE ]; then
+        wget -c $DOWNLOAD_URL -O $CACHE_DIR/$DOWNLOAD_FILE
+    fi
+    # linking source tar
+    ln -s $CACHE_DIR/$DOWNLOAD_FILE .
+    
     ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
     if [ -z $SLK_ARCH ]; then
         SLK_ARCH=$ARCH
@@ -115,7 +123,7 @@ function buildpkg() {
         echo "Building $1"
         mkdir -p $PKG_DIR
         mkdir -p $STAGING_PKG_DIR
-        PATH=$STAGINGFS/usr/bin:$PATH SLK_TARGET=$SLK_TARGET SLK_CFLAGS=$SLK_CFLAGS SLK_SYSROOT=$STAGINGFS ARCH=$ARCH SLK_ARCH=$SLK_ARCH \
+        SLK_TARGET=$SLK_TARGET SLK_CFLAGS=$SLK_CFLAGS SLK_SYSROOT=$STAGINGFS ARCH=$ARCH SLK_ARCH=$SLK_ARCH \
         SLK_TOOLCHAIN_PATH=$SLK_TOOLCHAIN_PATH TAG=$TAG PKGTYPE=$PKGTYPE OUTPUT=$STAGING_PKG_DIR \
         STAGING=$STAGINGFS ./$PKG_NAME.SlackBuild # &> $PKG_LOGS/$PKG_NAME.log
 
@@ -145,6 +153,7 @@ function buildpkg() {
 		       usr/doc \
 		       usr/lib64/pkgconfig \
 		       usr/lib/pkgconfig \
+		       lib/pkgconfig \
 		       usr/share/aclocal
 		makepkg -l y -c n $PKGFINAL > /dev/null
 	    )
@@ -170,6 +179,13 @@ function buildrootfs() {
 
 function usage() {
     echo "usage: $0 [build|rebuild|delete|cleanfs|buildfs|rebuildfs]"
+    echo ""
+    echo "      build [package|buildlist]       build single or multiple package"
+    echo "      rebuild [package|buildlist]     rebuild single or multiple package"
+    echo "      delete [package|buildlist]      debuild single or multiple package"
+    echo "      cleanfs                         clean output filesystem"
+    echo "      buildfs                         build output filesystem"
+    echo "      rebuildfs                       rebuild output filesystem"
     exit 1
 }
 
@@ -195,21 +211,24 @@ if [ -z "$PLATFORM_NAME" ]; then
 fi
 
 PLATFORM_DIR=$PWD/platforms/$PLATFORM_NAME
-OUTPUT_DIR=$MAIN_DIR/output/platforms/$PLATFORM_NAME
+OUTPUT_DIR=$MAIN_DIR/output/targets/$PLATFORM_NAME
 ROOTFS=$OUTPUT_DIR/rootfs
 STAGINGFS=$OUTPUT_DIR/staging
 KERNEL_DIR=$PLATFORM_DIR/kernel
 OUTPUT_PKGS=$OUTPUT_DIR/pkgs
+CACHE_DIR=$MAIN_DIR/cache
 OUTPUT_STAGING_PKGS=$OUTPUT_DIR/staging_pkgs
 OUTPUT_LOGS=$OUTPUT_DIR/logs
-TMP=/tmp
+TMP=/tmp/lilala
 
 mkdir -p $ROOTFS
 mkdir -p $STAGINGFS
+mkdir -p $CACHE_DIR
 
 export PATH=$PWD/tools/:$SLK_TOOLCHAIN_PATH/bin:$PATH
 export PKG_CONFIG_PATH= 
 export PKG_CONFIG_LIBDIR=$STAGINGFS/usr/lib/pkgconfig:$STAGINGFS/usr/lib64/pkgconfig
+export PKG_CONFIG_SYSROOT_DIR=$STAGINGFS
 
 BUILDPKG=
 DELETEPKG=
