@@ -82,7 +82,6 @@ function deletepkg() {
 }
 
 function buildpkg() {
-
     PKG_DIR=$OUTPUT_PKGS/`dirname $1`
     STAGING_PKG_DIR=$OUTPUT_STAGING_PKGS/`dirname $1`
     PKG_LOGS=$OUTPUT_LOGS/`dirname $1`
@@ -104,13 +103,15 @@ function buildpkg() {
     cd $TMP/$1
     . ./$PKG_NAME.info
     
-    # download source code  
-    DOWNLOAD_FILE=`basename $DOWNLOAD_URL`
-    if [ ! -e $CACHE_DIR/$DOWNLOAD_FILE ]; then
-        wget -c $DOWNLOAD_URL -O $CACHE_DIR/$DOWNLOAD_FILE
+    # download source code
+    if [ ! -z $DOWNLOAD_URL ]; then
+        DOWNLOAD_FILE=`basename $DOWNLOAD_URL`
+        if [ ! -e $CACHE_DIR/$DOWNLOAD_FILE ]; then
+            wget -c $DOWNLOAD_URL -O $CACHE_DIR/$DOWNLOAD_FILE
+        fi
+        # linking source tar
+        ln -s $CACHE_DIR/$DOWNLOAD_FILE .
     fi
-    # linking source tar
-    ln -s $CACHE_DIR/$DOWNLOAD_FILE .
     
     ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
     if [ -z $SLK_ARCH ]; then
@@ -173,7 +174,7 @@ function buildpkg() {
 
 function buildrootfs() {
     for i in `find $OUTPUT_PKGS -name *.t?z`; do
-	ROOT=$ROOTFS upgradepkg --reinstall --install-new $i
+	ROOT=$ROOTFS upgradepkg --reinstall --install-new --terse $i
     done
 }
 
@@ -187,6 +188,23 @@ function usage() {
     echo "      buildfs                         build output filesystem"
     echo "      rebuildfs                       rebuild output filesystem"
     exit 1
+}
+
+function showbuildinfo() {
+
+    echo "Building Lilala linux for $PLATFORM_NAME"
+    echo "----------------------------------------"
+    echo "Target :$SLK_TARGET"
+    echo "Targhet arch: $SLK_ARCH"
+    echo "Toolchain path: $SLK_TOOLCHAIN_PATH"
+    echo "Compiler flags: $SLK_CFLAGS"
+    echo "Final rootfs: $ROOTFS"
+    echo "Staging rootfs: $STAGINGFS"
+    echo "Final pkgs output: $OUTPUT_PKGS"
+    echo "----------------------------------------"
+    echo "Check and press enter to start"
+    read
+    
 }
 
 MAIN_DIR=$PWD
@@ -226,7 +244,7 @@ mkdir -p $STAGINGFS
 mkdir -p $CACHE_DIR
 
 export PATH=$PWD/tools/:$SLK_TOOLCHAIN_PATH/bin:$PATH
-export PKG_CONFIG_PATH= 
+export PKG_CONFIG_PATH=
 export PKG_CONFIG_LIBDIR=$STAGINGFS/usr/lib/pkgconfig:$STAGINGFS/usr/lib64/pkgconfig
 export PKG_CONFIG_SYSROOT_DIR=$STAGINGFS
 
@@ -235,29 +253,35 @@ DELETEPKG=
 case $1 in
     build)
 	echo "starting build"
+    showbuildinfo
 	BUILDPKG="YES"
 	shift
 	;;
     rebuild)
+    showbuildinfo
 	DELETEPKG="YES"
 	BUILDPKG="YES"
 	shift
 	;;
     delete)
+    showbuildinfo
 	DELETEPKG="YES"
 	shift
 	;;
     cleanfs)
+    showbuildinfo
 	echo "cleaning target fs"
 	rm -r $ROOTFS
 	exit 0
 	;;
     buildfs)
+    showbuildinfo
 	echo "build target fs"
 	buildrootfs
 	exit 0
 	;;
     rebuildfs)
+    showbuildinfo
 	echo "rebuild target fs"
 	rm -r $ROOTFS
 	mkdir -p $ROOTFS
@@ -271,21 +295,8 @@ case $1 in
 	;;
 esac
 
-echo "Building Lilala linux for $PLATFORM_NAME"
-echo "----------------------------------------"
-echo "Target :$SLK_TARGET"
-echo "Targhet arch: $SLK_ARCH"
-echo "Toolchain path: $SLK_TOOLCHAIN_PATH"
-echo "Compiler flags: $SLK_CFLAGS"
-echo "Final rootfs: $ROOTFS"
-echo "Staging rootfs: $STAGINGFS"
-echo "Final pkgs output: $OUTPUT_PKGS"
-echo "----------------------------------------"
-echo "Check and press enter to start"
-read
-
+rm -f $OUTPUT_DIR/buildlist
 while [ $# -gt 0 ] ; do
-    rm -f $OUTPUT_DIR/buildlist
     findbuildlist $1 $OUTPUT_DIR/buildlist
     if [ "$?" == 1 ]; then
 	findbuildscript $1 $OUTPUT_DIR/buildlist
@@ -294,6 +305,7 @@ while [ $# -gt 0 ] ; do
 		exit 1
 	fi
     fi
+
     shift
 done
 
