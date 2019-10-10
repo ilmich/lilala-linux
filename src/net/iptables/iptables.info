@@ -1,8 +1,7 @@
 PRGNAM=iptables
-VERSION=1.6.1
+VERSION=1.8.3
 BUILD=1
 DOWNLOAD_URL=http://www.netfilter.org/projects/iptables/files/iptables-$VERSION.tar.bz2
-DOWNLOAD_SHA1=b2592490ca7a6c2cd0f069e167a4337c86acdf91
+DOWNLOAD_SHA1=6df99e90cb4d59032ab2050ebb426fe065249bd3
 DEPS="musl libnftnl libpcap"
-
 

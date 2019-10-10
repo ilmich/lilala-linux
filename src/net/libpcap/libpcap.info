@@ -1,8 +1,6 @@
 PRGNAM=libpcap
-VERSION=1.8.1
+VERSION=1.9.1
 BUILD=1
 DOWNLOAD_URL=http://www.tcpdump.org/release/libpcap-$VERSION.tar.gz
-DOWNLOAD_SHA1=32d7526dde8f8a2f75baf40c01670602aeef7e39
+DOWNLOAD_SHA1=04d6e619defad5bb17af15f6d2304e79b649786c
 DEPS="musl"
-
-

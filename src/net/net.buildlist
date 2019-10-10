@@ -1,6 +1,2 @@
-net/libnl
-net/iw
-net/wireless-tools
 net/dnsmasq
 net/hostapd
-net/wpa_supplicant

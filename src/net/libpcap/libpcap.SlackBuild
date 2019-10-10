@@ -135,7 +135,7 @@ rm $PKG/usr/lib/*.a
 )
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a CHANGES CREDITS INSTALL.txt LICENSE README* TODO VERSION $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a CHANGES CREDITS INSTALL.md LICENSE README* TODO VERSION $PKG/usr/doc/$PRGNAM-$VERSION
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
