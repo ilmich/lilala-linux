@@ -20,3 +20,5 @@ core/net-tools
 core/sdhcp
 core/curl
 core/dropbear
+core/ncurses
+core/nano

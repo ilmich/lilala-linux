@@ -176,6 +176,9 @@ function buildrootfs() {
     for i in `find $OUTPUT_PKGS -name *.t?z`; do
 	ROOT=$ROOTFS upgradepkg --reinstall --install-new --terse $i
     done
+
+    echo "Filesystem size:"
+    du -d 0 -h $ROOTFS
 }
 
 function usage() {

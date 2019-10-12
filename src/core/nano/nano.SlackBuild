@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Slackware build script for cacerts
+# Slackware build script for nano
 
-# Copyright 2019 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -27,7 +27,7 @@ if [ $UID != "0" ]; then
     exit 1
 fi
 
-PRGNAM=cacerts
+PRGNAM=nano
 CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
@@ -42,15 +42,9 @@ fi
 . $CWD/$PRGNAM.info
 
 STRIP_CMD=strip
-CC_CMD=gcc
-AR_CMD=ar
-RANLIB_CMD=ranlib
 if [ ! -z "$SLK_TARGET" ]; then
-    TARGET=" --target=$SLK_TARGET "
+    TARGET=" --host=$SLK_TARGET "
     STRIP_CMD=$SLK_TARGET-strip
-    CC_CMD=$SLK_TARGET-gcc
-    AR_CMD=$SLK_TARGET-ar
-    RANLIB_CMD=$SLK_TARGET-ranlib
 fi
 
 if [ ! -z "$SLK_SYSROOT" ]; then
@@ -60,7 +54,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) ;;
+    x86_64) ;; 
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -78,18 +72,14 @@ fi
 
 set -e
 
-if [ ! -z $DOWNLOAD_URL ]; then
-    SOURCE_TAR=`basename $DOWNLOAD_URL`
-    if [ ! -e ${CWD}/$SOURCE_TAR ]; then
-      wget -c $DOWNLOAD_URL
-    fi
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+if [ ! -e ${CWD}/$SOURCE_TAR ]; then
+  wget -c $DOWNLOAD_URL
+fi
 
-    if [ ! $DOWNLOAD_SHA1 == `sha1sum $SOURCE_TAR | cut -d " " -f 1` ]; then
-	echo "SHA1 did not match"
-	exit 1
-    fi
-else
-    SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
+if [ ! $DOWNLOAD_SHA1 == `sha1sum $SOURCE_TAR | cut -d " " -f 1` ]; then
+    echo "SHA1 did not match"
+    exit 1
 fi
 
 rm -rf $PKG
@@ -105,13 +95,34 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-mkdir -p $PKG/etc/ssl/certs
+CFLAGS="$SLK_CFLAGS $SYSROOT -s" \
+CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
+./configure \
+  --prefix=/usr \
+  --libdir=/usr/lib \
+  --bindir=/usr/bin \
+  --sbindir=/usr/sbin \
+  --sysconfdir=/etc \
+  --localstatedir=/var \
+  --mandir=/usr/man \
+  --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --includedir=/usr/include \
+  $TARGET
 
-for i in `ls certs/*`;do
-    chmod 0644 $i
-    cp -a $i $PKG/etc/ssl/$i
+make -j2 V=1
+make DESTDIR=$PKG install
 
-done
+set -e
+#strip binaries
+( cd $PKG
+  find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
+  find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
+  find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
+)
+
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a AUTHORS COPYING* IMPROVEMENTS INSTALL NEWS README.* THANKS TODO $PKG/usr/doc/$PRGNAM-$VERSION
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
@@ -126,6 +137,7 @@ fi
 
 cd $PKG
 mkdir -p $OUTPUT
+
 if [ -z $SLK_ARCH ]; then
     makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
 else

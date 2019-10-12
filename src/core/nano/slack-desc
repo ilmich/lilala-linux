@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+    |-----handy-ruler------------------------------------------------------|
+nano: nano - Nano’s ANOther editor, inspired by Pico
+nano:
+nano: GNU nano was designed to be a free replacement for the Pico 
+nano: text editor, part of the Pine email suite from The University of 
+nano: Washington. It aimed to "emulate Pico as closely as is reasonable 
+nano: and then include extra functionality".
+nano:
+nano:
+nano:
+nano:
+nano:

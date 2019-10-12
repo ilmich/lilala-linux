@@ -108,7 +108,7 @@ CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
   --enable-libblkid \
   --disable-defrag \
   --mandir=/usr/man \
-  --infodir=/usr/info \
+  --infodir=/usr/share/info \
   --datarootdir=/usr/share \
   --includedir=/usr/include \
   $TARGET
