@@ -100,6 +100,7 @@ sed -i -e "s/\-L\$libdir//g" misc/ncurses-config.in
 
 CFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
+INSTALL="/bin/ginstall --strip-program=$STRIP_CMD" \
 ./configure \
   --prefix=/usr \
   --libdir=/usr/lib \
