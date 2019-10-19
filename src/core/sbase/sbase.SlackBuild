@@ -115,6 +115,16 @@ touch numfmt.1
 make AR=$AR_CMD RANLIB=$RANLIB_CMD CC=$CC_CMD CFLAGS="$SLK_CFLAGS $SYSROOT -s "
 make DESTDIR=$PKG PREFIX=/ MANPREFIX=/usr/share/man install
 
+#install cron
+install -D -m=0666 $CWD/crontab $PKG/etc/crontab.new
+mkdir -p $PKG/etc/rc.d/{avail,run}
+touch $PKG/etc/rc.d/avail/cron.new
+ 
+(
+    cd $PKG/etc/rc.d/run
+    ln -s ../avail/cron cron
+)
+
 #strip binaries
 ( cd $PKG
   find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
@@ -126,6 +136,7 @@ mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a README LICENSE TODO $PKG/usr/doc/$PRGNAM-$VERSION
 
 mkdir -p $PKG/install
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 #generate slack-required

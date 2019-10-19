@@ -10,17 +10,6 @@ config() {
   # Otherwise, we leave the .new copy for the admin to consider...
 }
 
-config etc/HOSTNAME.new
-config etc/fstab.new
-config etc/group.new
-config etc/hosts.new
-config etc/rc.d/rc.init.new
-config etc/rc.d/rc.modules.new
-config etc/rc.d/rc.network.new
-config etc/mdev.conf.new
-config etc/passwd.new
-config etc/profile.new
-config etc/syslog.conf.new
-config etc/shadow.new
-config etc/shells.new
-config etc/services.new
+config etc/crontab.new
+config etc/rc.d/avail/cron.new
+

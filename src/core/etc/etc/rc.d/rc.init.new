@@ -16,16 +16,43 @@ on_boot() {
     /bin/mountpoint -q /dev/pts || /bin/mount -t devpts devpts /dev/pts -o mode=0620,gid=5,nosuid,noexec
     /bin/mountpoint -q /dev/shm || /bin/mount -t tmpfs shm /dev/shm -o mode=1777,nosuid,nodev
 
+    echo_color 2 "checking filesystems..."
+    /sbin/fsck -ATa
+    if [ $? -eq 2 ]; then
+       echo_color 2 "filesystem errors fixed but system should be rebooted"
+       sleep 2
+       /sbin/halt -r
+    fi
+    if [ $? -gt 2 ]; then
+       echo_color 2 "filesystem errors exist, press enter to fix manually"
+       read
+       /bin/sh
+       /sbin/halt -r
+    fi
+
+    echo_color 2 "remounting root read/write..."
+    /bin/mount -o remount,rw /
+    
     #===================
     # initialize system
     echo_color 2 "setting up loopback device..."
     /bin/ifconfig lo 127.0.0.1
+    
+    echo_color 2 "start syslogd..."
+    /sbin/syslogd
+
+    #load fake clock if present
+    if [ -x /sbin/fake-hwclock ]; then
+	echo_color 2 "loading hardware clock..."
+	/sbin/fake-hwclock load
+    fi
+
+    echo_color 2 "initializing smdev..."
+    echo /bin/smdev > /proc/sys/kernel/hotplug
+    /bin/smdev -s
 
     # Determine the version of the running kernel:
-    RELEASE=$(uname -r)
-
-    /bin/mount -o remount,rw /
-
+    RELEASE=$(uname -r)    
     # Update kernel module dependencies:
     if [ -e "/lib/modules/$RELEASE/modules.dep" ]; then 
 	echo_color 2 "Updating module dependency list for $RELEASE:  /sbin/depmod --quick"
@@ -35,20 +62,24 @@ on_boot() {
 	/sbin/depmod --all
     fi
 
-    if [ -x "/etc/init.d/rc.modules" ]; then
-	/etc/rc.d/rc.modules
-    fi
-
     echo_color 2 "loading modules..."
-    find /sys -name modalias | xargs sort -u | xargs /sbin/modprobe
-    MODULE=`find /sys -name modalias | xargs sort -u | xargs echo`
+    MODULE=`find /sys -name modalias | xargs cat | sort -u`
     for i in $MODULE; do
 	/sbin/modprobe $i >/dev/null 2>/dev/null
     done
 
-    echo_color 2 "initializing smdev..."
-    echo /bin/smdev > /proc/sys/kernel/hotplug
-    /bin/smdev -s
+    if [ -x "/etc/rc.d/rc.modules" ]; then
+	/etc/rc.d/rc.modules
+    fi
+
+    echo_color 2 "setting random seed..."
+    [ -f /etc/random-seed ] && /bin/cat /etc/random-seed >/dev/urandom
+    /bin/dd if=/dev/urandom of=/etc/random-seed count=1 bs=512 2>/dev/null
+
+    if [ -x /usr/sbin/haveged ]; then
+	echo_color 2 "generate random numbers"
+	/usr/sbin/haveged -v 1
+    fi
 
     echo_color 2 "setting hostname..."
     echo "$HOSTNAME" >| /proc/sys/kernel/hostname
@@ -56,11 +87,8 @@ on_boot() {
     echo_color 2 "mounting..."
     /bin/mount -a
 
-    echo_color 2 "start syslogd..."
-    /sbin/syslogd
-
     #===================
-    # load /etc/init.d/rc.network
+    # load /etc/rc.d/rc.network
     if [ -x /etc/rc.d/rc.network ]; then
         echo_color 2 "loading /etc/init.d/rc.network..."
         /etc/rc.d/rc.network
@@ -71,14 +99,14 @@ on_boot() {
 
     if [ -e "/etc/keymap" ]; then
         echo_color 2 "load keyboard..."
-        loadkey `cat /etc/keymap`
+        loadkeys `cat /etc/keymap`
     fi
 
     #===================
-    # load /etc/init.d/rc.local
-    if [ -x /etc/init.d/rc.local ]; then
-        echo_color 2 "loading /etc/init.d/rc.local..."
-        /etc/init.d/rc.local
+    # load /etc/rc.d/rc.local
+    if [ -x /etc/rc.d/rc.local ]; then
+        echo_color 2 "loading /etc/rc.d/rc.local..."
+        /etc/rc.d/rc.local
     fi
 
     /bin/dmesg > /var/log/dmesg
@@ -109,10 +137,16 @@ on_shutdown() {
     echo_color 2 "stopping services..."
     /sbin/svc -k
 
-    #===================
-    # umount the API filesystem
-    #echo unmounting API filesystem...
-    #umount -r /run
+    #save fake clock if present    
+    if [ -x /sbin/fake-hwclock ]; then
+	echo_color 2 "saving hardware clock..."
+	/sbin/fake-hwclock save
+    fi
+
+    echo_color 2 "remounting root filesystem read-only"
+    /bin/mount -o remount.ro /
+
+    /bin/sync
 }
 
 echo_color() {

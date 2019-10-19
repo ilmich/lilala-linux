@@ -1,6 +1,5 @@
 core/raspberry-firmware
+extra/fake-hwclock
 +core
 +wifi
-
-
-
+extra/haveged

@@ -1,0 +1,25 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+       |-----handy-ruler------------------------------------------------------|
+haveged: haveged - Entropy harvesting daemon
+haveged:
+haveged: The Haveged package contains a daemon that generates an 
+haveged: unpredictable stream of random numbers and feeds the /dev/random 
+haveged: device.
+haveged: 
+haveged: 
+haveged: 
+haveged:
+haveged: 
+haveged:
+
+
+ 
+
+
+

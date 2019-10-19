@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# put commands that setup your network
+
+# ifconfig eth0 192.168.0.1
