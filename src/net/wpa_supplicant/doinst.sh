@@ -10,6 +10,4 @@ config() {
   # Otherwise, we leave the .new copy for the admin to consider...
 }
 
-config etc/crontab.new
-config etc/rc.d/avail/cron.new
-
+config etc/wpa_supplicant.conf.new

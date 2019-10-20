@@ -1,0 +1,71 @@
+.TH FAKE-HWCLOCK 8 "1 October 2014" Debian
+.SH NAME
+fake-hwclock \- Control fake hardware clock
+.SH SYNOPSIS
+\fBfake-hwclock\fP [ \fIcommand\fP ] [ \fBforce\fP ]
+.SH BACKGROUND
+Many embedded Linux systems do not have a functional hardware clock. Either
+they simply don't have a hardware clock at all or they have a hardware clock
+but it is not usable (e.g. because Linux doesn't know how to use it or because
+no battery is present).
+
+This can lead to time moving backwards to some default value (often 1970) when
+the system is rebooted. Since lots of software assumes that time only moves
+forward this is a bad thing. NTP can (and should where practical) be used to
+sync with an external timeserver but it is not available early in the boot
+process and may be unavailable for other reasons.
+
+The design expectation of \fBfake-hwclock\fP is that it will be run
+very late at shutdown and very early at boot. This will ensure that
+fsck has a vaguely sensible idea of system time at boot and won't
+complain that the last-modified time in the filesystem is not hugely
+in the past or future. Some users may not worry about this too use
+case, in which case it is possible to modify the init system
+configuration to move things earlier/later as appropriate.
+
+.SH DESCRIPTION
+\fBfake-hwclock\fP sets and queries a fake "hardware clock" which stores the
+time in a file. This program may be run by the system administrator
+directly but is typically run by init (to load the time on startup and
+save it on shutdown) and cron (to save the time hourly).
+
+If no command is given then fake-hwclock acts as if the save command was used.
+.SH COMMANDS
+.SS
+.TP
+\fBsave\fP
+Save the time to the file. As a sanity check, fake-hwclock will not
+move the saved clock backwards to a time/date earlier than its own
+release date. Use "force" to over-ride this check.
+.TP
+\fBload\fP
+Load the time from the file. If force is specified fake-hwclock will move the
+clock either backwards or forwards. Otherwise it will only move it forwards.
+.SH FILES
+.SS
+.TP
+\fB/etc/fake-hwclock.data\fR
+The file used to store the time
+.TP
+\fB/etc/init.d/fake-hwclock\fR
+The init script used to run fake-hwclock on startup and shutdown
+.TP
+\fB/lib/systemd/system/fake-hwclock.service\fR
+systemd service used to run fake-hwclock on startup and shutdown
+.TP
+\fB/etc/default/fake-hwclock\fR
+Settings file for the init script.
+.TP
+\fB/etc/cron.hourly/fake-hwclock\fR
+Cron job used to save the time hourly
+.SH ENVIRONMENT VARIABLES
+.SS
+.TP
+\fBFILE\fR
+set the file used by fake-hwclock
+.SH RETURN VALUES
+1 is returned for invalid commands. 0 is returned in all other cases.
+.SH BUGS
+This approach can only provide a crude approximation of what a real hardware
+clock provides. Use of NTP or another method to keep the time in sync is 
+strongly advised.

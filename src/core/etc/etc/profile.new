@@ -10,6 +10,7 @@ fi
 
 # Setup some environment variables.
 export HOSTNAME=`/bin/hostname`
+export HISTFILE='~/.history'
 export HISTSIZE=1000
 export HISTFILESIZE=1000
 export PAGER='/bin/less'

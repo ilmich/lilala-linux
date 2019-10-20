@@ -24,3 +24,4 @@ config etc/syslog.conf.new
 config etc/shadow.new
 config etc/shells.new
 config etc/services.new
+config etc/inittab.new

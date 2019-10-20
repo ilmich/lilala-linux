@@ -36,7 +36,7 @@ on_boot() {
     #===================
     # initialize system
     echo_color 2 "setting up loopback device..."
-    /bin/ifconfig lo 127.0.0.1
+    /sbin/ifconfig lo 127.0.0.1
     
     echo_color 2 "start syslogd..."
     /sbin/syslogd
@@ -48,8 +48,8 @@ on_boot() {
     fi
 
     echo_color 2 "initializing smdev..."
-    echo /bin/smdev > /proc/sys/kernel/hotplug
-    /bin/smdev -s
+    echo /sbin/mdev > /proc/sys/kernel/hotplug
+    /sbin/mdev -s
 
     # Determine the version of the running kernel:
     RELEASE=$(uname -r)    
@@ -121,8 +121,6 @@ on_boot() {
     echo_color 2 "|_______ \|__||____/(____  /|____/(____  / "
     echo_color 2 "        \/               \/       Linux\/  "
 
-    /bin/respawn -d 2 /sbin/getty /dev/tty1
-
 }
 
 on_shutdown() {
@@ -144,7 +142,7 @@ on_shutdown() {
     fi
 
     echo_color 2 "remounting root filesystem read-only"
-    /bin/mount -o remount.ro /
+    /bin/mount -o remount,ro /
 
     /bin/sync
 }
@@ -164,12 +162,12 @@ init)
 shutdown)
     on_shutdown
     echo_color 2 "poweroff system..."
-    /sbin/halt -p
+    /sbin/halt
     ;;
 reboot)
     on_shutdown
     echo_color 2 "reboot system..."
-    /sbin/halt -r
+    /sbin/reboot
     ;;
 *)
     echo "This is an init script! Don't run as normal program"

@@ -1,0 +1,7 @@
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=root
+
+#network={
+#	ssid="HashBang#!"
+#	psk="yourpassword"
+#}

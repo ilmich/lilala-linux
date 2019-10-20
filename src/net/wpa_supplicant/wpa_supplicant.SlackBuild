@@ -108,6 +108,9 @@ cp $CWD/dot.config .config
 
 make V=1 CC="$SLK_CC $SLK_CFLAGS $SYSROOT" LIBDIR=/usr/lib BINDIR=/usr/sbin/ DESTDIR=$PKG/ install
 
+#install sample config file
+install -D -m=0600 -o root -g root $CWD/wpa_supplicant.conf.new $PKG/etc/wpa_supplicant.conf.new
+
 #strip binaries
 ( cd $PKG
   find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
@@ -120,6 +123,7 @@ mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a README* ChangeLog $PKG/usr/doc/$PRGNAM-$VERSION
 
 mkdir -p $PKG/install
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 #generate slack-required

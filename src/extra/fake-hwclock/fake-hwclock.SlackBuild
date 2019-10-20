@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Slackware build script for ubase
+# Slackware build script for fake-hwclock
 
-# Copyright 2018,2019 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -27,7 +27,7 @@ if [ $UID != "0" ]; then
     exit 1
 fi
 
-PRGNAM=ubase
+PRGNAM=fake-hwclock
 CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
@@ -42,15 +42,9 @@ fi
 . $CWD/$PRGNAM.info
 
 STRIP_CMD=strip
-CC_CMD=gcc
-AR_CMD=ar
-RANLIB_CMD=ranlib
 if [ ! -z "$SLK_TARGET" ]; then
-    TARGET=" --target=$SLK_TARGET "
+    TARGET=" --host=$SLK_TARGET "
     STRIP_CMD=$SLK_TARGET-strip
-    CC_CMD=$SLK_TARGET-gcc
-    AR_CMD=$SLK_TARGET-ar
-    RANLIB_CMD=$SLK_TARGET-ranlib
 fi
 
 if [ ! -z "$SLK_SYSROOT" ]; then
@@ -60,7 +54,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-    x86_64) ;;
+    x86_64) ;; 
     *) ARCH=$( uname -m ) ;;
 esac
 
@@ -78,41 +72,15 @@ fi
 
 set -e
 
-if [ ! -z $DOWNLOAD_URL ]; then
-    SOURCE_TAR=`basename $DOWNLOAD_URL`
-    if [ ! -e ${CWD}/$SOURCE_TAR ]; then
-      wget -c $DOWNLOAD_URL
-    fi
-
-    if [ ! $DOWNLOAD_SHA1 == `sha1sum $SOURCE_TAR | cut -d " " -f 1` ]; then
-	echo "SHA1 did not match"
-	exit 1
-    fi
-else
-    SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
-fi
-
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
-cd $TMP
-rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$SOURCE_TAR
-cd $PRGNAM-$VERSION
-chown -R root:root .
-find -L . \
- \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
-  -o -perm 511 \) -exec chmod 755 {} \; -o \
- \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
-  -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-#apply patches
-for i in `find $CWD/patches/ -name *.diff | sort -`; do
-    patch -p1 < $i
-done
+# install script with correct permission
+install -D -m=0755 -o root -g root $CWD/fake-hwclock $PKG/sbin/fake-hwclock
+install -D -m=0655 -o root -g root $CWD/fake-hwclock.8 $PKG/usr/man/man8/fake-hwclock.8
+install -D -m=0655 -o root -g root $CWD/COPYING $PKG/usr/doc/$PRGNAM-$VERSION/COPYING
 
-make AR=$AR_CMD RANLIB=$RANLIB_CMD CC=$CC_CMD CFLAGS="$SLK_CFLAGS $SYSROOT -s "
-make DESTDIR=$PKG PREFIX=/ MANPREFIX=/usr/share/man install
-
+set -e
 #strip binaries
 ( cd $PKG
   find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
@@ -120,31 +88,6 @@ make DESTDIR=$PKG PREFIX=/ MANPREFIX=/usr/share/man install
   find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
 )
 
-mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a README LICENSE TODO $PKG/usr/doc/$PRGNAM-$VERSION
-
-rm $PKG/bin/{insmod,lsmod,rmmod}
-
-#move some binary to /sbin
-mkdir -p $PKG/sbin
-mv $PKG/bin/{blkdiscard,ctrlaltdel,fsfreeze,getty,halt,hwclock,killall5,mkswap,nologin,pidof,pivot_root,swaplabel,swapoff,swapon,switch_root,sysctl} $PKG/sbin
-
-cat > $PKG/sbin/reboot << EOF
-#!/bin/sh
-exec /bin/kill -s INT 1
-EOF
-
-cat > $PKG/sbin/poweroff << EOF
-#!/bin/sh
-exec /sbin/halt -p
-EOF
-
-cat > $PKG/sbin/shutdown << EOF
-#!/bin/sh
-exec /bin/kill -s USR1 1
-EOF
-
-chmod 0755 $PKG/sbin/{reboot,shutdown,poweroff}
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
@@ -159,6 +102,7 @@ fi
 
 cd $PKG
 mkdir -p $OUTPUT
+
 if [ -z $SLK_ARCH ]; then
     makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
 else

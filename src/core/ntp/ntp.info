@@ -1,6 +1,0 @@
-PRGNAM=ntp
-VERSION=4.2.8p13
-BUILD=1
-DOWNLOAD_URL=http://archive.ntp.org/ntp4/ntp-4.2/ntp-$VERSION.tar.gz
-DOWNLOAD_SHA1=cff200a987d64e891fb349a22313ecb0feaea090
-DEPS="musl"

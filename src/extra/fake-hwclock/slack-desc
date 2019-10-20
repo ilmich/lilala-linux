@@ -1,0 +1,20 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+            |-----handy-ruler------------------------------------------------------|
+fake-hwclock: fake-hwclock - save/restore system clock
+fake-hwclock:
+fake-hwclock: Save/restore system clock on machines without working RTC hardware
+fake-hwclock: Some machines don't have a working realtime clock (RTC) unit, or no
+fake-hwclock: driver for the hardware that does exist. fake-hwclock is a simple set
+fake-hwclock: of scripts to save the kernel's current clock periodically (including
+fake-hwclock: at shutdown) and restore it at boot so that the system clock keeps at
+fake-hwclock: least close to realtime.
+fake-hwclock:
+fake-hwclock:
+fake-hwclock:
+

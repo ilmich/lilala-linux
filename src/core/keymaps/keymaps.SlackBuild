@@ -85,7 +85,7 @@ fi
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf $PRGNAM-$VERSION
+rm -rf $SRCNAM-$VERSION
 tar xvf $CWD/$SOURCE_TAR
 cd $SRCNAM-$VERSION
 chown -R root:root .

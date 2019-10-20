@@ -1,8 +1,8 @@
 NAME=Lilala
-VERSION="2019.06"
+VERSION="2019.10"
 ID=lilala
 VERSION_ID=1
-PRETTY_NAME="Lilala 2019.06"
+PRETTY_NAME="Lilala 2019.10"
 ANSI_COLOR="0;34"
 CPE_NAME="cpe:/o:lilala:lilala-linux:1"
 HOME_URL="https://github.com/ilmich/lilala-linux

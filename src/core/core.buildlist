@@ -1,4 +1,5 @@
 core/aaa_base
+core/busybox
 core/etc
 core/cacerts
 core/svc
@@ -7,19 +8,12 @@ core/keymaps
 core/musl
 core/zlib
 core/openssl
-core/sinit
-core/ubase
-core/sbase
-core/smdev
 core/mksh
 core/kmod
 core/e2fsprogs
-core/gzip
-core/sysklogd
-core/net-tools
-core/sdhcp
 core/curl
 core/dropbear
 core/ncurses
 core/nano
-core/ntp
+
+
