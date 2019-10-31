@@ -113,16 +113,16 @@ LDFLAGS=" $SYSROOT -s" \
 
 make V=1 PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" DESTDIR=$PKG install
 
-mkdir -p $PKG/etc/rc.d/{avail,run}
+#mkdir -p $PKG/etc/rc.d/{avail,run}
 mkdir -p $PKG/etc/dropbear
 
 install -D -m=0600 $CWD/dropbear.conf $PKG/etc/dropbear/dropbear.conf.new
-install -D -m=0755 $CWD/dropbear.rc $PKG/etc/rc.d/avail/dropbear.new
+install -D -m=0755 $CWD/rc.dropbear $PKG/etc/rc.d/rc.dropbear.new
 
-(
-    cd $PKG/etc/rc.d/run
-    ln -s ../avail/dropbear dropbear
-)
+#(
+#    cd $PKG/etc/rc.d/run
+#    ln -s ../avail/dropbear dropbear
+#)
 
 set -e
 #strip binaries

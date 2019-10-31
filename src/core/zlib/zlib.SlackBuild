@@ -100,19 +100,20 @@ patch -p0 < $CWD/configure-mandir.patch
 CFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 CHOST=$SLK_TARGET \
+LDFLAGS="-Wl,-soname,libz.so.1" \
 ./configure \
   --prefix=/ \
-  --libdir=/lib \
+  --libdir=/usr/lib \
   --mandir=/usr/man \
-  --includedir=/usr/include
+  --includedir=/usr/include \
+  --shared
 
 make -j2
 make DESTDIR=$PKG install
 
 #remove static
-rm $PKG/lib/*.a
+rm $PKG/usr/lib/*.a
 mkdir -p $PKG/usr/lib/
-mv $PKG/lib/pkgconfig $PKG/usr/lib/
 
 #strip binaries
 ( cd $PKG

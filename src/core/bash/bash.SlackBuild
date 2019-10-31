@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Slackware build script for gcc_libs
+# Slackware build script for bash
 
-# Copyright 2018 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2019 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -27,11 +27,12 @@ if [ $UID != "0" ]; then
     exit 1
 fi
 
-PRGNAM=gcc_libs
+PRGNAM=bash
 CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-$PWD}
+ARCH=${ARCH:-`uname -m`}
 
 if [ ! -e $CWD/$PRGNAM.info ]; then
     echo "File $PRGNAM.info not found"
@@ -41,78 +42,85 @@ fi
 . $CWD/$PRGNAM.info
 
 STRIP_CMD=strip
-CC_CMD=gcc
-AR_CMD=ar
-RANLIB_CMD=ranlib
 if [ ! -z "$SLK_TARGET" ]; then
-    TARGET=" --target=$SLK_TARGET "
-    ARCH=` echo $SLK_TARGET | cut -d - -f 1 -`
+    TARGET=" --host=$SLK_TARGET "
     STRIP_CMD=$SLK_TARGET-strip
-    CC_CMD=$SLK_TARGET-gcc
-    AR_CMD=$SLK_TARGET-ar
-    RANLIB_CMD=$SLK_TARGET-ranlib
 fi
 
 if [ ! -z "$SLK_SYSROOT" ]; then
     SYSROOT=" --sysroot=$SLK_SYSROOT "
 fi
 
-
-if [ -z "$ARCH" ]; then
-  case "$( uname -m )" in
+case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-       *) ARCH=$( uname -m ) ;;
-  esac
-fi
+    x86_64) ;;
+    *) ARCH=$( uname -m ) ;;
+esac
 
 if [ -z "$SLK_CFLAGS" ]; then
 	if [ "$ARCH" = "i486" ]; then
-	  SLKCFLAGS="-O2 -march=i486 -mtune=i686"
+	  SLK_CFLAGS="-O2 -march=i486 -mtune=i686"
 	elif [ "$ARCH" = "i686" ]; then
-	  SLKCFLAGS="-O2 -march=i686 -mtune=i686"
+	  SLK_CFLAGS="-O2 -march=i686 -mtune=i686"
 	elif [ "$ARCH" = "x86_64" ]; then
-	  SLKCFLAGS="-O2 -fPIC"
+	  SLK_CFLAGS="-O2 -fPIC"
 	else
-	  SLKCFLAGS="-O2"
+	  SLK_CFLAGS="-O2"
 	fi
-else
-	SLKCFLAGS=$SLK_CFLAGS
 fi
 
 set -e
 
-if [ ! -z $DOWNLOAD_URL ]; then
-    SOURCE_TAR=`basename $DOWNLOAD_URL`
-    if [ ! -e ${CWD}/$SOURCE_TAR ]; then
-      wget -c $DOWNLOAD_URL
-    fi
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+if [ ! -e ${CWD}/$SOURCE_TAR ]; then
+  wget -c $DOWNLOAD_URL
+fi
 
-    if [ ! $DOWNLOAD_SHA1 == `sha1sum $SOURCE_TAR | cut -d " " -f 1` ]; then
-	echo "SHA1 did not match"
-	exit 1
-    fi
-else
-    SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
+if [ ! $DOWNLOAD_SHA1 == `sha1sum $SOURCE_TAR | cut -d " " -f 1` ]; then
+    echo "SHA1 did not match"
+    exit 1
 fi
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
-#cd $TMP
-#rm -rf $PRGNAM-$VERSION
-#tar xvf $CWD/$SOURCE_TAR
-#cd $PRGNAM-$VERSION
-#chown -R root:root .
-#find -L . \
-# \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
-#  -o -perm 511 \) -exec chmod 755 {} \; -o \
-# \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
-#  -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+find -L . \
+ \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
+  -o -perm 511 \) -exec chmod 755 {} \; -o \
+ \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
+  -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-#copy libs from toolchains in order to avoid a boring compilation of gcc
-mkdir -p $PKG/lib
-cp -a $SLK_TOOLCHAIN_PATH/$SLK_TARGET/lib/{libgcc_s*.so*,libstdc*.so*} $PKG/lib
+CFLAGS="$SLK_CFLAGS $SYSROOT -s" \
+CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
+./configure \
+  --prefix=/ \
+  --libdir=/lib \
+  --bindir=/bin \
+  --sbindir=/sbin \
+  --sysconfdir=/etc \
+  --localstatedir=/var \
+  --infodir=/usr/share/info \
+  --localedir=/usr/share/locale \
+  --mandir=/usr/man \
+  --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --includedir=/usr/include \
+  --without-bash-malloc \
+  $TARGET
 
+make TERMCAP_LIB=-lncursesw -j2 V=1
+make TERMCAP_LIB=-lncursesw DESTDIR=$PKG install
+
+(
+    cd $PKG/bin
+    ln -sf bash sh
+)
+
+set -e
 #strip binaries
 ( cd $PKG
   find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
@@ -120,8 +128,9 @@ cp -a $SLK_TOOLCHAIN_PATH/$SLK_TARGET/lib/{libgcc_s*.so*,libstdc*.so*} $PKG/lib
   find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
 )
 
-#mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-#cp -a README LICENSE TODO $PKG/usr/doc/$PRGNAM-$VERSION
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a INSTALL AUTHORS NEWS README COPYING  $PKG/usr/doc/$PRGNAM-$VERSION
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
@@ -136,10 +145,11 @@ fi
 
 cd $PKG
 mkdir -p $OUTPUT
+
 if [ -z $SLK_ARCH ]; then
-    /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+    makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
 else
-    /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$SLK_ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+    makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$SLK_ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
 fi
 
 # Clean up the extra stuff:

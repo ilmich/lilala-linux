@@ -47,7 +47,7 @@ on_boot() {
 	/sbin/fake-hwclock load
     fi
 
-    echo_color 2 "initializing smdev..."
+    echo_color 2 "initializing mdev..."
     echo /sbin/mdev > /proc/sys/kernel/hotplug
     /sbin/mdev -s
 
@@ -69,6 +69,7 @@ on_boot() {
     done
 
     if [ -x "/etc/rc.d/rc.modules" ]; then
+	echo_color 2 "loading /etc/rc.d/rc.modules..."
 	/etc/rc.d/rc.modules
     fi
 
@@ -87,22 +88,34 @@ on_boot() {
     echo_color 2 "mounting..."
     /bin/mount -a
 
-    #===================
     # load /etc/rc.d/rc.network
     if [ -x /etc/rc.d/rc.network ]; then
-        echo_color 2 "loading /etc/init.d/rc.network..."
+        echo_color 2 "loading /etc/rc.d/rc.network..."
         /etc/rc.d/rc.network
     fi
 
-    echo_color 2 "start all services..."
-    /sbin/svc -s
+    # load /etc/rc.d/rc.network
+    if [ -x /etc/rc.d/rc.firewall ]; then
+        echo_color 2 "loading /etc/rc.d/rc.firewall..."
+        /etc/rc.d/rc.firewall
+    fi
+    
+    # starting ssh daemon
+    if [ -x /etc/rc.d/rc.dropbear ]; then
+	/etc/rc.d/rc.dropbear start
+    fi
+
+    # starting cron daemon
+    if [ -x /sbin/crond ]; then
+	echo_colore 2 "starting crond..."
+	/sbin/crond
+    fi
 
     if [ -e "/etc/keymap" ]; then
         echo_color 2 "load keyboard..."
         loadkeys `cat /etc/keymap`
     fi
 
-    #===================
     # load /etc/rc.d/rc.local
     if [ -x /etc/rc.d/rc.local ]; then
         echo_color 2 "loading /etc/rc.d/rc.local..."

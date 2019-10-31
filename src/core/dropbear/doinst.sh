@@ -11,5 +11,5 @@ config() {
 }
 
 config etc/dropbear/dropbear.conf.new
-config etc/rc.d/avail/dropbear.new
+config etc/rc.d/rc.dropbear.new
 
