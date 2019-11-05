@@ -102,17 +102,17 @@ function buildpkg() {
 
     cd $TMP/$1
     . ./$PKG_NAME.info
-    
+
     # download source code
     if [ ! -z $DOWNLOAD_URL ]; then
-        DOWNLOAD_FILE=`basename $DOWNLOAD_URL`
-        if [ ! -e $CACHE_DIR/$DOWNLOAD_FILE ]; then
-            wget -c $DOWNLOAD_URL -O $CACHE_DIR/$DOWNLOAD_FILE
+        SOURCE_TAR=${SOURCE_TAR:-`basename $DOWNLOAD_URL`}
+        if [ ! -e $CACHE_DIR/$SOURCE_TAR ]; then
+            wget -c $DOWNLOAD_URL -O $CACHE_DIR/$SOURCE_TAR
         fi
         # linking source tar
-        ln -s $CACHE_DIR/$DOWNLOAD_FILE .
+        ln -s $CACHE_DIR/$SOURCE_TAR .
     fi
-    
+
     ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
     if [ -z $SLK_ARCH ]; then
         SLK_ARCH=$ARCH

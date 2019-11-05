@@ -46,11 +46,7 @@ on_boot() {
 	echo_color 2 "loading hardware clock..."
 	/sbin/fake-hwclock load
     fi
-
-    echo_color 2 "initializing mdev..."
-    echo /sbin/mdev > /proc/sys/kernel/hotplug
-    /sbin/mdev -s
-
+    
     # Determine the version of the running kernel:
     RELEASE=$(uname -r)    
     # Update kernel module dependencies:
@@ -62,12 +58,19 @@ on_boot() {
 	/sbin/depmod --all
     fi
 
-    echo_color 2 "loading modules..."
-    MODULE=`find /sys -name modalias | xargs cat | sort -u`
-    for i in $MODULE; do
-	/sbin/modprobe $i >/dev/null 2>/dev/null
-    done
+    if [ -x "/etc/rc.d/rc.udev" ]; then
+	/etc/rc.d/rc.udev start
+    else
+	echo_color 2 "initializing mdev..."
+	echo /sbin/mdev > /proc/sys/kernel/hotplug
+	/sbin/mdev -s
 
+	echo_color 2 "loading modules..."
+	MODULE=`find /sys -name modalias | xargs cat | sort -u`
+	for i in $MODULE; do
+		/sbin/modprobe $i >/dev/null 2>/dev/null
+	done
+    fi
     if [ -x "/etc/rc.d/rc.modules" ]; then
 	echo_color 2 "loading /etc/rc.d/rc.modules..."
 	/etc/rc.d/rc.modules
@@ -107,7 +110,7 @@ on_boot() {
 
     # starting cron daemon
     if [ -x /sbin/crond ]; then
-	echo_colore 2 "starting crond..."
+	echo_color 2 "starting crond..."
 	/sbin/crond
     fi
 
