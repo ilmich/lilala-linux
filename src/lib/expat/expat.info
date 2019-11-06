@@ -1,0 +1,7 @@
+PRGNAM=expat
+VERSION=2.2.7
+BUILD=1
+DOWNLOAD_URL=https://github.com/libexpat/libexpat/releases/download/R_2_2_7/$PRGNAM-$VERSION.tar.gz
+DOWNLOAD_SHA1=c5054844247a5023268facfe8a7becf48e7e505c
+DEPS="musl"
+
