@@ -3,6 +3,6 @@ VERSION=2.0.10
 BUILD=1
 DOWNLOAD_URL=https://www.libsdl.org/release/SDL2-$VERSION.tar.gz
 DOWNLOAD_SHA1=fb31312ea1d4b45db839796ae2336dfe3d5884e5
-DEPS="musl alsa-lib mesa"
+DEPS="musl alsa-lib mesa eudev"
 
 
