@@ -106,11 +106,16 @@ function buildpkg() {
     # download source code
     if [ ! -z $DOWNLOAD_URL ]; then
         SOURCE_TAR=${SOURCE_TAR:-`basename $DOWNLOAD_URL`}
-        if [ ! -e $CACHE_DIR/$SOURCE_TAR ]; then
+
+        if [ ! -e ${CACHE_DIR}/$SOURCE_TAR ]; then
             wget -c $DOWNLOAD_URL -O $CACHE_DIR/$SOURCE_TAR
         fi
+
         # linking source tar
         ln -s $CACHE_DIR/$SOURCE_TAR .
+
+        # unset SOURCE_TAR
+        SOURCE_TAR=
     fi
 
     ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`

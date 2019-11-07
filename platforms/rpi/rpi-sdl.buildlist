@@ -1,0 +1,5 @@
++rpi
+core/eudev
++mesa
+lib/alsa-lib
+lib/SDL2
