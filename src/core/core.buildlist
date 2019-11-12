@@ -17,3 +17,5 @@ core/ncurses
 core/dialog
 core/nano
 core/bash
+core/libcap
+core/vsftpd

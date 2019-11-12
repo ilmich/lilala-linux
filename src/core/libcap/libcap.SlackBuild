@@ -1,9 +1,9 @@
 #!/bin/sh
 
-# Slackware build script for etc
+# Slackware build script for libcap
 
-# Copyright 2017,2018 Michele Zuccalà < ardutu at gmail dot com >
-# All rights reserved.
+# Copyright 2019 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -27,12 +27,12 @@ if [ $UID != "0" ]; then
     exit 1
 fi
 
-
-PRGNAM=etc
+PRGNAM=libcap
 CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-$PWD}
+ARCH=${ARCH:-`uname -m`}
 
 if [ ! -e $CWD/$PRGNAM.info ]; then
     echo "File $PRGNAM.info not found"
@@ -43,8 +43,7 @@ fi
 
 STRIP_CMD=strip
 if [ ! -z "$SLK_TARGET" ]; then
-    TARGET=$SLK_TARGET-
-    ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
+    TARGET=" --host=$SLK_TARGET "
     STRIP_CMD=$SLK_TARGET-strip
 fi
 
@@ -52,39 +51,72 @@ if [ ! -z "$SLK_SYSROOT" ]; then
     SYSROOT=" --sysroot=$SLK_SYSROOT "
 fi
 
-# Automatically determine the architecture we're building on:
-if [ -z "$ARCH" ]; then
-  case "$( uname -m )" in
+case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
-       *) ARCH=$( uname -m ) ;;
-  esac
+    x86_64) ;;
+    *) ARCH=$( uname -m ) ;;
+esac
+
+if [ -z "$SLK_CFLAGS" ]; then
+	if [ "$ARCH" = "i486" ]; then
+	  SLK_CFLAGS="-O2 -march=i486 -mtune=i686"
+	elif [ "$ARCH" = "i686" ]; then
+	  SLK_CFLAGS="-O2 -march=i686 -mtune=i686"
+	elif [ "$ARCH" = "x86_64" ]; then
+	  SLK_CFLAGS="-O2 -fPIC"
+	else
+	  SLK_CFLAGS="-O2"
+	fi
 fi
 
-CWD=$(pwd)
-TMP=${TMP:-/tmp}
-PKG=$TMP/package-$PRGNAM
-OUTPUT=${OUTPUT:-/tmp}
+set -e
 
-set -e # Exit on most errors
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+if [ ! -e ${CWD}/$SOURCE_TAR ]; then
+  wget -c $DOWNLOAD_URL
+fi
+
+if [ ! $DOWNLOAD_SHA1 == `sha1sum $SOURCE_TAR | cut -d " " -f 1` ]; then
+    echo "SHA1 did not match"
+    exit 1
+fi
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+find -L . \
+ \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
+  -o -perm 511 \) -exec chmod 755 {} \; -o \
+ \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
+  -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-# install files
-for i in `find etc -type f`; do
-    install -D -m=0644 $i $PKG/$i
+#apply patches
+for i in `find $CWD/patches/ -name *.patch | sort -`; do
+    patch -p1 < $i
 done
 
-# change permission for special files
-chmod 0644 $PKG/etc/passwd.new
-chmod 0700 $PKG/etc/rc.d/rc.init.new
-chmod 0700 $PKG/etc/rc.d/rc.network.new
-chmod 0660 $PKG/etc/shadow.new
+make CC=$SLK_TARGET-gcc CFLAGS="$SYSROOT $SLK_CFLAGS" lib=lib prefix=/usr DESTDIR=$PKG
+make lib=lib prefix=/usr RAISE_SETFCAP=no DESTDIR=$PKG install
+rm $PKG/usr/lib/*.a
 
-# Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
+set -e
+#strip binaries
+( cd $PKG
+  find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
+  find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
+  find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
+)
+
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a License README*  $PKG/usr/doc/$PRGNAM-$VERSION
+
 mkdir -p $PKG/install
-cat $CWD/doinst.sh > $PKG/install/doinst.sh
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 #generate slack-required
@@ -95,12 +127,9 @@ if [ ! -z "$DEPS" ]; then
     done
 fi
 
-# Make the package; be sure to leave it in $OUTPUT
-# If package symlinks need to be created during install *before*
-# your custom contents of doinst.sh runs, then add the -p switch to
-# the makepkg command below -- see makepkg(8) for details
 cd $PKG
 mkdir -p $OUTPUT
+
 if [ -z $SLK_ARCH ]; then
     makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
 else

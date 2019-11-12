@@ -17,3 +17,6 @@ cdrom:x:15:
 mail:x:16:
 input:x:17:
 kvm:x:18:
+ftp:x:19:
+nogroup:x:99:
+nobody:x:98:nobody

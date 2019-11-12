@@ -1,0 +1,34 @@
+diff -rupN libcap-2.27-orig/libcap/Makefile libcap-2.27/libcap/Makefile
+--- libcap-2.27-orig/libcap/Makefile	2019-11-11 08:02:22.020995872 +0100
++++ libcap-2.27/libcap/Makefile	2019-11-11 08:04:29.526995386 +0100
+@@ -1,4 +1,4 @@
+-#
++#2
+ # defines
+ #
+ topdir=$(shell pwd)/..
+@@ -9,7 +9,7 @@ include ../Make.Rules
+ LIBNAME=$(LIBTITLE).so
+ STALIBNAME=$(LIBTITLE).a
+ #
+-
++HOST_CC?=gcc
+ FILES=cap_alloc cap_proc cap_extint cap_flag cap_text cap_file
+ 
+ INCLS=libcap.h cap_names.h $(INCS)
+@@ -35,13 +35,13 @@ libcap.pc: libcap.pc.in
+ 		$< >$@
+ 
+ _makenames: _makenames.c cap_names.list.h
+-	$(BUILD_CC) $(BUILD_CFLAGS) $< -o $@
++	$(HOST_CC) $< -o $@
+ 
+ cap_names.h: _makenames
+ 	./_makenames > cap_names.h
+ 
+ $(GPERF_OUTPUT): cap_names.list.h
+-	perl -e 'print "struct __cap_token_s { const char *name; int index; };\n%{\nconst struct __cap_token_s *__cap_lookup_name(const char *, size_t);\n%}\n%%\n"; while ($$l = <>) { $$l =~ s/[\{\"]//g; $$l =~ s/\}.*// ; print $$l; }' < $< | gperf --ignore-case --language=ANSI-C --readonly --null-strings --global-table --hash-function-name=__cap_hash_name --lookup-function-name="__cap_lookup_name" -c -t -m20 $(INDENT) > $@
++	perl -e 'print "struct __cap_token_s { const char *name; int index; };\n%{\nconst struct __cap_token_s *__cap_lookup_name(register const char *, register unsigned int);\n%}\n%%\n"; while ($$l = <>) { $$l =~ s/[\{\"]//g; $$l =~ s/\}.*// ; print $$l; }' < $< | gperf --includes --ignore-case --language=ANSI-C --readonly --null-strings --global-table --hash-function-name=__cap_hash_name --lookup-function-name="__cap_lookup_name" -c -t -m20 -I $(INDENT) > $@
+ 
+ cap_names.list.h: Makefile $(KERNEL_HEADERS)/linux/capability.h
+ 	@echo "=> making $@ from $(KERNEL_HEADERS)/linux/capability.h"

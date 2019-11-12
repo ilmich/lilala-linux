@@ -113,6 +113,12 @@ on_boot() {
 	echo_color 2 "starting crond..."
 	/sbin/crond
     fi
+    
+    # starting vsftpd
+    if [ -x /etc/rc.d/rc.vsftpd ]; then
+	echo_color 2 "starting vsftpd..."
+	/etc/rc.d/rc.vsftpd start
+    fi
 
     if [ -e "/etc/keymap" ]; then
         echo_color 2 "load keyboard..."
@@ -147,9 +153,6 @@ on_shutdown() {
         echo_color 2 "loading /etc/rc.d/rc.local_shutdown..."
         /etc/rc.d/rc.local_shutdown
     fi
-
-    echo_color 2 "stopping services..."
-    /sbin/svc -k
 
     #save fake clock if present    
     if [ -x /sbin/fake-hwclock ]; then

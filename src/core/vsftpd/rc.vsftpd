@@ -1,0 +1,16 @@
+#!/bin/sh
+PID=$(pidof -o %PPID vsftpd 2> /dev/null)
+
+case $1 in
+	start)
+		[ -z "$PID" ] && /usr/sbin/vsftpd &
+		;;
+	stop)
+		[ -n "$PID" ] && kill -13 $PID &>/dev/null;
+		;;
+	*)
+		echo "usage: $0 start|stop"
+		exit 1
+esac
+
+

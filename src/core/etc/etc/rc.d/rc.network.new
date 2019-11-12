@@ -2,4 +2,12 @@
 
 # put commands that setup your network
 
-# ifconfig eth0 192.168.0.1
+# example for static ip address
+# /sbin/ifconfig eth0 192.168.0.1
+# /sbin/route add default gw 192.168.1.254
+# echo "nameserver 192.168.1.254" > /etc/resolv.conf
+
+# example for dhcp
+/sbin/ifconfig eth0 up
+/sbin/udhcpc eth0
+

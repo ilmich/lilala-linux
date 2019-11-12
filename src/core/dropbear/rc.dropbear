@@ -20,7 +20,7 @@ if [ -e /etc/dropbear/dropbear.conf ]; then
     [[ $DROPBEAR_ROOT_PASSWD_LOGIN == "false" ]] || [[ $DROPBEAR_ROOT_PASSWD_LOGIN == "FALSE" ]] && OPTIONS="$OPTIONS -g"
 fi
 
-PID=$(pidof -o %PPID /usr/sbin/dropbear 2> /dev/null)
+PID=$(pidof -o %PPID dropbear 2> /dev/null)
 
 case $1 in
 	start)
