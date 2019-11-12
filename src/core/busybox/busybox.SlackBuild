@@ -112,7 +112,7 @@ mkdir -p $PKG/var/spool/cron/crontabs
 chmod -R 0750 $PKG/var/spool/cron/crontabs
 install -D -m 0600 $CWD/crontabs.default $PKG/var/spool/cron/crontabs/root
 install -D -m 0644 $CWD/ntpd.conf.new $PKG/etc/ntpd.conf.new
-install -D -m 0700 examples/udhcp/sample.bound $PKG/usr/share/udhcpc/default.script
+install -D -m 0700 examples/udhcp/simple.script $PKG/usr/share/udhcpc/default.script
 
 #strip binaries
 ( cd $PKG
