@@ -122,6 +122,9 @@ CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 make -j2 V=1
 make DESTDIR=$PKG install
 
+# remove .la files
+find $PKG -name *.la -exec rm {} \;
+
 set -e
 #strip binaries
 ( cd $PKG

@@ -119,6 +119,9 @@ done
 
 make DESTDIR=$PKG install
 
+#remove .la files
+find $PKG -name *.la -exec rm {} \;
+
 #strip binaries
 ( cd $PKG
   find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
