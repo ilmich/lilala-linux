@@ -1,0 +1,21 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+         |-----handy-ruler------------------------------------------------------|
+libid3tag: libid3tag - library for ID3 tags
+libid3tag:
+libid3tag: libid3tag is a library for reading and (eventually) writing ID3 
+libid3tag: tags, both ID3v1 and the various versions of ID3v2.
+libid3tag:
+libid3tag: 
+libid3tag: 
+libid3tag: 
+libid3tag:
+libid3tag:
+libid3tag:
+
+  

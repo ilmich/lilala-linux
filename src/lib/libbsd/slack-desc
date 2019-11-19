@@ -1,0 +1,20 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+      |-----handy-ruler------------------------------------------------------|
+libbsd: libbsd - BSD compatibility layer
+libbsd:
+libbsd: This library provides useful functions commonly found on BSD 
+libbsd: systems, and lacking on others like GNU systems, thus making it 
+libbsd: easier to port projects with strong BSD origins, without needing 
+libbsd: to embed the same code over and over again on each project.
+libbsd:
+libbsd:
+libbsd:
+libbsd:
+libbsd:
+

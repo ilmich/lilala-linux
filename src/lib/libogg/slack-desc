@@ -1,0 +1,20 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+      |-----handy-ruler------------------------------------------------------|
+libogg: libogg - library for ogg container format
+libogg:
+libogg: Ogg is a multimedia container format, and the native file and 
+libogg: stream format for the Xiph.org multimedia codecs. As with all 
+libogg: Xiph.org technology is it an open format free for anyone to use. 
+libogg:
+libogg:
+libogg:
+libogg:
+libogg:
+libogg:
+

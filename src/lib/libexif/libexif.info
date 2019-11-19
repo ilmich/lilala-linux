@@ -1,0 +1,7 @@
+PRGNAM=libexif
+VERSION=0.6.21
+BUILD=1
+DOWNLOAD_URL=https://sourceforge.net/projects/libexif/files/libexif/$VERSION/libexif-$VERSION.tar.gz
+DOWNLOAD_SHA1=4106f02eb5f075da4594769b04c87f59e9f3b931
+DEPS="musl"
+

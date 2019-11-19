@@ -1,0 +1,7 @@
+PRGNAM=minidlna
+VERSION=1.2.1
+SOURCE_TAR=
+BUILD=1
+DOWNLOAD_URL=https://sourceforge.net/projects/minidlna/files/minidlna/$VERSION/minidlna-$VERSION.tar.gz
+DOWNLOAD_SHA1=79d0032c7055aefd4c8e5178bc86fbf258d449d2
+DEPS="musl libexif libjpeg-turbo ffmpeg sqlite3 libid3tag libogg libvorbis flac libbsd"

@@ -1,0 +1,11 @@
+lib/libexif
+lib/libjpeg-turbo
+extra/ffmpeg
+lib/sqlite3
+lib/libid3tag
+lib/libogg
+lib/libvorbis
+lib/flac
+lib/libbsd
+extra/minidlna
+

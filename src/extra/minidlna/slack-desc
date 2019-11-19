@@ -1,0 +1,25 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+        |-----handy-ruler------------------------------------------------------|
+minidlna: minidlna - DLNA/UPnp-AV mini server
+minidlna:
+minidlna: ReadyMedia (formerly known as MiniDLNA) is a simple media server 
+minidlna: software, with the aim of being fully compliant with DLNA/UPnP-AV 
+minidlna: clients
+minidlna:
+minidlna:
+minidlna:
+minidlna:
+minidlna:
+minidlna:
+
+
+
+
+
+

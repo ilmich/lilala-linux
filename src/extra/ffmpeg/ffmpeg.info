@@ -1,0 +1,7 @@
+PRGNAM=ffmpeg
+VERSION=4.2.1
+SOURCE_TAR=
+BUILD=1
+DOWNLOAD_URL=https://ffmpeg.org/releases/ffmpeg-$VERSION.tar.bz2
+DOWNLOAD_SHA1=ab56e8b8fcaced4a85cebf425bfadfb4ceb71e27
+DEPS="musl"
