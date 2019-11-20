@@ -99,7 +99,7 @@ find -L . \
 # Fix Makefile to install correctly on x86_64.
 sed -i "s%(PREFIX)/lib%(PREFIX)/lib%g" GNUmakefile
 
-make -j2 dynamic CXX="$SLK_TARGET-gcc" CFLAGS="$SLK_CFLAGS $SYSROOT " CXXFLAGS="-DNDEBUG $SLK_CFLAGS $SYSROOT"
+make -j2 dynamic CXX="$SLK_TARGET-gcc" CFLAGS="$SLK_CFLAGS -fPIC $SYSROOT " CXXFLAGS="-DNDEBUG $SLK_CFLAGS -fPIC $SYSROOT"
 make install PREFIX=$PKG/usr
 
 set -e

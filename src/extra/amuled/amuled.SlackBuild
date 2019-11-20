@@ -121,6 +121,8 @@ LDFLAGS="$SYSROOT" \
   --enable-webserver \
   --disable-nls \
   --with-crypto-prefix=$SLK_SYSROOT/usr/ \
+  --with-libpng-prefix=$SLK_SYSROOT/usr/ \
+  --with-wx-prefix=$SLK_SYSROOT/usr/ \
   $TARGET
 
 make V=1
