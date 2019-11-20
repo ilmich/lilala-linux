@@ -6,7 +6,7 @@ case $1 in
 		[ -z "$PID" ] && /usr/sbin/minidlnad &
 		;;
 	stop)
-		[ -n "$PID" ] && kill -13 $PID &>/dev/null;
+		[ -n "$PID" ] && kill -9 $PID &>/dev/null;
 		;;
 	*)
 		echo "usage: $0 start|stop"
