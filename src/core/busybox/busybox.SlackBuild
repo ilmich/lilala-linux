@@ -97,6 +97,9 @@ find -L . \
 
 cp $CWD/dot.config .config
 
+#build bbsuid
+$SLK_TARGET-gcc $SLK_CFLAGS $SYSROOT $CWD/bbsuid.c -o bbsuid
+
 # Compile the application and install it into the $PKG directory
 make -j2 V=1 CONFIG_EXTRA_CFLAGS="\"$SLK_CFLAGS -s $SYSROOT\"" CROSS_COMPILE=$SLK_TARGET-
 make install V=1 CONFIG_EXTRA_CFLAGS="\"$SLK_CFLAGS -s $SYSROOT \"" CROSS_COMPILE=$SLK_TARGET- CONFIG_PREFIX=$PKG
@@ -113,6 +116,21 @@ chmod -R 0750 $PKG/var/spool/cron/crontabs
 install -D -m 0600 $CWD/crontabs.default $PKG/var/spool/cron/crontabs/root
 install -D -m 0644 $CWD/ntpd.conf.new $PKG/etc/ntpd.conf.new
 install -D -m 0700 examples/udhcp/simple.script $PKG/usr/share/udhcpc/default.script
+install -D -m 4111 bbsuid $PKG/bin/bbsuid
+
+#replace symlinks for suid busybox
+(
+    cd $PKG/bin
+    rm {su,mount,umount,passwd,crontab,traceroute,traceroute6,vlock}
+    ln -s bbsuid su
+    ln -s bbsuid mount
+    ln -s bbsuid umount
+    ln -s bbsuid passwd
+    ln -s bbsuid crontab
+    ln -s bbsuid traceroute
+    ln -s bbsuid traceroute6
+    ln -s bbsuid vlock
+)
 
 #strip binaries
 ( cd $PKG
