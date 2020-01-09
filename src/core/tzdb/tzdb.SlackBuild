@@ -95,10 +95,15 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
+#make zic compiler for host machine
+make version.h
+mkdir host-tools
+gcc zic.c -o host-tools/zic
+
 #fix garbage in build system
 sed -i 's/$(ZIC_INSTALL) -l/#$(ZIC_INSTALL) -l/g' Makefile
 
-make zic=zic CC=$SLK_TARGET-gcc TOPDIR=$PKG LOCALTIME=GMT TZDIR=$PKG/usr/share/zoneinfo install
+make zic='host-tools/zic' CC=$SLK_TARGET-gcc TOPDIR=$PKG LOCALTIME=GMT TZDIR=$PKG/usr/share/zoneinfo install
 
 #move tzselect inside /usr/sbin/
 mkdir -p $PKG/usr/sbin/
