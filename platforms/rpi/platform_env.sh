@@ -3,3 +3,4 @@ SLK_TARGET=arm-linux-musleabihf
 SLK_ARCH=armv6j
 SLK_CFLAGS="-O2 -march=$SLK_ARCH -mtune=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard"
 SLK_STRIP_PKG="yes"
+SLK_PLATFORM=rpi
