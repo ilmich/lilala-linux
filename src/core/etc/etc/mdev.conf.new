@@ -1,1 +1,5 @@
 $MODALIAS=.* 0:0 660 @modprobe "$MODALIAS"
+
+null 0:0 777
+zero 0:0 666
+urandom 0:0 444
