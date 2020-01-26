@@ -1,7 +1,6 @@
 PRGNAM=libnftnl
-VERSION=1.1.4
+VERSION=1.1.5
 BUILD=1
 DOWNLOAD_URL=http://www.netfilter.org/projects/libnftnl/files/libnftnl-$VERSION.tar.bz2
-DOWNLOAD_SHA1=4f42144d05df7797afdb4c4de5d2d5fbb44b3534
+DOWNLOAD_SHA1=a923bae5b028a30c5c8aa4c0f71445885867274b
 DEPS="musl libmnl"
-
