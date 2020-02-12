@@ -32,12 +32,12 @@ on_boot() {
 
     echo_color 2 "remounting root read/write..."
     /bin/mount -o remount,rw /
-    
+
     #===================
     # initialize system
     echo_color 2 "setting up loopback device..."
     /sbin/ifconfig lo 127.0.0.1
-    
+
     echo_color 2 "start syslogd..."
     /sbin/syslogd
 
@@ -46,9 +46,9 @@ on_boot() {
 	echo_color 2 "loading hardware clock..."
 	/sbin/fake-hwclock load
     fi
-    
+
     # Determine the version of the running kernel:
-    RELEASE=$(uname -r)    
+    RELEASE=$(uname -r)
     # Update kernel module dependencies:
     if [ -e "/lib/modules/$RELEASE/modules.dep" ]; then 
 	echo_color 2 "Updating module dependency list for $RELEASE:  /sbin/depmod --quick"
@@ -91,6 +91,12 @@ on_boot() {
     echo_color 2 "mounting..."
     /bin/mount -a
 
+    # load kernel parameters
+    if [ -f /etc/sysctl.conf ]; then
+	echo_color 2 "configure kernel parameters from /etc/sysctl.conf"
+	/sbin/sysctl -p /etc/sysctl.conf
+    fi
+
     # load /etc/rc.d/rc.network
     if [ -x /etc/rc.d/rc.network ]; then
         echo_color 2 "loading /etc/rc.d/rc.network..."
@@ -102,7 +108,7 @@ on_boot() {
         echo_color 2 "loading /etc/rc.d/rc.firewall..."
         /etc/rc.d/rc.firewall
     fi
-    
+
     # starting ssh daemon
     if [ -x /etc/rc.d/rc.dropbear ]; then
 	/etc/rc.d/rc.dropbear start
@@ -113,7 +119,7 @@ on_boot() {
 	echo_color 2 "starting crond..."
 	/sbin/crond
     fi
-    
+
     # starting vsftpd
     if [ -x /etc/rc.d/rc.vsftpd ]; then
 	echo_color 2 "starting vsftpd..."

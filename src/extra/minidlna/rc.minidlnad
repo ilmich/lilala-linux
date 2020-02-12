@@ -3,7 +3,7 @@ PID=$(pidof -o %PPID minidlnad 2> /dev/null)
 
 case $1 in
 	start)
-		[ -z "$PID" ] && /usr/sbin/minidlnad &
+		[ -z "$PID" ] && /usr/sbin/minidlnad -r &
 		;;
 	stop)
 		[ -n "$PID" ] && kill -9 $PID &>/dev/null;
