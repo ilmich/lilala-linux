@@ -1,4 +1,4 @@
-core/raspberry-firmware
+kernel/kernel-rpi
 extra/fake-hwclock
 +core
 +wifi

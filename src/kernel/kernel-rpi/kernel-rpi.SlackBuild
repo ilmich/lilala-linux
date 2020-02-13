@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Slackware build script for raspberry-firmware
+# Slackware build script for kernel-rpi
 
 # Copyright 2018 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
@@ -27,7 +27,7 @@ if [ $UID != "0" ]; then
     exit 1
 fi
 
-PRGNAM=raspberry-firmware
+PRGNAM=kernel-rpi
 CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
@@ -96,22 +96,35 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-# pack blobs
-cp -r boot $PKG/
-mkdir -p $PKG/lib
-cp -r modules $PKG/lib
 
-#cleanup 64bit version
-rm $PKG/boot/kernel8.img
-rm -r $PKG/lib/modules/$VERSION-v8+
+SLK_PLATFORM=${SLK_PLATFORM:-rpi}
+
+case $SLK_PLATFORM in
+    rpi) KVER="" ; KMODVER="+" ; DTB="bcm2708*.dtb" ; BLOB="bootcode.bin start.elf fixup.dat";;
+    rpi2) KVER="7" ; KMODVER="-v7+" ; DTB="bcm27*rpi-2*.dtb" ; BLOB="bootcode.bin start.elf fixup.dat";;
+    rpi3) KVER="7" ; KMODVER="-v7+" ; DTB="bcm2710*3*.dtb" ; BLOB="bootcode.bin start.elf fixup.dat";;
+    rpi4) KVER="7l" ; KMODVER="-v7l+" ; DTB="bcm2711*.dtb" ; BLOB="start4.elf fixup4.dat";;
+    *) KVER="" ; KMODVER="+" ;;
+esac
+
+# pack blobs
+mkdir -p $PKG/boot
+(
+	cd boot
+	cp -r overlays $PKG/boot
+	cp {COPYING.linux,LICENCE.broadcom} $PKG/boot
+	cp $DTB $PKG/boot
+	cp kernel$KVER.img $PKG/boot
+	cp $BLOB $PKG/boot
+)
+
+mkdir -p $PKG/lib/modules
+cp -r modules/$VERSION$KMODVER $PKG/lib/modules
 
 # compress modules
 echo compressing modules
 find $PKG/lib -name *.ko -exec gzip -v {} \;
-/sbin/depmod -b $PKG $VERSION+
-/sbin/depmod -b $PKG $VERSION-v7+
-/sbin/depmod -b $PKG $VERSION-v7l+
-#depmod -b $PKG $VERSION-v8+
+/sbin/depmod -b $PKG $VERSION$KMODVER
 
 #install configs
 cp $CWD/config.txt $PKG/boot

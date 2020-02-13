@@ -1,6 +1,6 @@
-PRGNAM=raspberry-firmware
+PRGNAM=kernel-rpi
 VERSION=4.19.97
-BUILD=2
+BUILD=1
 DOWNLOAD_URL=https://github.com/raspberrypi/firmware/archive/1.20200210.tar.gz
 DOWNLOAD_SHA1=22bcb843e7af60a7e42251967ca1e470c7d8268d
 DEPS=
