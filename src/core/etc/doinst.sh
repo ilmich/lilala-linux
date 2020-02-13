@@ -25,3 +25,4 @@ config etc/shadow.new
 config etc/shells.new
 config etc/services.new
 config etc/inittab.new
+config etc/mime.types.new
