@@ -26,12 +26,18 @@ function findbuildlist() {
 		BUILDLIST=`ls -1 platforms/$PLATFORM_NAME/*.buildlist | grep $1.buildlist`
 	else
 		# scan source tree buildlist
-		COUNT=`ls -1 src/*/*.buildlist | grep $1.buildlist | wc -l `
+		COUNT=`ls -1 src/*.buildlist | grep $1.buildlist | wc -l `
 		if [ $(($COUNT)) -eq 1 ]; then
-			BUILDLIST=`ls -1 src/*/*.buildlist | grep $1.buildlist`
+			BUILDLIST=`ls -1 src/*.buildlist | grep $1.buildlist`
 		else
-		    return 1
-		fi
+		    # scan source tree buildlist
+		    COUNT=`ls -1 src/*/*.buildlist | grep $1.buildlist | wc -l `
+		    if [ $(($COUNT)) -eq 1 ]; then
+			BUILDLIST=`ls -1 src/*/*.buildlist | grep $1.buildlist`
+		    else
+			return 1
+		    fi
+		fi		
 	fi
 	
 	#parsing buildlist line by line
