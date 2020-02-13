@@ -1,6 +1,7 @@
 core/aaa_base
 core/busybox
 core/etc
+core/pkgtool
 core/cacerts
 core/tzdb
 core/keymaps
