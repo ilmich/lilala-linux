@@ -9,7 +9,7 @@
 raspberry-firmware: raspberry-firmware 
 raspberry-firmware:
 raspberry-firmware: This is the official raspberry bootloader and precompiled kernels
-raspberry-firmware: for raspberry armv6 and armv7+
+raspberry-firmware: for raspberry armv6,armv7+ and armv7l+
 raspberry-firmware:
 raspberry-firmware:
 raspberry-firmware:

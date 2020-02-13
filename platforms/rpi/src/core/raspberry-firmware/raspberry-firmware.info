@@ -1,7 +1,6 @@
 PRGNAM=raspberry-firmware
-VERSION=4.19.75
+VERSION=4.19.97
 BUILD=2
-DOWNLOAD_URL=https://github.com/raspberrypi/firmware/archive/1.20190925.tar.gz
-DOWNLOAD_SHA1=12fa8198efd5d27596d184a27f71fbbe9cd3fc9f
+DOWNLOAD_URL=https://github.com/raspberrypi/firmware/archive/1.20200210.tar.gz
+DOWNLOAD_SHA1=22bcb843e7af60a7e42251967ca1e470c7d8268d
 DEPS=
-

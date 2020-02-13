@@ -101,13 +101,17 @@ cp -r boot $PKG/
 mkdir -p $PKG/lib
 cp -r modules $PKG/lib
 
+#cleanup 64bit version
+rm $PKG/boot/kernel8.img
+rm -r $PKG/lib/modules/$VERSION-v8+
+
 # compress modules
 echo compressing modules
 find $PKG/lib -name *.ko -exec gzip -v {} \;
-depmod -b $PKG $VERSION+
-depmod -b $PKG $VERSION-v7+
-depmod -b $PKG $VERSION-v7l+
-depmod -b $PKG $VERSION-v8+
+/sbin/depmod -b $PKG $VERSION+
+/sbin/depmod -b $PKG $VERSION-v7+
+/sbin/depmod -b $PKG $VERSION-v7l+
+#depmod -b $PKG $VERSION-v8+
 
 #install configs
 cp $CWD/config.txt $PKG/boot
