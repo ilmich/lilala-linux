@@ -2,4 +2,3 @@ net/libnl
 net/iw
 net/wireless-tools
 net/wpa_supplicant
-net/hostapd

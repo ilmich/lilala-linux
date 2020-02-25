@@ -1,7 +1,8 @@
 PRGNAM=e2fsprogs
-VERSION=1.45.4
+VERSION=1.45.5
 BUILD=1
 DOWNLOAD_URL=http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-$VERSION.tar.gz
-DOWNLOAD_SHA1=8a1a71724f425331256953bf5ba4d5da89361c76
+DOWNLOAD_SHA1=7c63cfe34319aa90de6f6cf76e17f40248f68802
 DEPS="musl"
+
 
