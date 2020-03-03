@@ -501,7 +501,7 @@ for package in $* ; do
     rm -f $TMP/tmplist${MCOOKIE} $TMP/tmpsize${MCOOKIE}
     continue
   fi
-  UNCOMPRESSED="$(cat $TMP/tmpsize${MCOOKIE} | tail -n 1 | cut -f 1 -d ' ' | numfmt --to=iec)"
+  UNCOMPRESSED="$(cat $TMP/tmpsize${MCOOKIE} | tail -n 1 | cut -f 1 -d ' ')"
   rm -f $TMP/tmpsize${MCOOKIE}
 
   # If we still don't have a package description, look inside the package.
@@ -550,7 +550,7 @@ for package in $* ; do
 \n
 \n
 EOF
-  paste -d "" $TMP/tmpmsg${MCOOKIE} $TMP/controlns${MCOOKIE} > $TMP/pasted${MCOOKIE}
+  paste -d " " $TMP/tmpmsg${MCOOKIE} $TMP/controlns${MCOOKIE} > $TMP/pasted${MCOOKIE}
   rm -f $TMP/controlns${MCOOKIE}
   mv $TMP/pasted${MCOOKIE} $TMP/tmpmsg${MCOOKIE}
   # Emit information to the console:
