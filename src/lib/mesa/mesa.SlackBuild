@@ -120,10 +120,10 @@ EOF
 		-Dplatforms=drm \
 		-Dgles1=false -Dgles2=true \
 		-Dlibunwind=false  \
-		-Dgallium-drivers=v3d,kmsro,vc4 \
+		-Dgallium-drivers=v3d,kmsro,vc4,lima,panfrost \
 		-Dvulkan-drivers= \
 		-Dllvm=false \
-		-Dasm=false \
+		-Dasm=true \
 		-Dprefix=/usr \
 		-Dc_args="$SLK_CFLAGS $SYSROOT -s" \
 		-Dcpp_args="$SLK_CFLAGS $SYSROOT -s"

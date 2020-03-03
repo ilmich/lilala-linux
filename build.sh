@@ -187,7 +187,10 @@ function buildrootfs() {
     for i in `find $OUTPUT_PKGS -name *.t?z`; do
 	ROOT=$ROOTFS upgradepkg --reinstall --install-new --terse $i
     done
-
+    (
+	cd $ROOTFS
+        tar cvJf $OUTPUT_DIR/lilala-linux-rootfs.tar.xz .
+    )
     echo "Filesystem size:"
     du -d 0 -h $ROOTFS
 }
@@ -243,7 +246,7 @@ if [ -z "$PLATFORM_NAME" ]; then
 fi
 
 PLATFORM_DIR=$PWD/platforms/$PLATFORM_NAME
-OUTPUT_DIR=$MAIN_DIR/output/targets/$PLATFORM_NAME
+OUTPUT_DIR=$MAIN_DIR/output/target-$PLATFORM_NAME
 ROOTFS=$OUTPUT_DIR/rootfs
 STAGINGFS=$OUTPUT_DIR/staging
 KERNEL_DIR=$PLATFORM_DIR/kernel
