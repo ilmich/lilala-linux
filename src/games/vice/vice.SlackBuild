@@ -105,7 +105,7 @@ autoreconf -fi
 
 CFLAGS="$SLK_CFLAGS $SYSROOT -s" \
 CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
-LDFLAGS="-L$SLK_SYSROOT/opt/vc/lib" \
+LDFLAGS="$SYSROOT" \
 PATH=$SLK_SYSROOT/usr/bin:$PATH \
 ./configure \
   --prefix=/usr \
