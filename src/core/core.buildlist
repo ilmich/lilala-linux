@@ -13,6 +13,8 @@ core/openssl
 core/kmod
 core/e2fsprogs
 core/curl
+core/popt
+core/logrotate
 core/dropbear
 core/ncurses
 core/dialog

@@ -1,0 +1,20 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+         |-----handy-ruler------------------------------------------------------|
+logrotate: logrotate - rotates, compresses, and mails system logs
+logrotate:
+logrotate: logrotate is designed to ease administration of systems that 
+logrotate: generate large numbers of log files. It allows automatic rotation, 
+logrotate: compression, removal, and mailing of log files. Each log file may 
+logrotate: be handled daily, weekly, monthly, or when it grows too large.
+logrotate:
+logrotate:
+logrotate:
+logrotate:
+logrotate:
+

@@ -1,0 +1,7 @@
+PRGNAM=logrotate
+VERSION=3.15.1
+BUILD=1
+DOWNLOAD_URL=https://github.com/logrotate/logrotate/releases/download/$VERSION/logrotate-$VERSION.tar.gz
+DOWNLOAD_SHA1=95eb0f8c27d2be6b77ea23a0e0e22c2cefda360b
+DEPS="musl popt"
+
