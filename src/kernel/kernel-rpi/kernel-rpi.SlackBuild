@@ -96,10 +96,9 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
+SLK_BOARD=${SLK_BOARD:-rpi}
 
-SLK_PLATFORM=${SLK_PLATFORM:-rpi}
-
-case $SLK_PLATFORM in
+case $SLK_BOARD in
     rpi) KVER="" ; KMODVER="+" ; DTB="bcm2708*.dtb" ; BLOB="bootcode.bin start.elf fixup.dat";;
     rpi2) KVER="7" ; KMODVER="-v7+" ; DTB="bcm27*rpi-2*.dtb" ; BLOB="bootcode.bin start.elf fixup.dat";;
     rpi3) KVER="7" ; KMODVER="-v7+" ; DTB="bcm2710*3*.dtb" ; BLOB="bootcode.bin start.elf fixup.dat";;
