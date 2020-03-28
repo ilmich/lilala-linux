@@ -1,0 +1,21 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+    |-----handy-ruler------------------------------------------------------|
+lftp: lftp (IP packet filter administration)
+lftp:
+lftp: LFTP is a sophisticated file transfer program with command line 
+lftp: interface. It supports FTP, HTTP, FISH, SFTP, HTTPS and FTPS 
+lftp: protocols. GNU Readline library is used for input. BitTorrent 
+lftp: protocol is supported as built-in `torrent' command.
+lftp:
+lftp:
+lftp:
+lftp:
+lftp:
+
+

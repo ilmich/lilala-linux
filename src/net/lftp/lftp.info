@@ -1,0 +1,6 @@
+PRGNAM=lftp
+VERSION=4.9.1
+BUILD=1
+DOWNLOAD_URL=http://lftp.yar.ru/ftp/lftp-$VERSION.tar.xz
+DOWNLOAD_SHA1=bc6eda14a03b264066119cce96f638fee61568b7
+DEPS="musl readline zlib"
