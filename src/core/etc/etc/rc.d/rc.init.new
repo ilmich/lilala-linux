@@ -12,6 +12,7 @@ on_boot() {
     /bin/mountpoint -q /sys     || /bin/mount -t sysfs sys /sys -o nosuid,noexec,nodev
     /bin/mountpoint -q /run     || /bin/mount -t tmpfs run /run -o mode=0755,nosuid,nodev
     /bin/mountpoint -q /dev     || /bin/mount -t devtmpfs dev /dev -o mode=0755,nosuid
+    /bin/mountpoint -q /var/run || /bin/mount -t tmpfs tmpfs /var/run -o mode=0755,nosuid,nodev
     /bin/mkdir -p /dev/pts /dev/shm
     /bin/mountpoint -q /dev/pts || /bin/mount -t devpts devpts /dev/pts -o mode=0620,gid=5,nosuid,noexec
     /bin/mountpoint -q /dev/shm || /bin/mount -t tmpfs shm /dev/shm -o mode=1777,nosuid,nodev

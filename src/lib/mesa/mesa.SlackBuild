@@ -120,7 +120,7 @@ EOF
 		-Dplatforms=drm \
 		-Dgles1=false -Dgles2=true \
 		-Dlibunwind=false  \
-		-Dgallium-drivers=v3d,kmsro,vc4,lima,panfrost \
+		-Dgallium-drivers=v3d,kmsro,vc4,lima,swrast \
 		-Dvulkan-drivers= \
 		-Dllvm=false \
 		-Dasm=true \

@@ -103,7 +103,7 @@ CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 INSTALL="/bin/ginstall --strip-program=$STRIP_CMD" \
 ./configure \
   --prefix=/usr \
-  --libdir=/usr/lib \
+  --libdir=/lib \
   --mandir=/usr/man \
   --with-pkg-config-libdir=/usr/lib/pkgconfig \
   --with-terminfo-dirs="/etc/terminfo:/usr/share/terminfo" \
@@ -120,7 +120,7 @@ make -j2
 make DESTDIR=$PKG install
 
 #remove static libs
-rm $PKG/usr/lib/*.a
+rm $PKG/lib/*.a
 
 #strip binaries
 ( cd $PKG

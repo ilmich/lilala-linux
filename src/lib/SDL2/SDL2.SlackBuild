@@ -95,8 +95,13 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-CFLAGS="$SLK_CFLAGS $SYSROOT -DMESA_EGL_NO_X11_HEADERS -s" \
-CXXFLAGS="$SLK_CFLAGS $SYSROOT -DMESA_EGL_NO_X11_HEADERS -s " \
+#apply patches
+for i in `find $CWD/patches/ -name *.patch | sort -`; do
+    patch -p1 < $i
+done
+
+CFLAGS="$SLK_CFLAGS $SYSROOT -DEGL_NO_X11 -s " \
+CXXFLAGS="$SLK_CFLAGS $SYSROOT -DEGL_NO_X11 -s" \
 LDFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 ./configure \
   --prefix=/usr \
@@ -108,14 +113,14 @@ LDFLAGS="$SLK_CFLAGS $SYSROOT -s " \
   --mandir=/usr/man \
   --docdir=/usr/doc/$PRGNAM-$VERSION \
   --includedir=/usr/include \
-  --disable-static \
-  --enable-video-kmsdrm \
+  --enable-video-kmsdrm=yes \
   --enable-video-vulkan=no \
+  --enable-video-x11=no \
   --enable-esd=no \
   --enable-oss=no \
   $TARGET
 
-make -j2 V=1
+make V=1
 make DESTDIR=$PKG install
 
 set -e

@@ -1,6 +1,7 @@
 PRGNAM=mesa
-VERSION=19.3.4
-BUILD=1
+VERSION=20.0.4
+BUILD=2
 DOWNLOAD_URL=https://mesa.freedesktop.org/archive/mesa-$VERSION.tar.xz
-DOWNLOAD_SHA1=9acddc437c4839da3a8f34dc966754b2dbb7a539
+DOWNLOAD_SHA1=f87988896d48015dbe53be0897a9330c6c0244d8
 DEPS="musl expat libdrm"
+

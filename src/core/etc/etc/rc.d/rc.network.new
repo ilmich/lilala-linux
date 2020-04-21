@@ -8,6 +8,6 @@
 # echo "nameserver 192.168.1.254" > /etc/resolv.conf
 
 # example for dhcp
-/sbin/ifconfig eth0 up
-/sbin/udhcpc eth0
+#/sbin/ifconfig eth0 up
+#/sbin/udhcpc eth0
 
