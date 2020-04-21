@@ -1,0 +1,7 @@
+PRGNAM=RetroArch
+VERSION=1.8.1
+SOURCE_TAR=RetroArch-$VERSION.tar.gz
+BUILD=1
+DOWNLOAD_URL=https://github.com/libretro/RetroArch/archive/v$VERSION.tar.gz
+DOWNLOAD_SHA1=54bea176918d61535cd51470ab33892ff9219d0f
+DEPS="musl SDL2"

@@ -1,0 +1,8 @@
+PRGNAM=kernel
+VERSION=5.4.15
+SRCNAM=linux-$VERSION
+SOURCE_TAR=
+BUILD=1
+DOWNLOAD_URL=https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$VERSION.tar.xz
+DOWNLOAD_SHA1=d4187866c10b14e6e66ae26ef30209b3c8c3c167
+DEPS=

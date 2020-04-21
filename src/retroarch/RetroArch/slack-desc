@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+         |-----handy-ruler------------------------------------------------------|
+RetroArch: RetroArch - Frontend for emulators
+RetroArch:
+RetroArch: RetroArch is a frontend for emulators, game engines and media 
+RetroArch: players.
+RetroArch: 
+RetroArch: It enables you to run classic games on a wide range of computers 
+RetroArch: and consoles through its slick graphical interface. Settings are 
+RetroArch: also unified so configuration is done once and for all
+RetroArch:
+RetroArch:
+RetroArch:

@@ -245,8 +245,13 @@ if [ -z "$PLATFORM_NAME" ]; then
     exit 1
 fi
 
+if [ -z "$SLK_BOARD" ]; then
+    echo "Unknown board. Please check platform setup"
+    exit 1
+fi
+
 PLATFORM_DIR=$PWD/platforms/$PLATFORM_NAME
-OUTPUT_DIR=$MAIN_DIR/output/target-$PLATFORM_NAME
+OUTPUT_DIR=$MAIN_DIR/output/target-$PLATFORM_NAME-$SLK_BOARD
 ROOTFS=$OUTPUT_DIR/rootfs
 STAGINGFS=$OUTPUT_DIR/staging
 KERNEL_DIR=$PLATFORM_DIR/kernel

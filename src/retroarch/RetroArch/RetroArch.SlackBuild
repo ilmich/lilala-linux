@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Slackware build script for vice
+# Slackware build script for RetroArch
 
 # Copyright 2019 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
@@ -27,7 +27,7 @@ if [ $UID != "0" ]; then
     exit 1
 fi
 
-PRGNAM=vice
+PRGNAM=RetroArch
 CWD=$(pwd)
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PRGNAM
@@ -72,7 +72,7 @@ fi
 
 set -e
 
-SOURCE_TAR=`basename $DOWNLOAD_URL`
+SOURCE_TAR=${SOURCE_TAR:-`basename $DOWNLOAD_URL`}
 if [ ! -e ${CWD}/$SOURCE_TAR ]; then
   wget -c $DOWNLOAD_URL
 fi
@@ -95,40 +95,30 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-#apply patches
-for i in `find $CWD/patches/ -name *.patch | sort -`; do
-    patch -p1 < $i
-done
-
-sed -i 's/lib64/lib/g' configure.ac
-autoreconf -fi
-
-CFLAGS="$SLK_CFLAGS $SYSROOT -s  " \
-CXXFLAGS="$SLK_CFLAGS $SYSROOT -s  " \
-LDFLAGS="$SYSROOT -lcrypto" \
-PATH=$SLK_SYSROOT/usr/bin:$PATH \
+CFLAGS="$SLK_CFLAGS $SYSROOT -s" \
+CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
+LDFLAGS="$SLK_CFLAGS $SYSROOT -s -lcrypto " \
 ./configure \
   --prefix=/usr \
-  --libdir=/usr/lib \
   --bindir=/usr/bin \
-  --sbindir=/usr/sbin \
   --sysconfdir=/etc \
-  --localstatedir=/var \
   --mandir=/usr/man \
   --docdir=/usr/doc/$PRGNAM-$VERSION \
-  --includedir=/usr/include \
-  --disable-realdevice \
-  --without-resid \
-  --disable-catweasel \
-  --disable-midi \
-  --enable-sdlui2 \
-  --without-oss \
+  --enable-sdl2 \
+  --disable-x11 \
+  --disable-vulkan \
+  --disable-glsl \
+  --disable-materialui \
+  --disable-glslang \
+  --disable-discord \
+  --enable-neon \
   $TARGET
 
-# fix error
-sed -i 's/\-Werror\=implicit\-function\-declaration//g' Makefile
+read
+#fix for include dir
+sed -i -e 's/-I/-I=/g' config.mk
 
-make -j2 V=0
+make -j2 V=1
 make DESTDIR=$PKG install
 
 set -e
@@ -141,7 +131,7 @@ set -e
 
 # install docs
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a AUTHORS COPYING FEEDBACK INSTALL NEWS README doc $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a COPYING README*  $PKG/usr/doc/$PRGNAM-$VERSION
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
