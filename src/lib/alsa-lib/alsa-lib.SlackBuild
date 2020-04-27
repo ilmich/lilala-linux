@@ -108,9 +108,12 @@ CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
   --mandir=/usr/man \
   --docdir=/usr/doc/$PRGNAM-$VERSION \
   --includedir=/usr/include \
+  --disable-python \
   $TARGET
 
-make -j2 V=1
+cp $CWD/smixer.conf src/conf
+
+make  V=1
 make DESTDIR=$PKG install
 
 set -e

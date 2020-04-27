@@ -17,5 +17,5 @@ OUTPUT_DIR=$MAIN_DIR/output
 mkdir -p $OUTPUT_DIR
 echo $1 > $OUTPUT_DIR/platform
 
-echo "Building lilala linux for"
+echo "Building lilala linux for $1"
 echo "Target :$SLK_TARGET"

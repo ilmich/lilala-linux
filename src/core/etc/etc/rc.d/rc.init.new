@@ -7,7 +7,7 @@ on_boot() {
     #===================
     # mount the API filesystem
     # /proc, /sys, /run, /dev, /run/lock, /dev/pts, /dev/shm
-    echo_color 2 "mounting filesystem..."
+    #echo_color 2 "Mounting filesystem..."
     /bin/mountpoint -q /proc    || /bin/mount -t proc proc /proc -o nosuid,noexec,nodev
     /bin/mountpoint -q /sys     || /bin/mount -t sysfs sys /sys -o nosuid,noexec,nodev
     /bin/mountpoint -q /run     || /bin/mount -t tmpfs run /run -o mode=0755,nosuid,nodev
@@ -17,34 +17,38 @@ on_boot() {
     /bin/mountpoint -q /dev/pts || /bin/mount -t devpts devpts /dev/pts -o mode=0620,gid=5,nosuid,noexec
     /bin/mountpoint -q /dev/shm || /bin/mount -t tmpfs shm /dev/shm -o mode=1777,nosuid,nodev
 
-    echo_color 2 "checking filesystems..."
+    echo_color 2 "Checking filesystems..."
     /sbin/fsck -ATa
     if [ $? -eq 2 ]; then
-       echo_color 2 "filesystem errors fixed but system should be rebooted"
+       echo_color 2 "Filesystem errors fixed but system should be rebooted..."
        sleep 2
        /sbin/halt -r
     fi
     if [ $? -gt 2 ]; then
-       echo_color 2 "filesystem errors exist, press enter to fix manually"
+       echo_color 2 "Filesystem errors exist, press enter to fix manually..."
        read
        /bin/sh
        /sbin/halt -r
     fi
 
-    echo_color 2 "remounting root read/write..."
+    echo_color 2 "Remounting root read/write..."
     /bin/mount -o remount,rw /
 
+    if [ -x /sbin/ldconfig ]; then
+	echo_color 2 "Launching ldconfig..."
+	/sbin/ldconfig
+    fi
     #===================
     # initialize system
-    echo_color 2 "setting up loopback device..."
+    echo_color 2 "Setting up loopback device..."
     /sbin/ifconfig lo 127.0.0.1
 
-    echo_color 2 "start syslogd..."
+    echo_color 2 "Start syslogd..."
     /sbin/syslogd
 
     #load fake clock if present
     if [ -x /sbin/fake-hwclock ]; then
-	echo_color 2 "loading hardware clock..."
+	echo_color 2 "Loading fake hardware clock..."
 	/sbin/fake-hwclock load
     fi
 
@@ -60,81 +64,82 @@ on_boot() {
     fi
 
     if [ -x "/etc/rc.d/rc.udev" ]; then
-	/etc/rc.d/rc.udev start
+	/etc/rc.d/rc.udev start > /dev/null
     else
-	echo_color 2 "initializing mdev..."
+	echo_color 2 "Initializing mdev..."
 	echo /sbin/mdev > /proc/sys/kernel/hotplug
 	/sbin/mdev -s
 
-	echo_color 2 "loading modules..."
+	echo_color 2 "Loading modules..."
 	MODULE=`find /sys -name modalias | xargs cat | sort -u`
 	for i in $MODULE; do
 		/sbin/modprobe $i >/dev/null 2>/dev/null
 	done
     fi
     if [ -x "/etc/rc.d/rc.modules" ]; then
-	echo_color 2 "loading /etc/rc.d/rc.modules..."
+	echo_color 2 "Loading /etc/rc.d/rc.modules..."
 	/etc/rc.d/rc.modules
     fi
 
-    echo_color 2 "setting random seed..."
+    echo_color 2 "Setting random seed..."
     [ -f /etc/random-seed ] && /bin/cat /etc/random-seed >/dev/urandom
     /bin/dd if=/dev/urandom of=/etc/random-seed count=1 bs=512 2>/dev/null
 
     if [ -x /usr/sbin/haveged ]; then
-	echo_color 2 "generate random numbers"
-	/usr/sbin/haveged -v 1
+	echo_color 2 "Starting haveged..."
+	/usr/sbin/haveged -v 0 > /dev/null 2>/dev/null
     fi
 
-    echo_color 2 "setting hostname..."
+    echo_color 2 "Setting hostname..."
     echo "$HOSTNAME" >| /proc/sys/kernel/hostname
 
-    echo_color 2 "mounting..."
+    echo_color 2 "Mounting all filesystems..."
     /bin/mount -a
 
     # load kernel parameters
     if [ -f /etc/sysctl.conf ]; then
-	echo_color 2 "configure kernel parameters from /etc/sysctl.conf"
+	echo_color 2 "Configure kernel parameters..."
 	/sbin/sysctl -p /etc/sysctl.conf
     fi
 
     # load /etc/rc.d/rc.network
     if [ -x /etc/rc.d/rc.network ]; then
-        echo_color 2 "loading /etc/rc.d/rc.network..."
+        echo_color 2 "Loading /etc/rc.d/rc.network..."
         /etc/rc.d/rc.network
     fi
 
     # load /etc/rc.d/rc.network
     if [ -x /etc/rc.d/rc.firewall ]; then
-        echo_color 2 "loading /etc/rc.d/rc.firewall..."
+        echo_color 2 "Loading /etc/rc.d/rc.firewall..."
         /etc/rc.d/rc.firewall
     fi
 
     # starting ssh daemon
     if [ -x /etc/rc.d/rc.dropbear ]; then
+	echo_color 2 "Starting ssh daemon..."
 	/etc/rc.d/rc.dropbear start
     fi
 
     # starting cron daemon
     if [ -x /sbin/crond ]; then
-	echo_color 2 "starting crond..."
+	echo_color 2 "Starting crond..."
 	/sbin/crond
     fi
 
     # starting vsftpd
     if [ -x /etc/rc.d/rc.vsftpd ]; then
-	echo_color 2 "starting vsftpd..."
+	echo_color 2 "Starting ftp server..."
 	/etc/rc.d/rc.vsftpd start
     fi
 
     if [ -e "/etc/keymap" ]; then
-        echo_color 2 "load keyboard..."
+        echo_color 2 "Load keyboard..."
         loadkeys `cat /etc/keymap`
     fi
 
     # load /etc/rc.d/rc.local
     if [ -x /etc/rc.d/rc.local ]; then
-        echo_color 2 "loading /etc/rc.d/rc.local..."
+        echo_color 2 "Loading /etc/rc.d/rc.local..."
         /etc/rc.d/rc.local
     fi
 
@@ -157,17 +162,17 @@ on_shutdown() {
     #===================
     # load /etc/init.d/rc.local_shutdown
     if [ -x /etc/rc.d/rc.local_shutdown ]; then
-        echo_color 2 "loading /etc/rc.d/rc.local_shutdown..."
+        echo_color 2 "Loading /etc/rc.d/rc.local_shutdown..."
         /etc/rc.d/rc.local_shutdown
     fi
 
     #save fake clock if present    
     if [ -x /sbin/fake-hwclock ]; then
-	echo_color 2 "saving hardware clock..."
+	echo_color 2 "Saving fake hardware clock..."
 	/sbin/fake-hwclock save
     fi
 
-    echo_color 2 "remounting root filesystem read-only"
+    echo_color 2 "Remounting root filesystem read-only..."
     /bin/mount -o remount,ro /
 
     /bin/sync
@@ -187,12 +192,12 @@ init)
     on_boot;;
 shutdown)
     on_shutdown
-    echo_color 2 "poweroff system..."
+    echo_color 2 "Poweroff system..."
     /sbin/halt
     ;;
 reboot)
     on_shutdown
-    echo_color 2 "reboot system..."
+    echo_color 2 "Reboot system..."
     /sbin/reboot
     ;;
 *)

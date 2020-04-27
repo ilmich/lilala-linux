@@ -2,7 +2,7 @@
 
 # Slackware build script for RetroArch
 
-# Copyright 2019 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2020 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -95,6 +95,8 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
+patch -p1 < $CWD/retroarch.patch
+
 CFLAGS="$SLK_CFLAGS $SYSROOT -s" \
 CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 LDFLAGS="$SLK_CFLAGS $SYSROOT -s -lcrypto " \
@@ -105,21 +107,30 @@ LDFLAGS="$SLK_CFLAGS $SYSROOT -s -lcrypto " \
   --mandir=/usr/man \
   --docdir=/usr/doc/$PRGNAM-$VERSION \
   --enable-sdl2 \
+  --enable-ssl \
+  --enable-rgui \
+  --disable-materialui \
   --disable-x11 \
   --disable-vulkan \
   --disable-glsl \
-  --disable-materialui \
   --disable-glslang \
   --disable-discord \
   --enable-neon \
+  --enable-floathard \
   $TARGET
 
-read
 #fix for include dir
 sed -i -e 's/-I/-I=/g' config.mk
 
 make -j2 V=1
-make DESTDIR=$PKG install
+make -C libretro-common/audio/dsp_filters
+make -C gfx/video_filters
+
+make DESTDIR=$PKG PREFIX=/usr install
+install -Dm 644 libretro-common/audio/dsp_filters/*.{dsp,so} -t $PKG/usr/lib/retroarch/filters/audio/
+install -Dm 644 gfx/video_filters/*.{filt,so} -t $PKG/usr/lib/retroarch/filters/video/
+
+rm $PKG/usr/bin/retroarch-cg2glsl
 
 set -e
 #strip binaries

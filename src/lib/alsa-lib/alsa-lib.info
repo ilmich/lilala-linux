@@ -1,8 +1,8 @@
 PRGNAM=alsa-lib
-VERSION=1.1.9
+VERSION=1.2.2
 BUILD=1
 DOWNLOAD_URL=https://www.alsa-project.org/files/pub/lib/alsa-lib-$VERSION.tar.bz2
-DOWNLOAD_SHA1=2404e1c377428908c5188076d5652a2a1ecd028e
+DOWNLOAD_SHA1=f0eee7ff8b37a40c104cee6fd7b2f4c645b1b1a1
 DEPS="musl"
 
 
