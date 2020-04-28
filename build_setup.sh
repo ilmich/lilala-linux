@@ -19,3 +19,5 @@ echo $1 > $OUTPUT_DIR/platform
 
 echo "Building lilala linux for $1"
 echo "Target :$SLK_TARGET"
+echo "Arch: $SLK_ARCH"
+echo "Compiler Flags: $SLK_CFLAGS"

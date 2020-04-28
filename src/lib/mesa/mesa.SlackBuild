@@ -54,6 +54,7 @@ fi
 case $ARCH in
     i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
+    aarch64) ARCH=aarch64 ;;
     x86_64) ;;
     *) ARCH=$( uname -m ) ;;
 esac
@@ -115,15 +116,14 @@ EOF
 (
     cd build
     meson --cross-file meson.cross \
+		-Dbuildtype=plain \
 		-Ddri-drivers= \
 		-Dglx=disabled \
 		-Dplatforms=drm \
-		-Dgles1=false -Dgles2=true \
 		-Dlibunwind=false  \
 		-Dgallium-drivers=v3d,kmsro,vc4,lima,swrast \
-		-Dvulkan-drivers= \
 		-Dllvm=false \
-		-Dasm=true \
+		-Dasm=false \
 		-Dprefix=/usr \
 		-Dc_args="$SLK_CFLAGS $SYSROOT -s" \
 		-Dcpp_args="$SLK_CFLAGS $SYSROOT -s"

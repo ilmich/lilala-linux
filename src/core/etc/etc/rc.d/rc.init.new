@@ -159,6 +159,15 @@ on_boot() {
 
 on_shutdown() {
 
+    if [ -x /etc/rc.d/rc.dropbear ]; then
+	echo_color 2 "Stopping ssh daemon..."
+	/etc/rc.d/rc.dropbear stop
+    fi
+    
+    if [ -x /etc/rc.d/rc.vsftpd ]; then
+	echo_color 2 "Stopping ftp server..."
+	/etc/rc.d/rc.vsftpd stop
+    fi
     #===================
     # load /etc/init.d/rc.local_shutdown
     if [ -x /etc/rc.d/rc.local_shutdown ]; then
