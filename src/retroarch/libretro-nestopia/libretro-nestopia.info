@@ -1,0 +1,9 @@
+PRGNAM=libretro-nestopia
+SRCNAM=nestopia
+VERSION=20200427
+BUILD=1
+DOWNLOAD_URL=
+DOWNLOAD_SHA1=
+DEPS="musl RetroArch"
+
+

@@ -1,0 +1,9 @@
+PRGNAM=libretro-pcsx_rearmed
+SRCNAM=pcsx_rearmed
+VERSION=20200425
+BUILD=1
+DOWNLOAD_URL=
+DOWNLOAD_SHA1=
+DEPS="musl RetroArch"
+
+
