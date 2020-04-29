@@ -1,3 +1,4 @@
+core/musl
 kernel/kernel-rpi
 extra/fake-hwclock
 +core

@@ -5,7 +5,6 @@ core/pkgtool
 core/cacerts
 core/tzdb
 core/keymaps
-#core/musl
 core/gcc_libs
 core/zlib
 core/tar
