@@ -120,6 +120,10 @@ make TERMCAP_LIB=-lncursesw DESTDIR=$PKG install
     ln -sf bash sh
 )
 
+# cleanup
+rm $PKG/bin/bashbug
+rm $PKG/lib/bash/{Makefile.inc,loadables.h}
+
 set -e
 #strip binaries
 ( cd $PKG

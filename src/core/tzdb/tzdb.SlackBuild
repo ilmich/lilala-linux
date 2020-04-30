@@ -100,19 +100,14 @@ make version.h
 mkdir host-tools
 gcc zic.c -o host-tools/zic
 
-#fix garbage in build system
-sed -i 's/$(ZIC_INSTALL) -l/#$(ZIC_INSTALL) -l/g' Makefile
-
 make zic='host-tools/zic' CC=$SLK_TARGET-gcc TOPDIR=$PKG LOCALTIME=GMT TZDIR=$PKG/usr/share/zoneinfo install
 
 #move tzselect inside /usr/sbin/
 mkdir -p $PKG/usr/sbin/
-mv $PKG/etc/tzselect $PKG/usr/sbin/
+mv $PKG/usr/bin/tzselect $PKG/usr/sbin/
 
 #remove useless dir
-rm -r $PKG/etc
-rm -r $PKG/lib
-rm -r $PKG/man
+rm -r $PKG/usr/lib
 
 #strip binaries
 ( cd $PKG

@@ -97,6 +97,9 @@ find -L . \
 
 cp $CWD/dot.config .config
 
+#fix musl build
+sed -i 's/__NR_clock_gettime/clock_gettime/g' libbb/time.c
+
 #build bbsuid
 $SLK_TARGET-gcc $SLK_CFLAGS $SYSROOT $CWD/bbsuid.c -o bbsuid
 

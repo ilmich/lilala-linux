@@ -89,7 +89,7 @@ if [ ! -z $DOWNLOAD_URL ]; then
 	exit 1
     fi
 else
-    SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
+    SOURCE_TAR=$PRGNAM-$VERSION.tar.xz
 fi
 
 rm -rf $PKG
