@@ -120,7 +120,6 @@ make -j2
 make DESTDIR=$PKG install
 
 #remove static libs
-rm $PKG/usr/bin/ncursesw6-config
 rm $PKG/lib/*.a
 
 #strip binaries

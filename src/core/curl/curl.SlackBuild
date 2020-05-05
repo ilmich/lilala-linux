@@ -122,8 +122,6 @@ CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 make -j2 V=1
 make DESTDIR=$PKG install
 
-# cleanup
-rm $PKG/usr/bin/curl-config
 # remove .la files
 find $PKG -name *.la -exec rm {} \;
 
