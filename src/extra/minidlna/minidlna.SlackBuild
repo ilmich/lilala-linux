@@ -111,6 +111,7 @@ LDFLAGS="$SYSROOT -s " \
   --includedir=/usr/include \
   $TARGET
 
+sed -i 's/__NR_clock_gettime/clock_gettime/g' uuid.c
 sed -i "s/sys\/queue.h/bsd\/sys\/queue.h/g" upnphttp.h
 sed -i "s/sys\/queue.h/bsd\/sys\/queue.h/g" upnpreplyparse.h
 sed -i "s/sys\/queue.h/bsd\/sys\/queue.h/g" upnpevents.c
