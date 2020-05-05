@@ -95,9 +95,7 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-CXX="$SLK_TARGET-g++" \
-CC="$SLK_TARGET-gcc" \
-CFLAGS="$SLK_CFLAGS $SYSROOT  -s " \
+CFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 LDFLAGS=" $SYSROOT -lncursesw" \
 ./configure \
@@ -111,6 +109,9 @@ LDFLAGS=" $SYSROOT -lncursesw" \
   --with-modules \
   --disable-nls \
   --enable-threads=posix \
+  --disable-rpath \
+  --with-expat=$SLK_SYSROOT/usr \
+  --with-readline=$SLK_SYSROOT/usr \
   --with-zlib=$SLK_SYSROOT/usr \
   $TARGET
 
