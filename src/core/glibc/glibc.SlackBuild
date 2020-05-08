@@ -41,8 +41,6 @@ fi
 
 . $CWD/$PRGNAM.info
 
-#VERSION=${VERSION:-1.1.16}
-#BUILD=${BUILD:-1}
 STRIP_CMD=strip
 if [ ! -z "$SLK_TARGET" ]; then
     TARGET=" --host=$SLK_TARGET "
@@ -73,16 +71,6 @@ if [ -z "$SLK_CFLAGS" ]; then
 fi
 
 set -e
-
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-if [ ! -e ${CWD}/$SOURCE_TAR ]; then
-  wget -c $DOWNLOAD_URL
-fi
-
-if [ ! $DOWNLOAD_SHA1 == `sha1sum $SOURCE_TAR | cut -d " " -f 1` ]; then
-    echo "SHA1 did not match"
-    exit 1
-fi
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
