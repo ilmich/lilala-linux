@@ -4,4 +4,5 @@ VERSION=2.2.0
 BUILD=1
 DOWNLOAD_URL=http://ftp.altlinux.org/pub/people/legion/kbd/kbd-$VERSION.tar.xz
 DOWNLOAD_SHA1=9b62f5f162b2f9c8e444ddfaccd6720d81c0f319
+SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS=""

@@ -3,4 +3,5 @@ VERSION=1.16
 BUILD=1
 DOWNLOAD_URL=ftp://anduin.linuxfromscratch.org/BLFS/popt/popt-$VERSION.tar.gz
 DOWNLOAD_SHA1=cfe94a15a2404db85858a81ff8de27c8ff3e235e
+SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="musl"

@@ -3,6 +3,7 @@ VERSION=1.45.5
 BUILD=1
 DOWNLOAD_URL=http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-$VERSION.tar.gz
 DOWNLOAD_SHA1=7c63cfe34319aa90de6f6cf76e17f40248f68802
+SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="musl"
 
 

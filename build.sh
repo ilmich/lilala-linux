@@ -117,6 +117,11 @@ function buildpkg() {
             wget -c $DOWNLOAD_URL -O $CACHE_DIR/$SOURCE_TAR
         fi
 
+        if [ ! $DOWNLOAD_SHA1 == `sha1sum $CACHE_DIR/$SOURCE_TAR | cut -d " " -f 1` ]; then
+            echo "SHA1 did not match"
+            exit 1
+        fi
+
         # linking source tar
         ln -s $CACHE_DIR/$SOURCE_TAR .
 
@@ -252,7 +257,7 @@ if [ -z "$SLK_BOARD" ]; then
 fi
 
 PLATFORM_DIR=$PWD/platforms/$PLATFORM_NAME
-OUTPUT_DIR=$MAIN_DIR/output/target-$PLATFORM_NAME-$SLK_BOARD
+OUTPUT_DIR=$MAIN_DIR/output/target-$SLK_LIBC-$SLK_ARCH
 ROOTFS=$OUTPUT_DIR/rootfs
 STAGINGFS=$OUTPUT_DIR/staging
 KERNEL_DIR=$PLATFORM_DIR/kernel
@@ -331,6 +336,9 @@ while [ $# -gt 0 ] ; do
 
     shift
 done
+
+#ensure libc is builted
+buildpkg core/$SLK_LIBC
 
 for i in `cat $OUTPUT_DIR/buildlist`; do
 	if [ ! -z $DELETEPKG ]; then

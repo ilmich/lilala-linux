@@ -3,5 +3,6 @@ VERSION=1.2.0
 BUILD=1
 DOWNLOAD_URL=https://www.musl-libc.org/releases/musl-$VERSION.tar.gz
 DOWNLOAD_SHA1=140038a5376ca3a4e69168ed6c3879d1477b20d1
+SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS=
 

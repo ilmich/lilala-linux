@@ -1,30 +1,33 @@
 SLK_TOOLCHAIN_PATH=$MAIN_DIR/toolchains/armhf/
 SLK_TARGET=arm-linux-musleabihf
 SLK_STRIP_PKG="yes"
+SLK_LIBC="musl"
 
 case $SLK_BOARD in
     rpi)
 	SLK_ARCH=armv6
 	SLK_CPU=arm1176jzf-s
-	SLK_CFLAGS="-O2 -mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard"
+	SLK_CFLAGS="-O2 -march=armv6zk+fp -mtune=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard"
 	;;
-    rpi2)
-	SLK_ARCH=armv7a
+    rpi2|rpi3|rpi4)
+	SLK_ARCH=armv7ve
 	SLK_CPU=cortex-a7
-	SLK_CFLAGS="-O2 -mcpu=cortex-a7 -mfpu=neon -mfloat-abi=hard"
-	;;
-    rpi3)
-	SLK_ARCH=armv8a
-	SLK_CPU=cortex-a53
-	SLK_CFLAGS="-O2 -mcpu=cortex-a53 -mfpu=neon -mfloat-abi=hard"
-	;;
-    rpi4)
-	SLK_ARCH=armv8a
-	SLK_CPU=cortex-a72
-	SLK_CFLAGS="-O2 -mcpu=cortex-a72 -mfpu=neon -mfloat-abi=hard -ftree-vectorize -pipe -fomit-frame-pointer"
+	SLK_CFLAGS="-O2 -march=armv7ve -mtune=cortex-a7 -mfpu=neon -mfloat-abi=hard"
 	;;
     *)
 	echo "Unknown board!!!"
 	exit 1
 	;;
 esac
+
+# just for future development... in a linux system with package manager it's hard to mantain different repos for each architecture
+#    rpi3)
+#	SLK_ARCH=armv8a
+#	SLK_CPU=cortex-a53
+#	SLK_CFLAGS="-O2 -march=armv8-a+crc+crypto -mtune=cortex-a53 -mfpu=crypto-neon-fp-armv8 -mfloat-abi=hard -ftree-vectorize -pipe -fomit-frame-pointer"
+#	;;
+#   rpi4)
+#	SLK_ARCH=armv8a
+#	SLK_CPU=cortex-a72
+#	SLK_CFLAGS="-O2 -march=armv8-a+crc+crypto -mtune=cortex-a72 -mfpu=crypto-neon-fp-armv8 -mfloat-abi=hard -ftree-vectorize -pipe -fomit-frame-pointer"
+#	;;
