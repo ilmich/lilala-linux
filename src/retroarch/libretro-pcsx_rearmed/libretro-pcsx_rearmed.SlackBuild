@@ -90,7 +90,7 @@ for i in `find $CWD/patches/ -name *.patch | sort -`; do
     patch -p1 < $i
 done
 
-CC="$SLK_TARGET-gcc $SYSROOT -s" platform="armv7a-neon-hardfloat" make -f Makefile.libretro 
+CC="$SLK_TARGET-gcc $SYSROOT $SLK_CFLAGS -s" platform="armv7a-neon-hardfloat" make -f Makefile.libretro 
 install -Dm644 pcsx_rearmed_libretro.so $PKG/usr/lib/libretro/pcsx_rearmed_libretro.so
 install -Dm644 $CWD/pcsx_rearmed_libretro.info $PKG/usr/share/libretro/info/pcsx_rearmed_libretro.info
 

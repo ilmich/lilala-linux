@@ -1,7 +1,7 @@
 PRGNAM=RetroArch
-VERSION=1.8.5
+VERSION=1.8.6
 SOURCE_TAR=RetroArch-$VERSION.tar.gz
 BUILD=1
 DOWNLOAD_URL=https://github.com/libretro/RetroArch/archive/v$VERSION.tar.gz
-DOWNLOAD_SHA1=7c828516679b61e6491a1663a922ce7ee9e6d8ad
-DEPS="musl SDL2"
+DOWNLOAD_SHA1=8ef97f232bcbcef08a565f290d5a55f3b89c4546
+DEPS="musl eudev alsa-lib"
