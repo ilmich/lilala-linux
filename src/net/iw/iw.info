@@ -3,5 +3,6 @@ VERSION=4.9
 BUILD=1
 DOWNLOAD_URL=https://www.kernel.org/pub/software/network/iw/iw-$VERSION.tar.gz
 DOWNLOAD_SHA1=5ad439cd3d76f4f2bcf0977691219ff4e13bb3f7
-DEPS="musl libnl"
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="libnl"
 

@@ -3,5 +3,6 @@ VERSION=1.8.4
 BUILD=1
 DOWNLOAD_URL=http://www.netfilter.org/projects/iptables/files/iptables-$VERSION.tar.bz2
 DOWNLOAD_SHA1=cd5fe776fb2b0479b3234758fc333777caa1239b
-DEPS="musl libnftnl libpcap"
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="libnftnl libpcap"
 

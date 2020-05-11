@@ -3,4 +3,5 @@ VERSION=2.8
 BUILD=1
 DOWNLOAD_URL=https://w1.fi/releases/hostapd-$VERSION.tar.gz
 DOWNLOAD_SHA1=7e1ee725a605f2ddf4eb50f18fe0a20ab38dd731
-DEPS="musl openssl libnl"
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="openssl libnl"
