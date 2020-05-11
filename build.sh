@@ -171,6 +171,7 @@ function buildpkg() {
 		       usr/doc \
 		       usr/lib64/pkgconfig \
 		       usr/lib/pkgconfig \
+		       usr/lib/cmake \
 		       lib/pkgconfig \
 		       usr/share/aclocal
 		makepkg -l y -c n $PKGFINAL > /dev/null
@@ -273,7 +274,7 @@ mkdir -p $CACHE_DIR
 
 export PATH=$PWD/tools/:$SLK_TOOLCHAIN_PATH/bin:$PATH
 export PKG_CONFIG_PATH=
-export PKG_CONFIG_LIBDIR=$STAGINGFS/usr/lib/pkgconfig:$STAGINGFS/usr/lib64/pkgconfig
+export PKG_CONFIG_LIBDIR=$STAGINGFS/lib/pkgconfig:$STAGINGFS/usr/lib/pkgconfig
 export PKG_CONFIG_SYSROOT_DIR=$STAGINGFS
 
 BUILDPKG=
