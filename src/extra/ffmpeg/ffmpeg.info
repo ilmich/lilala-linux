@@ -4,4 +4,5 @@ SOURCE_TAR=
 BUILD=1
 DOWNLOAD_URL=https://ffmpeg.org/releases/ffmpeg-$VERSION.tar.bz2
 DOWNLOAD_SHA1=77c9724bde4c6e3ef21ab954c0572ac45e61c3e5
-DEPS="musl"
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS=

@@ -3,5 +3,6 @@ VERSION=1.1.9
 BUILD=1
 DOWNLOAD_URL=https://www.alsa-project.org/files/pub/utils/alsa-utils-$VERSION.tar.bz2
 DOWNLOAD_SHA1=9aee48df54a6df7519f50b9b62a13217e2a91bf8
-DEPS="musl alsa-lib"
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="alsa-lib"
 

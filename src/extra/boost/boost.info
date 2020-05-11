@@ -4,4 +4,5 @@ SVERSION=1_69_0
 BUILD=1
 DOWNLOAD_URL=https://dl.bintray.com/boostorg/release/$VERSION/source/boost_$SVERSION.tar.gz
 DOWNLOAD_SHA1=25fca5b6b3ce70b682ecd2c1b9eae04fb90bdafd
-DEPS="musl"
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS=
