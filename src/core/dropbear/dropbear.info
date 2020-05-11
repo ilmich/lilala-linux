@@ -4,7 +4,7 @@ BUILD=1
 DOWNLOAD_URL=https://matt.ucc.asn.au/dropbear/releases/dropbear-$VERSION.tar.bz2
 DOWNLOAD_SHA1=820ec2b8c869edbcf5ad1138777fc0f54349505c
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=""
+DEPS=
 
 
 

@@ -4,4 +4,4 @@ BUILD=2
 DOWNLOAD_URL=https://busybox.net/downloads/busybox-$VERSION.tar.bz2
 DOWNLOAD_SHA1=d5514f5cf8eb89a3b20ac3b965f4463f14a5709a
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="musl"
+DEPS=

@@ -4,4 +4,4 @@ VERSION=r11003
 BUILD=1
 DOWNLOAD_URL=http://ponce.cc/slackware/sources/repo/$SRCNAM-$VERSION.tar.xz
 DOWNLOAD_SHA1=c7da52be4c8d48724331e1159b390934b280a16e
-DEPS="musl wxbase libupnp cryptopp libpng"
+DEPS="wxbase libupnp cryptopp libpng"

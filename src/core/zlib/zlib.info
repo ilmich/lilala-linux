@@ -4,5 +4,5 @@ BUILD=1
 DOWNLOAD_URL=http://prdownloads.sourceforge.net/libpng/zlib-$VERSION.tar.gz
 DOWNLOAD_SHA1=e6d119755acdf9104d7ba236b1242696940ed6dd
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="musl"
+DEPS=
 

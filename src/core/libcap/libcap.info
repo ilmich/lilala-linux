@@ -4,5 +4,5 @@ BUILD=1
 DOWNLOAD_URL=https://git.kernel.org/pub/scm/libs/libcap/libcap.git/snapshot/libcap-$VERSION.tar.gz
 DOWNLOAD_SHA1=10893866f7e2bff19e07ad6be26745d80258711e
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="musl"
+DEPS=
 

@@ -101,9 +101,12 @@ CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
   --datarootdir=/usr/share \
   --includedir=/usr/include \
   $TARGET
-  
+
 make -j2 V=1
 make DESTDIR=$PKG install
+
+#remova .la files
+rm $PKG/lib/*.la
 
 set -e
 #strip binaries

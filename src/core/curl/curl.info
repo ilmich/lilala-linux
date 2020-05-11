@@ -4,4 +4,4 @@ BUILD=1
 DOWNLOAD_URL=https://curl.haxx.se/download/$PRGNAM-$VERSION.tar.gz
 DOWNLOAD_SHA1=cfa63c38800d7fcf90328d10f61a191dba475762
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="musl zlib openssl"
+DEPS="zlib openssl"

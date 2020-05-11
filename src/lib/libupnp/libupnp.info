@@ -3,5 +3,6 @@ VERSION=1.6.25
 BUILD=1
 DOWNLOAD_URL=http://downloads.sourceforge.net/pupnp/$PRGNAM-$VERSION.tar.bz2
 DOWNLOAD_SHA1=6adb96f864bb030263b8b57b2ab4610eeddb37b5
-DEPS="musl"
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS=
 

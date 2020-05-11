@@ -3,5 +3,6 @@ VERSION=20.0.4
 BUILD=2
 DOWNLOAD_URL=https://mesa.freedesktop.org/archive/mesa-$VERSION.tar.xz
 DOWNLOAD_SHA1=f87988896d48015dbe53be0897a9330c6c0244d8
-DEPS="musl expat libdrm"
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="expat libdrm"
 

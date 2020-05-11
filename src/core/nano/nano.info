@@ -4,5 +4,5 @@ BUILD=1
 DOWNLOAD_URL=https://www.nano-editor.org/dist/v4/nano-$VERSION.tar.xz
 DOWNLOAD_SHA1=7893a41d1a9fd7225857e4602f8675ec153100ec
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="musl ncurses"
+DEPS="ncurses"
 

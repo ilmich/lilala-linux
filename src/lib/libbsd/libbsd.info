@@ -3,6 +3,7 @@ VERSION=0.10.0
 BUILD=1
 DOWNLOAD_URL=https://libbsd.freedesktop.org/releases/libbsd-$VERSION.tar.xz
 DOWNLOAD_SHA1=9cb8f0b717da13c8aa13b9f3f5f8105ee6e5ccb5
-DEPS="musl"
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS=
 
 

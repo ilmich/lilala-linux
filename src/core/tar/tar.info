@@ -4,5 +4,5 @@ BUILD=1
 DOWNLOAD_URL=https://ftp.gnu.org/gnu/tar/tar-1.32.tar.xz
 DOWNLOAD_SHA1=162e00af4702565119c05465e8b6f21c75092794
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="musl"
+DEPS=
 

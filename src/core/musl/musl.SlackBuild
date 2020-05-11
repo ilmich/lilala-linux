@@ -41,11 +41,9 @@ fi
 
 . $CWD/$PRGNAM.info
 
-#VERSION=${VERSION:-1.1.16}
-#BUILD=${BUILD:-1}
 STRIP_CMD=strip
 if [ ! -z "$SLK_TARGET" ]; then
-    TARGET=" --target=$SLK_TARGET "    
+    TARGET=" --target=$SLK_TARGET "
     STRIP_CMD=$SLK_TARGET-strip
 fi
 

@@ -3,5 +3,6 @@ VERSION=2.0.12
 BUILD=1
 DOWNLOAD_URL=https://www.libsdl.org/release/SDL2-$VERSION.tar.gz
 DOWNLOAD_SHA1=e8ba91bf5eb438dbcf1fedf0530a1bcbe30d3bb6
-DEPS="musl alsa-lib mesa eudev"
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="alsa-lib eudev"
 

@@ -4,5 +4,5 @@ BUILD=1
 DOWNLOAD_URL=https://www.iana.org/time-zones/repository/releases/tzdb-$VERSION.tar.lz
 DOWNLOAD_SHA1=8b43c548ab0c45e03bdfcd9ba3aa05e8f36a732d
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="musl"
+DEPS=
 

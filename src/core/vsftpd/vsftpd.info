@@ -4,4 +4,4 @@ BUILD=1
 DOWNLOAD_URL=https://security.appspot.com/downloads/vsftpd-$VERSION.tar.gz
 DOWNLOAD_SHA1=d5f5a180dbecd0fbcdc92bf0ba2fc001c962b55a
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="musl libcap openssl"
+DEPS="libcap openssl"

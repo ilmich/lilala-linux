@@ -5,4 +5,4 @@ BUILD=1
 DOWNLOAD_URL=http://invisible-mirror.net/archives/dialog/dialog-$SVERSION.tgz
 DOWNLOAD_SHA1=b576b64d0a780186b26a606bd5fb132eeda0825f
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="musl ncurses"
+DEPS="ncurses"

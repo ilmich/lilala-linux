@@ -4,4 +4,5 @@ VERSION=3.0.4
 BUILD=1
 DOWNLOAD_URL=https://github.com/wxWidgets/wxWidgets/archive/v$VERSION/wxWidgets-$VERSION.tar.gz
 DOWNLOAD_SHA1=47964e7432477c2ddcb4c40f3052dcaede2cdef2
-DEPS="musl gcc_libs zlib"
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="gcc_libs zlib"
