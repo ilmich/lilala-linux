@@ -106,6 +106,10 @@ function buildpkg() {
         cp -r -a platforms/$PLATFORM_NAME/src/$1/* $TMP/$1
     fi
 
+    DOWNLOAD_URL=
+    SOURCE_TAR=
+    DOWNLOAD_SHA1=
+
     cd $TMP/$1
     . ./$PKG_NAME.info
 
@@ -149,10 +153,6 @@ function buildpkg() {
             echo "Error in $PKG_NAME.SlackBuild"
             exit 1
         fi
-#       if [ -e $PKGFINAL ]; then
-#           echo "Installing $i"
-#           ROOT=$ROOTFS upgradepkg --reinstall --install-new $PKGFINAL #&> $PKG_LOGS/$PKG_NAME.install.log
-#       fi
 
 	if [ -z $SLK_STRIP_PKG ]; then
 	    cp $PKGFINALDEV $PKGFINAL
@@ -258,7 +258,7 @@ if [ -z "$SLK_BOARD" ]; then
 fi
 
 PLATFORM_DIR=$PWD/platforms/$PLATFORM_NAME
-OUTPUT_DIR=$MAIN_DIR/output/target-$SLK_LIBC-$SLK_ARCH
+OUTPUT_DIR=$MAIN_DIR/output/target-$SLK_LIBC-$SLK_ARCH-$SLK_BOARD
 ROOTFS=$OUTPUT_DIR/rootfs
 STAGINGFS=$OUTPUT_DIR/staging
 KERNEL_DIR=$PLATFORM_DIR/kernel

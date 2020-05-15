@@ -101,7 +101,7 @@ find -L . \
 
 make depend
 make -j2
-make -j2 INSTALL_PREFIX="$PKG" MANDIR=/usr/man install
+make -j2 DESTDIR="$PKG" MANDIR=/usr/man DOCDIR=/usr/doc install
 
 rm $PKG/usr/lib/*.a
 rm $PKG/usr/bin/c_rehash
@@ -115,7 +115,7 @@ mv $PKG/etc/ssl/openssl.cnf $PKG/etc/ssl/openssl.cnf.new
 )
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a CHANGES* INSTALL* LICENSE PROBLEMS README* $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a CHANGES* INSTALL* LICENSE README* $PKG/usr/doc/$PRGNAM-$VERSION
 
 mkdir -p $PKG/install
 cat $CWD/doinst.sh > $PKG/install/doinst.sh
