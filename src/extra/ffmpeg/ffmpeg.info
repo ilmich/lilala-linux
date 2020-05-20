@@ -1,8 +1,7 @@
 PRGNAM=ffmpeg
 VERSION=4.2.2
-SOURCE_TAR=
 BUILD=1
-DOWNLOAD_URL=https://ffmpeg.org/releases/ffmpeg-$VERSION.tar.bz2
-DOWNLOAD_SHA1=77c9724bde4c6e3ef21ab954c0572ac45e61c3e5
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=
+DOWNLOAD_URL=https://ffmpeg.org/releases/ffmpeg-4.2.2.tar.bz2
+DOWNLOAD_SHA1=
+SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
+DEPS="libdrm libudev"

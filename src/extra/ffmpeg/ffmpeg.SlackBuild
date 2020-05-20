@@ -85,6 +85,11 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
+#apply patches
+for i in `find $CWD/patches/ -name *.patch | sort -`; do
+    patch -p1 < $i
+done
+
 sed -i -e 's/\/opt\/vc/\/usr/g' configure
 
 CFLAGS=" $SLK_CFLAGS $SYSROOT -s" \
@@ -107,7 +112,11 @@ LDFLAGS="$SYSROOT -s " \
   --cpu=$SLK_CPU \
   --target-os=linux \
   --enable-neon \
-  --cross-prefix=$SLK_TARGET-
+  --enable-v4l2-request --enable-libudev \
+  --enable-version3 \
+  --enable-libdrm \
+  --cross-prefix=$SLK_TARGET- \
+  --pkg-config=pkg-config
 
 #enable mmal
 

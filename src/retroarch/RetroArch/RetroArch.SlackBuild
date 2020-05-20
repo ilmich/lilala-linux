@@ -105,6 +105,9 @@ LDFLAGS="$SLK_CFLAGS $SYSROOT -s -lcrypto " \
   --disable-discord \
   --disable-imageviewer \
   --disable-cdrom \
+  --disable-ffmpeg \
+  --disable-freetype \
+  --disable-dinput \
   $TARGET \
   $EXTRA_OPTIONS
 
