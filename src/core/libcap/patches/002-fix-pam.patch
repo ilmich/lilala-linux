@@ -1,0 +1,12 @@
+diff -ruPN libcap-2.27/Make.Rules libcap-2.27-new/Make.Rules
+--- libcap-2.27/Make.Rules	2019-04-16 02:54:28.000000000 +0200
++++ libcap-2.27-new/Make.Rules	2020-12-14 14:35:09.828250883 +0100
+@@ -67,7 +67,7 @@
+ INCS=$(topdir)/libcap/include/sys/capability.h
+ LDFLAGS += -L$(topdir)/libcap
+ CFLAGS += -Dlinux $(WARNINGS) $(DEBUG)
+-PAM_CAP := $(shell if [ -f /usr/include/security/pam_modules.h ]; then echo yes ; else echo no ; fi)
++PAM_CAP := $(shell if [ -f $SYSROOT/usr/include/security/pam_modules.h ]; then echo yes ; else echo no ; fi)
+ INDENT := $(shell if [ -n "$$(which indent 2>/dev/null)" ]; then echo "| indent -kr" ; fi)
+ DYNAMIC := $(shell if [ ! -d "$(topdir)/.git" ]; then echo yes; fi)
+ 

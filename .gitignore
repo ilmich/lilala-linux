@@ -1,6 +1,7 @@
 toolchains/
 output/
 test/
+cache/
 *.tar.*
 *.t?z
 *.zip
