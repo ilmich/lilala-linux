@@ -18,6 +18,7 @@ export EDITOR='/bin/vi'
 export USER_ID=`/bin/id -u`
 export MANPATH='/usr/local/man:/usr/man:/usr/share/man'
 export PS1='${USER:=$(id -un)}'"@${HOSTNAME:=$(hostname)}:\$PWD$( if ((USER_ID)); then printf \$; else printf \#; fi) "
+export TZDIR=/usr/share/zoneinfo
 
 #set timezone
 if [ -e /etc/localtime ]; then

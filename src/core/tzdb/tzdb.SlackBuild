@@ -96,8 +96,9 @@ make zic='host-tools/zic' CC=$SLK_TARGET-gcc TOPDIR=$PKG LOCALTIME=GMT TZDIR=$PK
 mkdir -p $PKG/usr/sbin/
 mv $PKG/usr/bin/tzselect $PKG/usr/sbin/
 
-#remove useless dir
+#remove useless stuffs
 rm -r $PKG/usr/lib
+rm $PKG/etc/localtime
 
 #strip binaries
 ( cd $PKG

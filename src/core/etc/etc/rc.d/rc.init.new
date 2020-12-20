@@ -96,6 +96,17 @@ on_boot() {
     echo_color 2 "Mounting all filesystems..."
     /bin/mount -a
 
+	#handle cgroups
+	if grep -wq cgroup /proc/filesystems ; then
+		echo_color 2 "Mount cgroup..."
+		if [ -d /sys/fs/cgroup ]; then
+			mount -t cgroup cgroup /sys/fs/cgroup
+		else
+			mkdir -p /dev/cgroup
+			mount -t cgroup cgroup /dev/cgroup
+		fi
+	fi
+
     # load kernel parameters
     if [ -f /etc/sysctl.conf ]; then
 	echo_color 2 "Configure kernel parameters..."
@@ -108,7 +119,7 @@ on_boot() {
         /etc/rc.d/rc.network
     fi
 
-    # load /etc/rc.d/rc.network
+    # load /etc/rc.d/rc.firewall
     if [ -x /etc/rc.d/rc.firewall ]; then
         echo_color 2 "Loading /etc/rc.d/rc.firewall..."
         /etc/rc.d/rc.firewall
