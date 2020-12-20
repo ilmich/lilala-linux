@@ -112,7 +112,7 @@ set -e
 
 # install docs
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a AUTHORS COPYING* IMPROVEMENTS INSTALL NEWS README.* THANKS TODO $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a AUTHORS COPYING* IMPROVEMENTS INSTALL NEWS README THANKS TODO $PKG/usr/doc/$PRGNAM-$VERSION
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
