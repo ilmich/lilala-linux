@@ -1,8 +1,8 @@
 PRGNAM=dropbear
-VERSION=2019.78
+VERSION=2020.81
 BUILD=1
 DOWNLOAD_URL=https://matt.ucc.asn.au/dropbear/releases/dropbear-$VERSION.tar.bz2
-DOWNLOAD_SHA1=820ec2b8c869edbcf5ad1138777fc0f54349505c
+DOWNLOAD_SHA1=c3d4fe27fa17ec8217dbedbd33dd73a1ca6cda2c
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS=
 
