@@ -1,7 +1,7 @@
 PRGNAM=RetroArch
-VERSION=1.8.7
+VERSION=1.9.0
 BUILD=1
 DOWNLOAD_URL=https://github.com/libretro/RetroArch/archive/v$VERSION.tar.gz
-DOWNLOAD_SHA1=abf84736f13864862ce250aa99edbfa737b3a096
+DOWNLOAD_SHA1=49ac34c1c7047a580f1e436ec13fee0a7b70adf9
 SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
 DEPS="eudev alsa-lib"
