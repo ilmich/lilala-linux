@@ -5,5 +5,11 @@ ca certificates generated like Linux From Scratch
 with this certdata
 
  http://anduin.linuxfromscratch.org/BLFS/other/certdata.txt
- 
+
+with this command
+
+./make-ca.sh -D $PWD/output/
+
+and moving ca-bundle.crt to certs/ca-certificates.crt
+
 resulting certificates are reduced/reorganized into an archive in order to make Slackbuild more simpler.

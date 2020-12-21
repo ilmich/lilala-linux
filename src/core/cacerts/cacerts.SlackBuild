@@ -96,7 +96,6 @@ mkdir -p $PKG/etc/ssl/certs
 for i in `ls certs/*`;do
     chmod 0644 $i
     cp -a $i $PKG/etc/ssl/$i
-
 done
 
 mkdir -p $PKG/install
