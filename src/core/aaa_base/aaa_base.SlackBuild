@@ -96,7 +96,7 @@ mkdir -p $PKG/run
 mkdir -p $PKG/sys
 mkdir -p $PKG/proc
 mkdir -p $PKG/boot
-mkdir -p $PKG/mnt
+mkdir -p $PKG/mnt/{hd,tmp,memory}
 mkdir -p $PKG/media
 mkdir -m=0777 -p $PKG/tmp
 mkdir -m=0700 -p $PKG/root
