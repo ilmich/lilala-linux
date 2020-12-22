@@ -1,6 +1,6 @@
-core/musl
-kernel/kernel-rpi
+kernel/kernel
 extra/fake-hwclock
 +core
++iptables
 +wifi
 extra/haveged
