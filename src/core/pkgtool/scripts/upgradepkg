@@ -262,11 +262,11 @@ for ARG; do
         echo "$NEW would be installed (new package)."
       else
         if [ $PLAINTERSE ]; then
-          installpkg --terse --terselength $TERSELENGTH $INCOMINGDIR/$NNAME
+          /sbin/installpkg --terse --terselength $TERSELENGTH $INCOMINGDIR/$NNAME
         elif [ $INFOBOX ]; then
-          installpkg --infobox $INCOMINGDIR/$NNAME
+          /sbin/installpkg --infobox $INCOMINGDIR/$NNAME
         elif [ $TERSE ]; then
-          OUTPUTLINE="$(installpkg --terse --terselength $(expr $TERSELENGTH - 12) $INCOMINGDIR/$NNAME)"
+          OUTPUTLINE="$(/sbin/installpkg --terse --terselength $(expr $TERSELENGTH - 12) $INCOMINGDIR/$NNAME)"
           ( flock 9 || exit 11
             echo "Installing: ${OUTPUTLINE}"
           ) 9> $INSTLOCKDIR/outputline.lock
@@ -278,7 +278,7 @@ for ARG; do
 +==============================================================================
 
 EOF
-          installpkg $INCOMINGDIR/$NNAME
+          /sbin/installpkg $INCOMINGDIR/$NNAME
         fi
       fi
     fi
@@ -322,10 +322,10 @@ EOF
   TIMESTAMP=$(date +%Y-%m-%d,%T)
   SHORT="$(package_name $OLD)"
   if [ "$DRY_RUN" = "true" ]; then
-    echo -n "$NEW would upgrade: "
+    echo -n "$NEW would upgrade:"
     for installed_package in $ADM_DIR/packages/$SHORT* ; do
     if [ "$(package_name $installed_package)" = "$SHORT" ]; then
-      echo -n "$(pkgbase $installed_package)"
+      echo -n " $(pkgbase $installed_package)"
     fi
     done
     echo
@@ -356,26 +356,26 @@ EOF
   # Next, the new package is pre-installed:
   if [ "$VERBOSE" = "verbose" ]; then
     if ! [ $TERSE ]; then
-      installpkg $INCOMINGDIR/$NNAME
+      /sbin/installpkg $INCOMINGDIR/$NNAME
       RETCODE=$?
     else
-      installpkg $INCOMINGDIR/$NNAME 1> /dev/null
+      /sbin/installpkg $INCOMINGDIR/$NNAME 1> /dev/null
       RETCODE=$?
     fi
   else
     if [ $PLAINTERSE ]; then
-      installpkg --terse --terselength $TERSELENGTH $INCOMINGDIR/$NNAME
+      /sbin/installpkg --terse --terselength $TERSELENGTH $INCOMINGDIR/$NNAME
     elif [ $INFOBOX ]; then
-      installpkg --infobox $INCOMINGDIR/$NNAME
+      /sbin/installpkg --infobox $INCOMINGDIR/$NNAME
     elif [ $TERSE ]; then
-      OUTPUTLINE="$(installpkg --terse --terselength $(expr $TERSELENGTH - 12) $INCOMINGDIR/$NNAME)"
+      OUTPUTLINE="$(/sbin/installpkg --terse --terselength $(expr $TERSELENGTH - 12) $INCOMINGDIR/$NNAME)"
       RETCODE=$?
       ( flock 9 || exit 11
         echo "Upgrading:  ${OUTPUTLINE}"
       ) 9> $INSTLOCKDIR/outputline.lock
     else
       echo "Pre-installing package $NEW..."
-      installpkg $INCOMINGDIR/$NNAME 1> /dev/null
+      /sbin/installpkg $INCOMINGDIR/$NNAME 1> /dev/null
       RETCODE=$?
     fi
   fi
@@ -393,11 +393,11 @@ EOF
   ( flock 9 || exit 11
     for rempkg in "$ADM_DIR/packages/"*"-$TIMESTAMP"; do
       if [ "$VERBOSE" = "verbose" ]; then
-        removepkg "${rempkg##*/}"
+        /sbin/removepkg "${rempkg##*/}"
       elif ! [ $TERSE ]; then
-        removepkg "${rempkg##*/}" | grep -v 'Skipping\.\|Removing files:'
+        /sbin/removepkg "${rempkg##*/}" | grep -v 'Skipping\.\|Removing files:'
       else
-        removepkg "${rempkg##*/}" > /dev/null
+        /sbin/removepkg "${rempkg##*/}" > /dev/null
       fi
     done
   ) 9> $INSTLOCKDIR/removepkg.lock
@@ -406,9 +406,9 @@ EOF
   # shift location, so we should always reinstall as the final step:
   if [ ! "$NOT_PARANOID" = "true" ]; then
     if ! [ $TERSE ]; then
-      installpkg $INCOMINGDIR/$NNAME
+      /sbin/installpkg --no-overwrite $INCOMINGDIR/$NNAME
     else
-      installpkg $INCOMINGDIR/$NNAME 1> /dev/null
+      /sbin/installpkg --no-overwrite $INCOMINGDIR/$NNAME 1> /dev/null
     fi
   fi
   ! [ $TERSE ] && echo "Package $OLD upgraded with new package $INCOMINGDIR/$NNAME."
