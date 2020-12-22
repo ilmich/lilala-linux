@@ -196,7 +196,7 @@ function buildrootfs() {
     done
     (
 	cd $ROOTFS
-        tar cvJf $OUTPUT_DIR/lilala-linux-rootfs.tar.xz .
+        tar cvJf $OUTPUT_DIR/lilala-linux-rootfs-$SLK_BOARD.tar.xz .
     )
     echo "Filesystem size:"
     du -d 0 -h $ROOTFS
@@ -228,7 +228,7 @@ function showbuildinfo() {
     echo "----------------------------------------"
     echo "Check and press enter to start"
     read
-    
+
 }
 
 MAIN_DIR=$PWD
@@ -259,7 +259,7 @@ fi
 
 PLATFORM_DIR=$PWD/platforms/$PLATFORM_NAME
 OUTPUT_DIR=$MAIN_DIR/output/target-$SLK_LIBC-$SLK_ARCH
-ROOTFS=$OUTPUT_DIR/rootfs
+ROOTFS=$OUTPUT_DIR/rootfs-$SLK_BOARD
 STAGINGFS=$OUTPUT_DIR/staging
 KERNEL_DIR=$PLATFORM_DIR/kernel
 OUTPUT_PKGS=$OUTPUT_DIR/pkgs
@@ -340,6 +340,7 @@ done
 
 #ensure libc is builted
 buildpkg core/$SLK_LIBC
+buildpkg kernel/kernel
 
 for i in `cat $OUTPUT_DIR/buildlist`; do
 	if [ ! -z $DELETEPKG ]; then
