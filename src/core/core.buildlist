@@ -20,3 +20,7 @@ core/dialog
 core/nano
 core/bash
 core/sftp-server
+core/libmnl
+core/libpcap
+core/libnftnl
+core/iptables
