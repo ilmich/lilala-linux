@@ -102,6 +102,8 @@ CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 make -j2 V=1
 make DESTDIR=$PKG install
 
+#install sample firewall
+install -D -m=0700 $CWD/rc.firewall $PKG/etc/rc.d/rc.firewall.new
 #remove .la files
 rm $PKG/usr/lib/*.la
 
@@ -116,6 +118,7 @@ mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a COMMIT_NOTES COPYING INCOMPATIBILITIES INSTALL $PKG/usr/doc/$PRGNAM-$VERSION
 
 mkdir -p $PKG/install
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 #generate slack-required

@@ -1,6 +1,6 @@
 PRGNAM=iptables
 VERSION=1.8.6
-BUILD=1
+BUILD=2
 DOWNLOAD_URL=http://www.netfilter.org/projects/iptables/files/iptables-$VERSION.tar.bz2
 DOWNLOAD_SHA1=95c866895a9b11387c2a633561c905148c9d0276
 SOURCE_TAR=`basename $DOWNLOAD_URL`

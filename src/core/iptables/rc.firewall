@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# Minimal sample firewall (customize or make a new one)
+# stolen from https://blog.sleeplessbeastie.eu/2018/05/09/how-to-create-simplest-possible-iptables-firewall/
+
+# Flush INPUT/OUTPUT/FORWARD chains
+iptables -F INPUT
+iptables -F OUTPUT
+iptables -F FORWARD
+
+# Drop invalid packets
+iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
+
+# Pass everything on loopback
+iptables -A INPUT  -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+
+# Accept incoming packets for established connections
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# Accept incoming ICMP
+iptables -A INPUT -p icmp -j ACCEPT
+
+# Accept incoming SSH on eth0 interface
+iptables -A INPUT -i eth0 -p tcp --dport 22 -j ACCEPT
+
+# Accept outgoing connections
+iptables -P OUTPUT ACCEPT
+
+# Drop everything else on INPUT/FORWARD
+iptables -P INPUT   DROP
+iptables -P FORWARD DROP
