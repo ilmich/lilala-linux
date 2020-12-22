@@ -1,0 +1,8 @@
+PRGNAM=sftp-server
+SRCNAM=openssh
+VERSION=8.4p1
+BUILD=2
+DOWNLOAD_URL=https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-$VERSION.tar.gz
+DOWNLOAD_SHA1=69305059e10a60693ebe6f17731f962c9577535c
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="zlib openssl"
