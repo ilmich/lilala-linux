@@ -137,12 +137,6 @@ on_boot() {
 	/sbin/crond
     fi
 
-    # starting vsftpd
-    if [ -x /etc/rc.d/rc.vsftpd ]; then
-	echo_color 2 "Starting ftp server..."
-	/etc/rc.d/rc.vsftpd start
-    fi
-
     if [ -e "/etc/keymap" ]; then
         echo_color 2 "Load keyboard..."
         loadkeys `cat /etc/keymap`
