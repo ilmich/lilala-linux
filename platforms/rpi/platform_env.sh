@@ -7,12 +7,12 @@ case $SLK_BOARD in
     rpi)
 	SLK_ARCH=armv6
 	SLK_CPU=arm1176jzf-s
-	SLK_CFLAGS="-O2 -march=armv6zk+fp -mtune=arm1176jzf-s -mfpu=vfp -mfloat-abi=hard"
+	SLK_CFLAGS="-O2 -march=armv6zk+fp -mfpu=vfp -mfloat-abi=hard"
 	;;
     rpi2|rpi3|rpi4)
-	SLK_ARCH=armv7ve
+	SLK_ARCH=armv7a
 	SLK_CPU=cortex-a7
-	SLK_CFLAGS="-O2 -march=armv7ve -mtune=cortex-a7 -mfpu=neon -mfloat-abi=hard"
+	SLK_CFLAGS="-O2 -march=armv7-a -mfpu=neon -mfloat-abi=hard"
 	;;
     *)
 	echo "Unknown board!!!"

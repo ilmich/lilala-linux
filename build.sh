@@ -37,7 +37,7 @@ function findbuildlist() {
 		    else
 			return 1
 		    fi
-		fi		
+		fi
 	fi
 	
 	#parsing buildlist line by line
@@ -258,7 +258,7 @@ if [ -z "$SLK_BOARD" ]; then
 fi
 
 PLATFORM_DIR=$PWD/platforms/$PLATFORM_NAME
-OUTPUT_DIR=$MAIN_DIR/output/target-$SLK_LIBC-$SLK_ARCH-$SLK_BOARD
+OUTPUT_DIR=$MAIN_DIR/output/target-$SLK_LIBC-$SLK_ARCH
 ROOTFS=$OUTPUT_DIR/rootfs
 STAGINGFS=$OUTPUT_DIR/staging
 KERNEL_DIR=$PLATFORM_DIR/kernel
