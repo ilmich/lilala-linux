@@ -3,11 +3,11 @@
 function findbuildscript() {
 	COUNT=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.SlackBuild 2> /dev/null | grep $1.SlackBuild | wc -l`
 	if [ $(($COUNT)) -eq 1 ]; then
-		PKGBUILD=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.SlackBuild | grep $1.SlackBuild`
+		PKGBUILD=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.SlackBuild | grep \/$1.SlackBuild`
 		PKGBUILD=`dirname $PKGBUILD`
 		echo ${PKGBUILD#platforms/$PLATFORM_NAME/src/} >> $2
 	else
-		COUNT=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild | wc -l`
+		COUNT=`ls -1 src/*/*/*.SlackBuild | grep \/$1.SlackBuild | wc -l`
 		if [ $(($COUNT)) -eq 1 ]; then
 			PKGBUILD=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild`
 			PKGBUILD=`dirname $PKGBUILD`
@@ -21,19 +21,19 @@ function findbuildscript() {
 
 function findbuildlist() {
 	# scan platforms buildlist
-	COUNT=`ls -1 platforms/$PLATFORM_NAME/*.buildlist 2> /dev/null | grep $1.buildlist | wc -l `
+	COUNT=`ls -1 platforms/$PLATFORM_NAME/*.buildlist 2> /dev/null | grep \/$1.buildlist | wc -l `
 	if [ $(($COUNT)) -eq 1 ]; then
-		BUILDLIST=`ls -1 platforms/$PLATFORM_NAME/*.buildlist | grep $1.buildlist`
+		BUILDLIST=`ls -1 platforms/$PLATFORM_NAME/*.buildlist | grep \/$1.buildlist`
 	else
 		# scan source tree buildlist
-		COUNT=`ls -1 src/*.buildlist | grep $1.buildlist | wc -l `
+		COUNT=`ls -1 src/*.buildlist | grep \/$1.buildlist | wc -l `
 		if [ $(($COUNT)) -eq 1 ]; then
-			BUILDLIST=`ls -1 src/*.buildlist | grep $1.buildlist`
+			BUILDLIST=`ls -1 src/*.buildlist | grep \/$1.buildlist`
 		else
 		    # scan source tree buildlist
-		    COUNT=`ls -1 src/*/*.buildlist | grep $1.buildlist | wc -l `
+		    COUNT=`ls -1 src/*/*.buildlist | grep \/$1.buildlist | wc -l `
 		    if [ $(($COUNT)) -eq 1 ]; then
-			BUILDLIST=`ls -1 src/*/*.buildlist | grep $1.buildlist`
+			BUILDLIST=`ls -1 src/*/*.buildlist | grep \/$1.buildlist`
 		    else
 			return 1
 		    fi
