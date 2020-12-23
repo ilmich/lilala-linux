@@ -52,7 +52,7 @@ if [ ! -z "$SLK_SYSROOT" ]; then
 fi
 
 case $ARCH in
-    i?86) ARCH=i486 ;;
+    i?86) ARCH=x86 ;;
     arm*) ARCH=arm ;;
     aarch64) ARCH=aarch64 ;;
     x86_64) ;;
@@ -109,10 +109,11 @@ EOF
 		-Dbuildtype=plain \
 		-Ddri-drivers= \
 		-Dglx=disabled \
-		-Dplatforms=drm \
+		-Dplatforms=wayland \
 		-Dlibunwind=false  \
-		-Dgallium-drivers=v3d,kmsro,vc4,lima,swrast,panfrost \
-		-Dllvm=false \
+		-Dgallium-drivers=v3d,vc4,lima,panfrost,swrast,kmsro \
+		-Dvulkan-drivers=freedreno,swrast \
+		-Dllvm=disabled \
 		-Dasm=false \
 		-Dprefix=/usr \
 		-Dc_args="$SLK_CFLAGS $SYSROOT -s" \
