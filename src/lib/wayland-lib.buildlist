@@ -1,0 +1,4 @@
+lib/expat
+lib/libffi
+lib/wayland
+lib/wayland-protocols

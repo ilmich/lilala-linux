@@ -1,0 +1,20 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+      |-----handy-ruler------------------------------------------------------|
+libffi: libffi - A Portable Foreign Function Interface Library 
+libffi:
+libffi: The libffi library provides a portable, high level programming
+libffi: interface to various calling conventions. This allows a programmer
+libffi: to call any function specified by a call interface description
+libffi: at run-time.
+libffi:
+libffi:
+libffi:
+libffi:
+libffi:
+

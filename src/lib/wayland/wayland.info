@@ -1,0 +1,8 @@
+PRGNAM=wayland
+VERSION=1.18.0
+BUILD=1
+DOWNLOAD_URL=https://wayland.freedesktop.org/releases/wayland-$VERSION.tar.xz
+DOWNLOAD_SHA1=33e5292b32a115e829458ea627201ed1e4ad4f45
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="expat libffi"
+
