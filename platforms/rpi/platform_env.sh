@@ -5,9 +5,9 @@ SLK_LIBC="musl"
 
 case $SLK_BOARD in
     rpi)
-	SLK_ARCH=armv6
+	SLK_ARCH=armv6k
 	SLK_CPU=arm1176jzf-s
-	SLK_CFLAGS="-O2 -march=armv6zk+fp -mfpu=vfp -mfloat-abi=hard"
+	SLK_CFLAGS="-O2 -march=armv6k+fp -mfpu=vfp -mfloat-abi=hard"
 	;;
     rpi2|rpi3|rpi4)
 	SLK_ARCH=armv7a
