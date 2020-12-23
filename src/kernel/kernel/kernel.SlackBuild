@@ -52,7 +52,7 @@ if [ ! -z "$SLK_SYSROOT" ]; then
 fi
 
 case $ARCH in
-    i?86) ARCH=i486 ;;
+    i?86) ARCH=x86 ;;
     arm*) ARCH=arm ;;
     x86_64) ;;
     *) ARCH=$( uname -m ) ;;
@@ -109,6 +109,8 @@ cp $CWD/kernel_${SLK_BOARD}_config .config
 make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- oldconfig
 make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET-
 make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- INSTALL_MOD_PATH=$PKG/ modules_install
+#install kernel headers into sysroot
+make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- headers_install INSTALL_HDR_PATH=$SLK_SYSROOT/usr
 
 mkdir -p $PKG/boot/overlays
 
