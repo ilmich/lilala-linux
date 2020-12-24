@@ -2,5 +2,3 @@
 lib/readline
 net/lftp
 +extra/minidlna
-+net/iptables
-

@@ -85,7 +85,14 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-CFLAGS="$SLK_CFLAGS $SYSROOT -s" \
+#apply patches
+for i in `find $CWD/patches/ -name *.patch | sort -`; do
+    patch -p1 < $i
+done
+
+./autogen.sh
+
+CFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
 LDFLAGS="$SYSROOT -s " \
 ./configure \
@@ -101,12 +108,11 @@ LDFLAGS="$SYSROOT -s " \
   --includedir=/usr/include \
   $TARGET
 
-sed -i 's/__NR_clock_gettime/clock_gettime/g' uuid.c
 sed -i "s/sys\/queue.h/bsd\/sys\/queue.h/g" upnphttp.h
 sed -i "s/sys\/queue.h/bsd\/sys\/queue.h/g" upnpreplyparse.h
 sed -i "s/sys\/queue.h/bsd\/sys\/queue.h/g" upnpevents.c
 
-make -j2 V=1
+make -j2 minidlnad
 make DESTDIR=$PKG install
 
 #install conf

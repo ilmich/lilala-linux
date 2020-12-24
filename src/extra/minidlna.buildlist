@@ -1,5 +1,7 @@
 lib/libexif
 lib/libjpeg-turbo
+core/eudev
+lib/libdrm
 extra/ffmpeg
 lib/sqlite3
 lib/libid3tag

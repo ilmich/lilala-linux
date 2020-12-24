@@ -4,6 +4,5 @@ SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
 BUILD=1
 DOWNLOAD_URL=https://github.com/libjpeg-turbo/libjpeg-turbo/archive/$VERSION.tar.gz
 DOWNLOAD_SHA1=8bc6421a28a3855a1d93df3259edf17367ae4792
-SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS=
 

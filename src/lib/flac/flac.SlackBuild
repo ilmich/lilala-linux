@@ -101,6 +101,7 @@ CPPFLAGS="$SLK_CFLAGS $SYSROOT -s " \
   --disable-asm-optimizations \
   --disable-sse \
   --disable-ogg \
+  --disable-xmms-plugin \
   $TARGET
 
 make -j2 V=1
