@@ -1,0 +1,8 @@
+PRGNAM=kernel
+VERSION=${SLK_BOARD}_5.10.2
+SRCNAM=linux-5.10.2
+SOURCE_TAR=
+BUILD=1
+DOWNLOAD_URL=https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.10.2.tar.xz
+DOWNLOAD_SHA1=7fbccddcf2f2b580da15614cec3798ab4f60d723
+DEPS=
