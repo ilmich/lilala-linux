@@ -8,8 +8,8 @@
     |-----handy-ruler------------------------------------------------------|
 flac: flac - lossless audio codec
 flac:
-flac: FLAC stands for Free Lossless Audio Codec, an audio format similar 
-flac: to MP3, but lossless, meaning that audio is compressed in FLAC 
+flac: FLAC stands for Free Lossless Audio Codec, an audio format similar
+flac: to MP3, but lossless, meaning that audio is compressed in FLAC
 flac: without any loss in quality.
 flac:
 flac:
@@ -17,4 +17,3 @@ flac:
 flac:
 flac:
 flac:
-

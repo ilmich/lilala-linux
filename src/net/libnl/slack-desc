@@ -8,12 +8,12 @@
      |-----handy-ruler------------------------------------------------------|
 libnl: libnl3 (Netlink Protocol Library Suite version 3)
 libnl:
-libnl: The libnl suite is a collection of libraries providing APIs to 
+libnl: The libnl suite is a collection of libraries providing APIs to
 libnl: netlink protocol based Linux kernel interfaces.  Netlink is a IPC
 libnl: mechanism primarily between the kernel and user space processes.
 libnl: It was designed to be a more flexible successor to ioctl to provide
 libnl: mainly networking related kernel configuration and monitoring
-libnl: interfaces. 
+libnl: interfaces.
 libnl:
 libnl: Homepage:  https://github.com/thom311/libnl
 libnl:

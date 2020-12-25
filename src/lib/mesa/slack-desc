@@ -9,7 +9,7 @@
 mesa: mesa - open source opengl library
 mesa:
 mesa: Mesa is an open source software implementation of OpenGL, Vulkan,
-mesa: and other graphics API specifications. Mesa translates these 
+mesa: and other graphics API specifications. Mesa translates these
 mesa: specifications to vendor-specific graphics hardware drivers.
 mesa:
 mesa:
@@ -17,4 +17,3 @@ mesa:
 mesa:
 mesa:
 mesa:
-

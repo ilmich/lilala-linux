@@ -8,23 +8,12 @@
       |-----handy-ruler------------------------------------------------------|
 amuled: amuled - amule daemon and web server
 amuled:
-amuled: aMule is a multi-platform ed2k client, fork of the eMule client, 
-amuled: using the wxWidgets class library. It was originally forked from 
-amuled: the xMule project, which in turn was forked from the lMule 
-amuled: project. This in turn was the first fork of eMule to run 
+amuled: aMule is a multi-platform ed2k client, fork of the eMule client,
+amuled: using the wxWidgets class library. It was originally forked from
+amuled: the xMule project, which in turn was forked from the lMule
+amuled: project. This in turn was the first fork of eMule to run
 amuled: natively on GNU/Linux and other Unix-like systems.
 amuled: This is only the daemon and web server parts.
 amuled:
 amuled: http://www.amule.org
 amuled:
-
-
-
-  
-  
-  
-
- 
-
-
-

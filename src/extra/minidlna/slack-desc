@@ -8,8 +8,8 @@
         |-----handy-ruler------------------------------------------------------|
 minidlna: minidlna - DLNA/UPnp-AV mini server
 minidlna:
-minidlna: ReadyMedia (formerly known as MiniDLNA) is a simple media server 
-minidlna: software, with the aim of being fully compliant with DLNA/UPnP-AV 
+minidlna: ReadyMedia (formerly known as MiniDLNA) is a simple media server
+minidlna: software, with the aim of being fully compliant with DLNA/UPnP-AV
 minidlna: clients
 minidlna:
 minidlna:
@@ -17,9 +17,3 @@ minidlna:
 minidlna:
 minidlna:
 minidlna:
-
-
-
-
-
-

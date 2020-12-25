@@ -8,7 +8,7 @@
            |-----handy-ruler------------------------------------------------------|
 sftp-server: sftp-server - Part of openssh tools
 sftp-server:
-sftp-server: OpenSSH is the premier connectivity tool for remote login with 
+sftp-server: OpenSSH is the premier connectivity tool for remote login with
 sftp-server: the SSH protocol.
 sftp-server:
 sftp-server: This is only the sftp service

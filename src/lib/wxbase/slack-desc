@@ -9,17 +9,11 @@
 wxbase: wxbase - core of wxwidgets library 
 wxbase:
 wxbase: wxbase is only the core part of wxwidgets (no gui compiled).
-wxbase: 
-wxbase: 
-wxbase: 
-wxbase: 
-wxbase: 
+wxbase:
+wxbase:
+wxbase:
+wxbase:
+wxbase:
 wxbase:
 wxbase: https://www.wxwidgets.org/
 wxbase:
-
-
- 
-
-
-

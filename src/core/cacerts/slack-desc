@@ -8,9 +8,9 @@
        |-----handy-ruler------------------------------------------------------|
 cacerts: cacerts - CA certificates package
 cacerts:
-cacerts: This package contains the certificate authorities shipped with 
-cacerts: Mozilla's browser to allow SSL-based applications to check for the 
-cacerts: authenticity of SSL connections. 
+cacerts: This package contains the certificate authorities shipped with
+cacerts: Mozilla's browser to allow SSL-based applications to check for the
+cacerts: authenticity of SSL connections.
 cacerts:
 cacerts:
 cacerts:

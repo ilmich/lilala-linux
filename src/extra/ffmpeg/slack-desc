@@ -8,8 +8,8 @@
       |-----handy-ruler------------------------------------------------------|
 ffmpeg: ffmpeg - multimedia framework
 ffmpeg:
-ffmpeg: FFmpeg is the leading multimedia framework, able to decode, 
-ffmpeg: encode, transcode, mux, demux, stream, filter and play pretty 
+ffmpeg: FFmpeg is the leading multimedia framework, able to decode,
+ffmpeg: encode, transcode, mux, demux, stream, filter and play pretty
 ffmpeg: much anything that humans and machines have created.
 ffmpeg:
 ffmpeg:
@@ -17,9 +17,3 @@ ffmpeg:
 ffmpeg:
 ffmpeg:
 ffmpeg:
-
-
- 
-
-
-

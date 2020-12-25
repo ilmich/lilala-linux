@@ -8,13 +8,12 @@
       |-----handy-ruler------------------------------------------------------|
 libogg: libogg - library for ogg container format
 libogg:
-libogg: Ogg is a multimedia container format, and the native file and 
-libogg: stream format for the Xiph.org multimedia codecs. As with all 
-libogg: Xiph.org technology is it an open format free for anyone to use. 
+libogg: Ogg is a multimedia container format, and the native file and
+libogg: stream format for the Xiph.org multimedia codecs. As with all
+libogg: Xiph.org technology is it an open format free for anyone to use.
 libogg:
 libogg:
 libogg:
 libogg:
 libogg:
 libogg:
-

@@ -8,13 +8,12 @@
         |-----handy-ruler------------------------------------------------------|
 iproute2: iproute2 Set of utilities for Linux networking.
 iproute2:
-iproute2: iproute2 is a collection of userspace utilities for controlling 
-iproute2: and monitoring various aspects of networking in the Linux kernel, 
-iproute2: including routing, network interfaces, tunnels, traffic control, 
+iproute2: iproute2 is a collection of userspace utilities for controlling
+iproute2: and monitoring various aspects of networking in the Linux kernel,
+iproute2: including routing, network interfaces, tunnels, traffic control,
 iproute2: and network-related device drivers.
 iproute2:
 iproute2:
 iproute2:
 iproute2:
 iproute2:
-

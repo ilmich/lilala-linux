@@ -8,13 +8,12 @@
              |-----handy-ruler------------------------------------------------------|
 libjpeg-turbo: libjpeg-turbo - JPEG image codec library
 libjpeg-turbo:
-libjpeg-turbo: libjpeg-turbo is a JPEG image codec that outperform libjpeg by a 
-libjpeg-turbo: significant amount, by virtue of its highly-optimized Huffman 
-libjpeg-turbo: coding routines. In many cases, the performance of libjpeg-turbo 
-libjpeg-turbo: rivals that of proprietary high-speed JPEG codecs. 
+libjpeg-turbo: libjpeg-turbo is a JPEG image codec that outperform libjpeg by a
+libjpeg-turbo: significant amount, by virtue of its highly-optimized Huffman
+libjpeg-turbo: coding routines. In many cases, the performance of libjpeg-turbo
+libjpeg-turbo: rivals that of proprietary high-speed JPEG codecs.
 libjpeg-turbo:
 libjpeg-turbo:
 libjpeg-turbo:
 libjpeg-turbo:
 libjpeg-turbo:
-

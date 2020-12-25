@@ -8,8 +8,8 @@
     |-----handy-ruler------------------------------------------------------|
 SDL2: SDL2 - Simple DirectMedia Layer library
 SDL2:
-SDL2: Simple DirectMedia Layer is a cross-platform development library 
-SDL2: designed to provide low level access to audio, keyboard, mouse, 
+SDL2: Simple DirectMedia Layer is a cross-platform development library
+SDL2: designed to provide low level access to audio, keyboard, mouse,
 SDL2: joystick, and graphics hardware via OpenGL and Direct3D
 SDL2:
 SDL2:
@@ -17,8 +17,3 @@ SDL2:
 SDL2:
 SDL2:
 SDL2:
-
-
-
-
-

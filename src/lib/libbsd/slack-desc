@@ -8,13 +8,12 @@
       |-----handy-ruler------------------------------------------------------|
 libbsd: libbsd - BSD compatibility layer
 libbsd:
-libbsd: This library provides useful functions commonly found on BSD 
-libbsd: systems, and lacking on others like GNU systems, thus making it 
-libbsd: easier to port projects with strong BSD origins, without needing 
+libbsd: This library provides useful functions commonly found on BSD
+libbsd: systems, and lacking on others like GNU systems, thus making it
+libbsd: easier to port projects with strong BSD origins, without needing
 libbsd: to embed the same code over and over again on each project.
 libbsd:
 libbsd:
 libbsd:
 libbsd:
 libbsd:
-

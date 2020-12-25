@@ -8,13 +8,12 @@
          |-----handy-ruler------------------------------------------------------|
 logrotate: logrotate - rotates, compresses, and mails system logs
 logrotate:
-logrotate: logrotate is designed to ease administration of systems that 
-logrotate: generate large numbers of log files. It allows automatic rotation, 
-logrotate: compression, removal, and mailing of log files. Each log file may 
+logrotate: logrotate is designed to ease administration of systems that
+logrotate: generate large numbers of log files. It allows automatic rotation,
+logrotate: compression, removal, and mailing of log files. Each log file may
 logrotate: be handled daily, weekly, monthly, or when it grows too large.
 logrotate:
 logrotate:
 logrotate:
 logrotate:
 logrotate:
-

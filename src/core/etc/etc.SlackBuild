@@ -2,7 +2,7 @@
 
 # Slackware build script for etc
 
-# Copyright 2017,2018 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -26,7 +26,6 @@ if [ $UID != "0" ]; then
     echo "You must be logged as root!!!"
     exit 1
 fi
-
 
 PRGNAM=etc
 CWD=$(pwd)

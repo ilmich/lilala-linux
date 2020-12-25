@@ -8,8 +8,8 @@
         |-----handy-ruler------------------------------------------------------|
 readline: readline - GNU Readline library
 readline:
-readline: The GNU Readline library provides a set of functions for use by 
-readline: applications that allow users to edit command lines as they are 
+readline: The GNU Readline library provides a set of functions for use by
+readline: applications that allow users to edit command lines as they are
 readline: typed in.
 readline:
 readline:
@@ -17,8 +17,3 @@ readline:
 readline:
 readline:
 readline:
-
-
-
-
-

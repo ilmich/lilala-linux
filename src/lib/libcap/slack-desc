@@ -8,9 +8,9 @@
       |-----handy-ruler------------------------------------------------------|
 libcap: libcap - library for posix capabilities
 libcap:
-libcap: This is a library for getting and setting POSIX.1e (formerly 
+libcap: This is a library for getting and setting POSIX.1e (formerly
 libcap: POSIX 6) draft 15 capabilities.
-libcap: 
+libcap:
 libcap:
 libcap:
 libcap:

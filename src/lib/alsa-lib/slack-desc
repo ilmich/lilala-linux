@@ -8,18 +8,12 @@
         |-----handy-ruler------------------------------------------------------|
 alsa-lib: alsa-lib - The ALSA Library package
 alsa-lib:
-alsa-lib: The ALSA Library package contains the ALSA library used by programs 
-alsa-lib: (including ALSA Utilities) requiring access to the ALSA sound 
+alsa-lib: The ALSA Library package contains the ALSA library used by programs
+alsa-lib: (including ALSA Utilities) requiring access to the ALSA sound
 alsa-lib: interface.
-alsa-lib: 
-alsa-lib: 
-alsa-lib: 
 alsa-lib:
-alsa-lib: 
 alsa-lib:
-
-
- 
-
-
-
+alsa-lib:
+alsa-lib:
+alsa-lib:
+alsa-lib:

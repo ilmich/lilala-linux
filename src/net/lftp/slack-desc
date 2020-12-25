@@ -8,14 +8,12 @@
     |-----handy-ruler------------------------------------------------------|
 lftp: lftp (IP packet filter administration)
 lftp:
-lftp: LFTP is a sophisticated file transfer program with command line 
-lftp: interface. It supports FTP, HTTP, FISH, SFTP, HTTPS and FTPS 
-lftp: protocols. GNU Readline library is used for input. BitTorrent 
+lftp: LFTP is a sophisticated file transfer program with command line
+lftp: interface. It supports FTP, HTTP, FISH, SFTP, HTTPS and FTPS
+lftp: protocols. GNU Readline library is used for input. BitTorrent
 lftp: protocol is supported as built-in `torrent' command.
 lftp:
 lftp:
 lftp:
 lftp:
 lftp:
-
-

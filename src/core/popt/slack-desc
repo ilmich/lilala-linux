@@ -8,9 +8,9 @@
     |-----handy-ruler------------------------------------------------------|
 popt: popt - Parse command line library
 popt:
-popt: The popt library exists essentially for parsing command-line 
-popt: options. It is found superior in many ways when compared to parsing 
-popt: the argv array by hand or using the getopt functions getopt() 
+popt: The popt library exists essentially for parsing command-line
+popt: options. It is found superior in many ways when compared to parsing
+popt: the argv array by hand or using the getopt functions getopt()
 popt: and getopt_long()
 popt:
 popt:

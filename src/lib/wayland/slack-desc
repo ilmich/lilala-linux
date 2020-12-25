@@ -8,13 +8,12 @@
        |-----handy-ruler------------------------------------------------------|
 wayland: wayland - simpler replacement for X
 wayland:
-wayland: Wayland is a protocol for a compositor to talk to its clients as 
-wayland: well as a C library implementation of that protocol. 
-wayland: The compositor can be a standalone display server running on Linux 
-wayland: kernel modesetting and evdev input devices, an X application, 
+wayland: Wayland is a protocol for a compositor to talk to its clients as
+wayland: well as a C library implementation of that protocol.
+wayland: The compositor can be a standalone display server running on Linux
+wayland: kernel modesetting and evdev input devices, an X application,
 wayland: or a wayland client itself.
 wayland:
 wayland:
 wayland:
 wayland:
-

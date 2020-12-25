@@ -9,7 +9,7 @@
 expat: expat - An XML parser 
 expat:
 expat: expat is a stream-oriented XML parser library written in C.
-expat: Expat excels with files too large to fit RAM, and where performance 
+expat: Expat excels with files too large to fit RAM, and where performance
 expat: and flexibility are crucial.
 expat:
 expat:
@@ -17,11 +17,3 @@ expat:
 expat:
 expat:
 expat:
-
-
-
-
- 
-
-
-

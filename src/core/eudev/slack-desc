@@ -8,8 +8,8 @@
      |-----handy-ruler------------------------------------------------------|
 eudev: eudev - not to be confused with udev
 eudev:
-eudev: eudev is Gentoo's fork of udev, systemd's device file manager for 
-eudev: the Linux kernel. It manages device nodes in /dev and handles 
+eudev: eudev is Gentoo's fork of udev, systemd's device file manager for
+eudev: the Linux kernel. It manages device nodes in /dev and handles
 eudev: all user space actions when adding or removing devices.
 eudev:
 eudev:
@@ -17,4 +17,3 @@ eudev:
 eudev:
 eudev:
 eudev:
-

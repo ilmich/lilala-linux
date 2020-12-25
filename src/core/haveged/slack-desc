@@ -9,17 +9,11 @@
 haveged: haveged - Entropy harvesting daemon
 haveged:
 haveged: The Haveged package contains a daemon that generates an 
-haveged: unpredictable stream of random numbers and feeds the /dev/random 
+haveged: unpredictable stream of random numbers and feeds the /dev/random
 haveged: device.
-haveged: 
-haveged: 
-haveged: 
 haveged:
-haveged: 
 haveged:
-
-
- 
-
-
-
+haveged:
+haveged:
+haveged:
+haveged:

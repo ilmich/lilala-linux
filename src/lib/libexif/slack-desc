@@ -8,12 +8,12 @@
        |-----handy-ruler------------------------------------------------------|
 libexif: libexif - library for exif data
 libexif:
-libexif: libexif is a library for parsing, editing, and saving EXIF data. 
-libexif: It is intended to replace lots of redundant implementations in 
+libexif: libexif is a library for parsing, editing, and saving EXIF data.
+libexif: It is intended to replace lots of redundant implementations in
 libexif: command-line utilities and programs with GUIs.
-libexif: 
-libexif: 
-libexif: 
+libexif:
+libexif:
+libexif:
 libexif:
 libexif:
 libexif:

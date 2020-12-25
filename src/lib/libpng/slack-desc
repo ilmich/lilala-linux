@@ -8,13 +8,12 @@
       |-----handy-ruler------------------------------------------------------|
 libpng: libpng - the official PNG reference library
 libpng:
-libpng: libpng is the official PNG reference library. It supports almost 
-libpng: all PNG features , is extensible, and has been extensively tested 
+libpng: libpng is the official PNG reference library. It supports almost
+libpng: all PNG features , is extensible, and has been extensively tested
 libpng: for over 23 years.
-libpng: 
-libpng: 
-libpng: 
+libpng:
+libpng:
+libpng:
 libpng:
 libpng: https://libpng.sourceforge.io/
 libpng:
-

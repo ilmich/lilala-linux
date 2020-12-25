@@ -8,7 +8,7 @@
         |-----handy-ruler------------------------------------------------------|
 dropbear: dropbear - Small ssh server and client
 dropbear:
-dropbear: Dropbear is a relatively small SSH server and client. 
+dropbear: Dropbear is a relatively small SSH server and client.
 dropbear: Features:
 dropbear:
 dropbear: - A small memory footprint suitable 

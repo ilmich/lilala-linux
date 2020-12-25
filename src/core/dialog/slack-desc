@@ -13,7 +13,7 @@ dialog: messages using dialog boxes from a shell script.  The Slackware
 dialog: package management script "pkgtool" uses this, as do various other
 dialog: menu-driven console scripts.
 dialog:
-dialog: Dialog was originally contributed to Slackware by Savio Lam, and has
-dialog: been contributed to by many.  Dialog is currently maintained by
-dialog: Thomas E. Dickey.
+dialog:
+dialog:
+dialog:
 dialog:

@@ -8,18 +8,12 @@
     |-----handy-ruler------------------------------------------------------|
 bash: bash - The Bourne Again SHell
 bash:
-bash: Bash is the GNU Project's shell. Bash is the Bourne Again SHell. 
-bash: Bash is an sh-compatible shell that incorporates useful features 
-bash: from the Korn shell (ksh) and C shell (csh). It is intended to 
-bash: conform to the IEEE POSIX P1003.2/ISO 9945.2 Shell and Tools 
-bash: standard
-bash: 
+bash: Bash is the GNU Project's shell. Bash is the Bourne Again SHell.
+bash: Bash is an sh-compatible shell that incorporates useful features
+bash: from the Korn shell (ksh) and C shell (csh). It is intended to
+bash: conform to the IEEE POSIX P1003.2/ISO 9945.2 Shell and Tools
+bash: standard.
 bash:
-bash: 
 bash:
-
-
-
-
-
-
+bash:
+bash:

@@ -8,18 +8,12 @@
       |-----handy-ruler------------------------------------------------------|
 libdrm: libdrm - user space for DRM
 libdrm:
-libdrm: libdrm provides a user space library for accessing the DRM, direct 
-libdrm: rendering manager, on operating systems that support the ioctl 
-libdrm: interface. libdrm is a low-level library, typically used by graphics 
-libdrm: drivers such as the Mesa DRI drivers, the X drivers, libva and 
+libdrm: libdrm provides a user space library for accessing the DRM, direct
+libdrm: rendering manager, on operating systems that support the ioctl
+libdrm: interface. libdrm is a low-level library, typically used by graphics
+libdrm: drivers such as the Mesa DRI drivers, the X drivers, libva and
 libdrm: similar projects.
 libdrm:
 libdrm:
 libdrm:
 libdrm:
-
-
- 
-
-
-

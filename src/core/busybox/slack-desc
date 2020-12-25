@@ -12,8 +12,8 @@ busybox: Busybox is a single binary which executes many common and standard
 busybox: shell utilities and the ash shell, but stripped down to the bare
 busybox: essentials and optimized for size.
 busybox:
-busybox: Use busybox instead of many other utilities, such as: bash, gzip, tar,
-busybox: and gnu-coreutils.
+busybox:
+busybox:
 busybox:
 busybox:
 busybox:
