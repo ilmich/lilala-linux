@@ -147,7 +147,7 @@ function buildpkg() {
         SLK_BOARD=$SLK_BOARD SLK_TARGET=$SLK_TARGET SLK_CFLAGS=$SLK_CFLAGS SLK_SYSROOT=$STAGINGFS \
         SLK_CPU=$SLK_CPU ARCH=$ARCH SLK_ARCH=$SLK_ARCH \
         SLK_TOOLCHAIN_PATH=$SLK_TOOLCHAIN_PATH TAG=$TAG PKGTYPE=$PKGTYPE OUTPUT=$STAGING_PKG_DIR \
-        STAGING=$STAGINGFS ./$PKG_NAME.SlackBuild # &> $PKG_LOGS/$PKG_NAME.log
+        STAGING=$STAGINGFS ./$PKG_NAME.SlackBuild --cleanup
 
         if [ $? -ne 0 ]; then
             echo "Error in $PKG_NAME.SlackBuild"
