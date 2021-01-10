@@ -1,0 +1,79 @@
+#!/bin/sh
+
+# Build script for busybox
+
+# Copyright 2017-2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=busybox
+VERSION=1.32.0
+BUILD=2
+DOWNLOAD_URL=https://busybox.net/downloads/busybox-$VERSION.tar.bz2
+DOWNLOAD_SHA1=277b245e4bbad2df44c767017c68cb68c477274b
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS=
+
+function build() {
+#explode source
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+
+cp $CWD/dot.config .config
+#fix musl build
+sed -i 's/__NR_clock_gettime/clock_gettime/g' libbb/time.c
+
+#build bbsuid
+$SLK_TARGET-gcc $SLK_CFLAGS --sysroot=$SLK_SYSROOT $CWD/bbsuid.c -o bbsuid
+
+# Compile the application and install it into the $PKG directory
+make -j2 V=1 CONFIG_EXTRA_CFLAGS="\"$SLK_CFLAGS -s --sysroot=$SLK_SYSROOT\"" CROSS_COMPILE=$SLK_TARGET-
+make install V=1 CONFIG_EXTRA_CFLAGS="\"$SLK_CFLAGS -s --sysroot=$SLK_SYSROOT \"" CROSS_COMPILE=$SLK_TARGET- CONFIG_PREFIX=$PKG
+
+#prepare crontabs
+mkdir -p $PKG/etc/cron.d
+mkdir -p $PKG/etc/cron.daily
+mkdir -p $PKG/etc/cron.hourly
+mkdir -p $PKG/etc/cron.weekly
+mkdir -p $PKG/etc/cron.monthly
+mkdir -p $PKG/var/spool/cron/crontabs
+
+chmod -R 0750 $PKG/var/spool/cron/crontabs
+install -D -m 0600 $CWD/crontabs.default $PKG/var/spool/cron/crontabs/root
+install -D -m 0644 $CWD/ntpd.conf.new $PKG/etc/ntpd.conf.new
+install -D -m 0700 examples/udhcp/simple.script $PKG/usr/share/udhcpc/default.script
+install -D -m 4111 bbsuid $PKG/bin/bbsuid
+
+#replace symlinks for suid busybox
+(
+    cd $PKG/bin
+    rm {su,mount,umount,passwd,crontab,traceroute,traceroute6,vlock}
+    ln -s bbsuid su
+    ln -s bbsuid mount
+    ln -s bbsuid umount
+    ln -s bbsuid passwd
+    ln -s bbsuid crontab
+    ln -s bbsuid traceroute
+    ln -s bbsuid traceroute6
+    ln -s bbsuid vlock
+)
+
+}

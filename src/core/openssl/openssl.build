@@ -1,0 +1,73 @@
+#!/bin/sh
+
+# Build script for openssl
+
+# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=openssl
+VERSION=1.1.1i
+BUILD=1
+DOWNLOAD_URL=https://www.openssl.org/source/openssl-$VERSION.tar.gz
+DOWNLOAD_SHA1=eb684ba4ed31fe2c48062aead75233ecd36882a6
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS=
+
+function build() {
+
+case $SLK_ARCH in
+    i?86) BUILD_TARGET=linux-generic32 ;;
+    arm*) BUILD_TARGET=linux-armv4 ;;
+    aarch64*) BUILD_TARGET=linux-aarch64 ;;
+    x86_64) BUILD_TARGET=linux-generic64 ;; 
+esac
+
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+
+./Configure $BUILD_TARGET --prefix=/usr --openssldir=/etc/ssl --libdir=lib \
+		no-mdc2 \
+		no-idea \
+		no-rc5 \
+		no-sse2 \
+		no-ssl2 \
+		no-ssl3 \
+		no-hw \
+		no-engine \
+		no-weak-ssl-ciphers \
+		shared \
+		--cross-compile-prefix=$SLK_TARGET- \
+		"-Wa,--noexecstack $SLK_CFLAGS --sysroot=$SLK_SYSROOT -s"
+
+make depend
+make -j2
+make -j2 DESTDIR="$PKG" MANDIR=/usr/man DOCDIR=/usr/doc install
+
+rm $PKG/usr/lib/*.a
+rm $PKG/usr/bin/c_rehash
+mv $PKG/etc/ssl/openssl.cnf $PKG/etc/ssl/openssl.cnf.new
+
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a CHANGES* INSTALL* LICENSE README* $PKG/usr/doc/$PRGNAM-$VERSION
+
+}

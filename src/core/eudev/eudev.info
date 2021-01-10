@@ -1,9 +1,0 @@
-PRGNAM=eudev
-VERSION=3.2.9
-SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
-BUILD=1
-DOWNLOAD_URL=https://github.com/gentoo/eudev/archive/v$VERSION.tar.gz
-DOWNLOAD_SHA1=0648c6e104057fc074a80a742d316cd0b6bee949
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="kmod"
-

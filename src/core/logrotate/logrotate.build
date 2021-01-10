@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# Build script for logrotate
+
+# Copyright 2020 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=logrotate
+VERSION=3.17.0
+BUILD=1
+DOWNLOAD_URL=https://github.com/logrotate/logrotate/releases/download/$VERSION/logrotate-$VERSION.tar.gz
+DOWNLOAD_SHA1=143fcf6010ff32cfb0a13ea49df22cb383843b63
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="popt"
+
+function build() {
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+
+CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+./configure \
+  --prefix=/usr \
+  --sysconfdir=/etc \
+  --enable-elf-shlibs \
+  --libdir=/lib \
+  --enable-libuuid \
+  --enable-libblkid \
+  --disable-defrag \
+  --mandir=/usr/man \
+  --infodir=/usr/share/info \
+  --datarootdir=/usr/share \
+  --includedir=/usr/include \
+  --host=$SLK_TARGET
+  
+make -j2 V=1
+make DESTDIR=$PKG install
+
+mkdir -p $PKG/etc/logrotate.d
+install -D -m 0600 examples/logrotate.conf $PKG/etc/logrotate.conf.new
+install -D -m 0700 examples/logrotate.cron $PKG/etc/cron.daily/logrotate
+
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a COPYING INSTALL README* $PKG/usr/doc/$PRGNAM-$VERSION
+
+}
+

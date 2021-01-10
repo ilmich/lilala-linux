@@ -1,0 +1,86 @@
+#!/bin/sh
+
+# Build script for kmod
+
+# Copyright 2011-2015  Robby Workman, Tuscaloosa, Alabama, USA
+# Copyright 2013-2015  Patrick J. Volkerding, Sebeka, MN, USA
+# Copyright 2017,2018,2019,2020  Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=kmod
+VERSION=27
+BUILD=1
+DOWNLOAD_URL=https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-$VERSION.tar.gz
+DOWNLOAD_SHA1=5bc0c876747eaa50c58f0da06ca87e7c824945a8
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="zlib"
+
+function build() {
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+
+# Fix paths in manual pages
+sed -i "s,/usr/lib,/lib,g" man/*
+
+CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s" \
+CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+./configure \
+  --prefix=/usr \
+  --libdir=/lib \
+  --bindir=/sbin \
+  --sbindir=/sbin \
+  --sysconfdir=/etc \
+  --localstatedir=/var \
+  --mandir=/usr/man \
+  --docdir=/usr/doc/$PKGNAM-$VERSION \
+  --includedir=/usr/include \
+  --with-zlib \
+  --host=$SLK_TARGET
+
+make -j2 V=1
+make DESTDIR=$PKG install 
+
+# Create symlinks for the usual module-init-tools stuff:
+( cd $PKG/sbin
+  for file in depmod insmod lsmod modinfo modprobe rmmod ; do
+    ln -sf kmod $file
+  done
+)
+
+# Link lsmod into /bin
+mkdir -p $PKG/bin
+( cd $PKG/bin ; ln -sf /sbin/lsmod . )
+
+mkdir -p $PKG/etc/modprobe.d
+mkdir -p $PKG/usr/lib
+mv $PKG/lib/pkgconfig $PKG/usr/lib
+rm -f $PKG/lib/{*.so,*.la}
+( cd $PKG/usr/lib
+  ln -sf ../../lib/libkmod.so.? libkmod.so
+)
+
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a COPYING README NEWS TODO $PKG/usr/doc/$PRGNAM-$VERSION
+
+}

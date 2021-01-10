@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# Build script for kernel
+
+# Copyright 2020 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=kernel
+VERSION=${SLK_BOARD}_5.4.84
+SRCNAM=linux-5.4.84
+SOURCE_TAR=
+BUILD=1
+DOWNLOAD_URL=https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.4.84.tar.xz
+DOWNLOAD_SHA1=3670b9ec553bfd125fbb33edf08fc0c06d8a2ad5
+DEPS=
+
+function build() {
+cd $TMP
+rm -rf $SRCNAM
+tar xvf $CWD/$SOURCE_TAR
+cd $SRCNAM
+chown -R root:root .
+
+#apply patches
+for i in `find $CWD/patches/ -name *.patch | sort -`; do
+    patch -p1 < $i
+done
+
+if [ ! -e $CWD/kernel_${SLK_BOARD}_config ]; then
+    echo "config for kernel $SLK_BOARD not found!!"
+    exit 1
+fi
+
+cp $CWD/kernel_${SLK_BOARD}_config arch/$ARCH/configs/${SLK_BOARD}_defconfig
+make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- ${SLK_BOARD}_defconfig
+#install kernel headers into sysroot
+make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- headers_install INSTALL_HDR_PATH=$SLK_SYSROOT/usr
+make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET-
+make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- INSTALL_MOD_PATH=$PKG/ modules_install
+
+mkdir -p $PKG/boot/overlays
+
+cp arch/$ARCH/boot/zImage $PKG/boot/vmlinuz-$VERSION
+if [ -e arch/$ARCH/boot/dts ]; then
+    cp arch/$ARCH/boot/dts/*.dtb $PKG/boot/
+fi
+if [ -e arch/$ARCH/boot/dts/overlays ]; then
+    cp arch/$ARCH/boot/dts/overlays/*.dtb* $PKG/boot/overlays/
+fi
+
+}

@@ -1,7 +1,0 @@
-PRGNAM=curl
-VERSION=7.74.0
-BUILD=1
-DOWNLOAD_URL=https://curl.haxx.se/download/$PRGNAM-$VERSION.tar.gz
-DOWNLOAD_SHA1=cd7239cf9223b39ade86a14eb37fe68f5656eae9
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="zlib openssl"

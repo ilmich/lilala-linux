@@ -1,8 +1,0 @@
-PRGNAM=glibc
-VERSION=2.27
-BUILD=1
-DOWNLOAD_URL=https://ftp.gnu.org/gnu/glibc/glibc-$VERSION.tar.xz
-DOWNLOAD_SHA1=1f7a9c43026484943ef7cf6885f2176a2bc1e093
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=
-

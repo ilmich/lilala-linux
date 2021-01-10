@@ -1,8 +1,0 @@
-PRGNAM=nano
-VERSION=5.4
-BUILD=1
-DOWNLOAD_URL=https://www.nano-editor.org/dist/v5/nano-$VERSION.tar.xz
-DOWNLOAD_SHA1=86a013962648631cae244d895fb3956bfec845cd
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="ncurses"
-

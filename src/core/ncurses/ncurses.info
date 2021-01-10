@@ -1,9 +1,0 @@
-PRGNAM=ncurses
-VERSION=6.1
-SVERSION=${VERSION/_/-}
-BUILD=1
-DOWNLOAD_URL=http://invisible-mirror.net/archives/ncurses/ncurses-$SVERSION.tar.gz
-DOWNLOAD_SHA1=57acf6bc24cacd651d82541929f726f4def780cc
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=
-

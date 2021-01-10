@@ -1,7 +1,0 @@
-PRGNAM=libpcap
-VERSION=1.9.1
-BUILD=1
-DOWNLOAD_URL=http://www.tcpdump.org/release/libpcap-$VERSION.tar.gz
-DOWNLOAD_SHA1=04d6e619defad5bb17af15f6d2304e79b649786c
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=

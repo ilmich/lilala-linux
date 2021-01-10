@@ -1,0 +1,81 @@
+#!/bin/sh
+
+# Build script for musl
+
+# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=musl
+VERSION=1.2.1
+BUILD=1
+DOWNLOAD_URL=https://www.musl-libc.org/releases/musl-$VERSION.tar.gz
+DOWNLOAD_SHA1=031062cf1a3c3e81e3dbae5ad2edbeff02ca198f
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS=
+
+function build() {
+#extract source
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+
+CFLAGS="$SLK_CFLAGS $SYSROOT -s " \
+CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
+./configure \
+  --prefix=/ \
+  --disable-static \
+  --libdir=/lib \
+  --syslibdir=/lib \
+  --includedir=/usr/include \
+  --target=$SLK_TARGET
+
+make -j2
+make DESTDIR=$PKG install
+
+rm -rf $PKG/lib/*.a
+rm -rf $PKG/lib/*.o
+rm -rf $PKG/lib/ld-musl-$ARCH.so.1
+
+(
+    cd $PKG/lib
+    ln -s libc.so ld-musl-$ARCH.so.1
+)
+
+# Create an /etc/ld-musl-$ARCH.path file telling ld where to find libs
+mkdir $PKG/etc
+cat > $PKG/etc/ld-musl-${ARCH}.path << EOF
+/lib
+/usr/lib
+/usr/local/lib
+EOF
+
+# create symlinks for glibc compatibility
+(
+    cd $PKG/lib
+    for i in libc.so.6 libcrypt.so.1 libdl.so.2 libm.so.6 libpthread.so.0 librt.so.1 libutil.so.1; do
+	ln -sf libc.so $i
+    done
+)
+
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a COPYRIGHT INSTALL README VERSION WHATSNEW $PKG/usr/doc/$PRGNAM-$VERSION
+
+}

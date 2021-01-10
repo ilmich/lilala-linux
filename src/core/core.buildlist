@@ -14,12 +14,12 @@ core/e2fsprogs
 core/curl
 core/popt
 core/logrotate
+core/sftp-server
 core/dropbear
 core/ncurses
 core/dialog
 core/nano
 core/bash
-core/sftp-server
 core/libmnl
 core/libpcap
 core/libnftnl

@@ -1,7 +1,0 @@
-PRGNAM=bash
-VERSION=5.1
-BUILD=1
-DOWNLOAD_URL=http://ftp.gnu.org/gnu/bash/bash-$VERSION.tar.gz
-DOWNLOAD_SHA1=063019501ef1f30fad99d2b735a7ae2ce1d11423
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=

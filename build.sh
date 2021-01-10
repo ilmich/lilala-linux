@@ -1,15 +1,15 @@
 #!/bin/sh
 
 function findbuildscript() {
-	COUNT=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.SlackBuild 2> /dev/null | grep $1.SlackBuild | wc -l`
+	COUNT=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.build 2> /dev/null | grep $1.build | wc -l`
 	if [ $(($COUNT)) -eq 1 ]; then
-		PKGBUILD=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.SlackBuild | grep \/$1.SlackBuild`
+		PKGBUILD=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.build | grep \/$1.build`
 		PKGBUILD=`dirname $PKGBUILD`
 		echo ${PKGBUILD#platforms/$PLATFORM_NAME/src/} >> $2
 	else
-		COUNT=`ls -1 src/*/*/*.SlackBuild | grep \/$1.SlackBuild | wc -l`
+		COUNT=`ls -1 src/*/*/*.build | grep \/$1.build | wc -l`
 		if [ $(($COUNT)) -eq 1 ]; then
-			PKGBUILD=`ls -1 src/*/*/*.SlackBuild | grep $1.SlackBuild`
+			PKGBUILD=`ls -1 src/*/*/*.build | grep $1.build`
 			PKGBUILD=`dirname $PKGBUILD`
 			echo ${PKGBUILD#src/} >> $2
 		else
@@ -69,13 +69,13 @@ function deletepkg() {
         SLK_ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
     fi
     #check if there is a slackbuild
-    if [ -e platforms/$PLATFORM_NAME/src/$1/*.SlackBuild ]; then
+    if [ -e platforms/$PLATFORM_NAME/src/$1/*.build ]; then
         cd platforms/$PLATFORM_NAME/src/$1
     else
         cd src/$1
     fi
 
-    . ./$PKG_NAME.info
+    . ./$PKG_NAME.build
     PKGFINAL=$PKG_DIR/$PKG_NAME-*$TAG.*
     PKGSTAGING=$STAGING_PKG_DIR/$PKG_NAME-*$TAG.*
 
@@ -93,7 +93,7 @@ function buildpkg() {
     PKG_LOGS=$OUTPUT_LOGS/`dirname $1`
     PKG_NAME=`basename $1`
     PKGTYPE=tgz
-    TAG=lilala
+    TAG=lilala    
 
     if [ -d $TMP/$1 ]; then
         rm -r $TMP/$1
@@ -111,28 +111,12 @@ function buildpkg() {
     DOWNLOAD_SHA1=
 
     cd $TMP/$1
-    . ./$PKG_NAME.info
-
-    # download source code
-    if [ ! -z $DOWNLOAD_URL ]; then
-        SOURCE_TAR=${SOURCE_TAR:-`basename $DOWNLOAD_URL`}
-
-        if [ ! -e ${CACHE_DIR}/$SOURCE_TAR ]; then
-            wget -c $DOWNLOAD_URL -O $CACHE_DIR/$SOURCE_TAR
-        fi
-
-        if [ ! $DOWNLOAD_SHA1 == `sha1sum $CACHE_DIR/$SOURCE_TAR | cut -d " " -f 1` ]; then
-            echo "SHA1 did not match"
-            exit 1
-        fi
-
-        # linking source tar
-        ln -s $CACHE_DIR/$SOURCE_TAR .
-
-        # unset SOURCE_TAR
-        SOURCE_TAR=
+    . ./$PKG_NAME.build
+    #load override build
+    if [ -e $PKG_NAME.build.override ]; then
+        . ./$PKG_NAME.build.override
     fi
-
+    
     ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
     if [ -z $SLK_ARCH ]; then
         SLK_ARCH=$ARCH
@@ -144,45 +128,92 @@ function buildpkg() {
         echo "Building $1"
         mkdir -p $PKG_DIR
         mkdir -p $STAGING_PKG_DIR
-        SLK_BOARD=$SLK_BOARD SLK_TARGET=$SLK_TARGET SLK_CFLAGS=$SLK_CFLAGS SLK_SYSROOT=$STAGINGFS \
-        SLK_CPU=$SLK_CPU ARCH=$ARCH SLK_ARCH=$SLK_ARCH \
-        SLK_TOOLCHAIN_PATH=$SLK_TOOLCHAIN_PATH TAG=$TAG PKGTYPE=$PKGTYPE OUTPUT=$STAGING_PKG_DIR \
-        STAGING=$STAGINGFS ./$PKG_NAME.SlackBuild --cleanup
+        (     
+            # download source code
+            if [ ! -z $DOWNLOAD_URL ]; then
+                SOURCE_TAR=${SOURCE_TAR:-`basename $DOWNLOAD_URL`}
+
+            if [ ! -e ${CACHE_DIR}/$SOURCE_TAR ]; then
+                wget -c $DOWNLOAD_URL -O $CACHE_DIR/$SOURCE_TAR
+            fi
+
+            if [ ! $DOWNLOAD_SHA1 == `sha1sum $CACHE_DIR/$SOURCE_TAR | cut -d " " -f 1` ]; then
+                echo "SHA1 did not match"
+                exit 1
+            fi
+
+            # linking source tar
+            ln -s $CACHE_DIR/$SOURCE_TAR .
+            fi
+
+            # setup some vars
+            OUTPUT=$STAGING_PKG_DIR
+            PKG=$TMP/`dirname $1`/package-$PRGNAM
+            CWD=$(pwd)
+            SLK_SYSROOT=$STAGINGFS
+            
+            # cleanup tmp files
+            rm -rf $PKG
+            mkdir -p $TMP $PKG $OUTPUT
+            # build package
+            set -e
+            build
+            
+            #ensure return to build script dir
+            cd $CWD 
+            mkdir -p $PKG/install
+            cat slack-desc > $PKG/install/slack-desc
+            if [ -e doinst.sh ]; then
+                cat doinst.sh > $PKG/install/doinst.sh
+            fi
+            #generate slack-required
+            if [ ! -z "$DEPS" ]; then
+                for i in $DEPS;
+                do
+                        echo $i >> $PKG/install/slack-required
+                done
+            fi
+
+            #strip binaries and make package
+            ( cd $PKG
+              find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $SLK_TARGET-strip --strip-unneeded 2> /dev/null || true
+              find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs -r $SLK_TARGET-strip --strip-unneeded 2> /dev/null || true
+              find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $SLK_TARGET-strip --strip-unneeded 2> /dev/null || true              
+              mkdir -p $OUTPUT
+              makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$SLK_ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+              if [ ! -z $SLK_STRIP_PKG ]; then
+                rm -rf usr/man \
+                        usr/share/man \
+                        usr/include \
+                        usr/share/locale \
+                        usr/share/info \
+                        usr/doc \
+                        usr/lib64/pkgconfig \
+                        usr/lib/pkgconfig \
+                        usr/lib/cmake \
+                        lib/pkgconfig \
+                        usr/share/aclocal
+                makepkg -l y -c n $PKGFINAL
+              fi
+            )
+
+            # cleanup package
+            rm -rf $PKG
+            
+            # unset SOURCE_TAR
+            SOURCE_TAR=        
+        )
 
         if [ $? -ne 0 ]; then
-            echo "Error in $PKG_NAME.SlackBuild"
+            echo "Error in $PKG_NAME.build"
             exit 1
-        fi
-
-	if [ -z $SLK_STRIP_PKG ]; then
-	    cp $PKGFINALDEV $PKGFINAL
-	else
-	    # strip pkg
-	    echo "stripping pkg"
-	    mkdir -p /tmp/strip-$PKG_NAME
-	    (
-		cd /tmp/strip-$PKG_NAME
-		explodepkg $PKGFINALDEV > /dev/null
-		rm -rf usr/man \
-		       usr/share/man \
-		       usr/include \
-		       usr/share/locale \
-		       usr/share/info \
-		       usr/doc \
-		       usr/lib64/pkgconfig \
-		       usr/lib/pkgconfig \
-		       usr/lib/cmake \
-		       lib/pkgconfig \
-		       usr/share/aclocal
-		makepkg -l y -c n $PKGFINAL > /dev/null
-	    )
-	    rm -rf /tmp/strip-$PKG_NAME
-	fi
+        fi	
 
 	if [ -e $PKGFINALDEV ]; then
 	    echo "Installing on staging $i"
 	    ROOT=$STAGINGFS upgradepkg --reinstall --install-new $PKGFINALDEV #&> $PKG_LOGS/$PKG_NAME.install.log
 	fi
+        
     else
         echo "Skipping $1"
     fi

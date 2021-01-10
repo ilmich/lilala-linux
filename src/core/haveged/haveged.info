@@ -1,7 +1,0 @@
-PRGNAM=haveged
-VERSION=1.9.13
-BUILD=1
-DOWNLOAD_URL=https://github.com/jirka-h/haveged/archive/v$VERSION.tar.gz
-DOWNLOAD_SHA1=add39b7665f2251fe087817397552893c70f11ab
-SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
-DEPS=

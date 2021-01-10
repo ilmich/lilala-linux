@@ -1,0 +1,59 @@
+#!/bin/sh
+
+# Build script for tzdb
+
+# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=tzdb
+VERSION=2020d
+BUILD=1
+DOWNLOAD_URL=https://www.iana.org/time-zones/repository/releases/tzdb-$VERSION.tar.lz
+DOWNLOAD_SHA1=99ef592149a18da607ea230499c94aa307963047
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS=
+
+function build() {
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+
+#make zic compiler for host machine
+make version.h
+mkdir host-tools
+gcc zic.c -o host-tools/zic
+
+make zic='host-tools/zic' CC=$SLK_TARGET-gcc TOPDIR=$PKG LOCALTIME=GMT TZDIR=$PKG/usr/share/zoneinfo install
+
+#move tzselect inside /usr/sbin/
+mkdir -p $PKG/usr/sbin/
+mv $PKG/usr/bin/tzselect $PKG/usr/sbin/
+
+#remove useless stuffs
+rm -r $PKG/usr/lib
+rm $PKG/etc/localtime
+
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a CONTRIBUTING LICENSE NEWS README $PKG/usr/doc/$PRGNAM-$VERSION
+
+}

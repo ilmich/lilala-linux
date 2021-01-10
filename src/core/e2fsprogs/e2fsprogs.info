@@ -1,9 +1,0 @@
-PRGNAM=e2fsprogs
-VERSION=1.45.6
-BUILD=1
-DOWNLOAD_URL=http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-$VERSION.tar.gz
-DOWNLOAD_SHA1=4f2eb83d9fd96d61355c10f1223e47cc8df71229
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=
-
-

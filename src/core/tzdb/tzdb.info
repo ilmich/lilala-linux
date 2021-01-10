@@ -1,8 +1,0 @@
-PRGNAM=tzdb
-VERSION=2020d
-BUILD=1
-DOWNLOAD_URL=https://www.iana.org/time-zones/repository/releases/tzdb-$VERSION.tar.lz
-DOWNLOAD_SHA1=99ef592149a18da607ea230499c94aa307963047
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=
-

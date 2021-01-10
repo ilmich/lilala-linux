@@ -1,7 +1,0 @@
-PRGNAM=kmod
-VERSION=27
-BUILD=1
-DOWNLOAD_URL=https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-$VERSION.tar.gz
-DOWNLOAD_SHA1=5bc0c876747eaa50c58f0da06ca87e7c824945a8
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="zlib"
