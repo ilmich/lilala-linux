@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# Build script for wpa_supplicant
+
+# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=wpa_supplicant
+VERSION=2.9
+BUILD=1
+DOWNLOAD_URL=https://w1.fi/releases/wpa_supplicant-$VERSION.tar.gz
+DOWNLOAD_SHA1=b784c0e5e56889c81d027757a4623659bf15f9a8
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="openssl libnl"
+
+function build() {
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+
+#apply patches
+for i in `find $CWD/patches/ -name *.patch | sort -`; do
+    patch -p1 < $i
+done
+
+cd wpa_supplicant
+cp $CWD/dot.config .config
+
+make V=1 CC="$SLK_TARGET-gcc $SLK_CFLAGS --sysroot=$SLK_SYSROOT" LIBDIR=/usr/lib BINDIR=/usr/sbin/ DESTDIR=$PKG/ install
+
+#install sample config file
+install -D -m=0600 -o root -g root $CWD/wpa_supplicant.conf.new $PKG/etc/wpa_supplicant.conf.new
+
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a README* ChangeLog $PKG/usr/doc/$PRGNAM-$VERSION
+
+}

@@ -1,7 +1,0 @@
-PRGNAM=wpa_supplicant
-VERSION=2.9
-BUILD=1
-DOWNLOAD_URL=https://w1.fi/releases/wpa_supplicant-$VERSION.tar.gz
-DOWNLOAD_SHA1=b784c0e5e56889c81d027757a4623659bf15f9a8
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="openssl libnl"

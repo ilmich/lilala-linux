@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# Build script for wireless-tools
+
+# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=wireless-tools
+VERSION=29
+BUILD=1
+SRC_NAME=wireless_tools.$VERSION
+DOWNLOAD_URL=https://hewlettpackard.github.io/wireless-tools/wireless_tools.$VERSION.tar.gz
+DOWNLOAD_SHA1=22040ac1497f4c5f8ddeca365591b01ae3475710
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS=
+
+function build() {
+cd $TMP
+rm -rf $SRC_NAME
+tar xvf $CWD/$SOURCE_TAR
+cd $SRC_NAME
+chown -R root:root .
+
+make CC="$SLK_TARGET-gcc $SLK_CFLAGS --sysroot=$SLK_SYSROOT"
+make INSTALL_DIR=$PKG/sbin INSTALL_INC=$PKG/usr/include \
+     INSTALL_LIB=$PKG/lib INSTALL_MAN=$PKG/usr/man install
+     
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a CHANGELOG.h README *.txt $PKG/usr/doc/$PRGNAM-$VERSION
+
+}

@@ -1,7 +1,0 @@
-PRGNAM=iproute2
-VERSION=4.19.0
-BUILD=1
-DOWNLOAD_URL=https://mirrors.edge.kernel.org/pub/linux/utils/net/iproute2/$PRGNAM-$VERSION.tar.xz
-DOWNLOAD_SHA1=
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="libmnl"
