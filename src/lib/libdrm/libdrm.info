@@ -1,8 +1,0 @@
-PRGNAM=libdrm
-VERSION=2.4.100
-BUILD=1
-DOWNLOAD_URL=https://dri.freedesktop.org/libdrm/libdrm-$VERSION.tar.gz
-DOWNLOAD_SHA1=2097f0b98deaff16b8f3b93cedcb5cd35291a3c1
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=
-

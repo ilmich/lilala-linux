@@ -1,8 +1,0 @@
-PRGNAM=mesa
-VERSION=20.3.1
-BUILD=2
-DOWNLOAD_URL=https://mesa.freedesktop.org/archive/mesa-$VERSION.tar.xz
-DOWNLOAD_SHA1=1e1bd571189923eb66af53d0f17141ad11e9962f
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="expat libdrm"
-

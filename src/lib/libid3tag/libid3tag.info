@@ -1,7 +1,0 @@
-PRGNAM=libid3tag
-VERSION=0.15.1b
-BUILD=1
-DOWNLOAD_URL=https://sourceforge.net/projects/mad/files/libid3tag/$VERSION/libid3tag-$VERSION.tar.gz
-DOWNLOAD_SHA1=4d867e8a8436e73cd7762fe0e85958e35f1e4306
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=

@@ -1,8 +1,0 @@
-PRGNAM=libffi
-VERSION=3.3
-BUILD=1
-DOWNLOAD_URL=https://github.com/libffi/libffi/releases/download/v3.3/libffi-3.3.tar.gz
-DOWNLOAD_SHA1=8df6cb570c8d6596a67d1c0773bf00650154f7aa
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=
-

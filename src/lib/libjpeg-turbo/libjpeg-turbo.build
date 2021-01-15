@@ -1,0 +1,70 @@
+#!/bin/sh
+
+# Build script for libjpeg-turbo
+
+# Copyright 2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=libjpeg-turbo
+VERSION=2.0.3
+SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
+BUILD=1
+DOWNLOAD_URL=https://github.com/libjpeg-turbo/libjpeg-turbo/archive/$VERSION.tar.gz
+DOWNLOAD_SHA1=8bc6421a28a3855a1d93df3259edf17367ae4792
+DEPS=
+
+function build() {
+
+case $ARCH in
+    i?86) ARCH=i486 ;;
+    arm*) ARCH=arm ;;
+    x86_64) ;;
+    *) ARCH=$( uname -m ) ;;
+esac
+
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+
+mkdir build
+(
+cd build
+CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s" \
+CPPFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+LDFLAGS="--sysroot=$SLK_SYSROOT -s " \
+cmake -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_C_COMPILER=$SLK_TARGET-gcc \
+      -DWITH_SIMD=no \
+      -DENABLE_STATIC=NO \
+      -DCMAKE_SYSTEM_PROCESSOR=$ARCH ..
+
+make -j2 V=1
+make DESTDIR=$PKG install
+
+#remove useless files
+rm -r $PKG/usr/share
+)
+
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a ChangeLog.md LICENSE.md README* coderules.txt example.txt structure.txt usage.txt wizard.txt $PKG/usr/doc/$PRGNAM-$VERSION
+}

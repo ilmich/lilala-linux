@@ -1,7 +1,0 @@
-PRGNAM=readline
-VERSION=8.0
-BUILD=1
-DOWNLOAD_URL=http://ftp.gnu.org/gnu/readline/readline-$VERSION.tar.gz
-DOWNLOAD_SHA1=d58041c2143595dc001d2777ae9a200be30198b0
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=

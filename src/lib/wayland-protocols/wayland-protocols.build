@@ -1,0 +1,64 @@
+#!/bin/sh
+
+# Build script for wayland-protocols
+
+# Copyright 2020 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=wayland-protocols
+VERSION=1.20
+BUILD=2
+DOWNLOAD_URL=https://wayland.freedesktop.org/releases/wayland-protocols-$VERSION.tar.xz
+DOWNLOAD_SHA1=e78c739a3a85477ed524b81e8bb75efe7f8bf4df
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="wayland"
+
+function build() {
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+
+CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s" \
+CPPFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+./configure \
+  --prefix=/usr \
+  --disable-static \
+  --libdir=/usr/lib \
+  --bindir=/usr/bin \
+  --sbindir=/usr/sbin \
+  --sysconfdir=/etc \
+  --localstatedir=/var \
+  --mandir=/usr/man \
+  --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --includedir=/usr/include \
+  --with-noarch-pkgconfigdir=/usr/lib/pkgconfig \
+  --with-host-scanner \
+  --host=$SLK_TARGET
+
+make V=1
+make DESTDIR=$PKG install
+
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a COPYING README* $PKG/usr/doc/$PRGNAM-$VERSION
+
+}
