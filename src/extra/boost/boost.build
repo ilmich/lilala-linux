@@ -1,0 +1,84 @@
+#!/bin/sh
+
+# Build script for boost
+
+# Copyright 2020 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=boost
+VERSION=1.69.0
+SVERSION=1_69_0
+BUILD=1
+DOWNLOAD_URL=https://dl.bintray.com/boostorg/release/$VERSION/source/boost_$SVERSION.tar.gz
+DOWNLOAD_SHA1=25fca5b6b3ce70b682ecd2c1b9eae04fb90bdafd
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS=
+
+function build() {
+case $ARCH in
+    i?86) BUILD_ARCH=x86 ;;
+    arm*) BUILD_ARCH=arm ;;
+    x86_64) BUILD_ARCH=ia64 ; LIBDIRSUFFIX="64" ;;
+esac
+
+cd $TMP
+rm -rf $PRGNAM"_"$SVERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM"_"$SVERSION
+chown -R root:root .
+
+./bootstrap.sh --without-icu --without-libraries=python
+
+cat > user-config.jam << EOF
+using gcc : $BUILD_ARCH : $SLK_TARGET-g++ ;
+EOF
+
+./b2 --toolset=gcc-$BUILD_ARCH \
+     --user-config=user-config.jam \
+     --with-thread \
+     --with-system \
+     architecture=$BUILD_ARCH \
+     link=shared \
+     variant=release \
+     cxxflags="$SLKCFLAGS --sysroot=$SLK_SYSROOT -s" \
+     --prefix=$PKG/usr \
+     --libdir=$PKG/usr/lib
+
+# --without-python
+
+./b2 --toolset=gcc-$BUILD_ARCH \
+     --user-config=user-config.jam \
+     --with-thread \
+     --with-system \
+     architecture=$BUILD_ARCH \
+     link=shared \
+     variant=release \
+     cxxflags="$SLKCFLAGS --sysroot=$SLK_SYSROOT -s" \
+     --prefix=$PKG/usr \
+     --libdir=$PKG/usr/lib \
+     install
+
+#remove static
+#rm $PKG/usr/lib$LIBDIRSUFFIX/*.a
+
+#mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+#cp -a INSTALL  $PKG/usr/doc/$PRGNAM-$VERSION
+
+}

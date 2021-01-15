@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# Build script for fake-hwclock
+
+# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=fake-hwclock
+VERSION=0.11
+SRCDIR=git
+BUILD=1
+DOWNLOAD_URL=
+DOWNLOAD_SHA1=
+DEPS=""
+
+function build() {
+# install script with correct permission
+install -D -m=0755 -o root -g root $CWD/fake-hwclock $PKG/sbin/fake-hwclock
+install -D -m=0655 -o root -g root $CWD/fake-hwclock.8 $PKG/usr/man/man8/fake-hwclock.8
+install -D -m=0655 -o root -g root $CWD/COPYING $PKG/usr/doc/$PRGNAM-$VERSION/COPYING
+}

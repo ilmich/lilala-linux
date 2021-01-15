@@ -1,9 +1,0 @@
-PRGNAM=vice
-VERSION=3.3
-BUILD=1
-DOWNLOAD_URL=https://sourceforge.net/projects/vice-emu/files/releases/vice-$VERSION.tar.gz
-DOWNLOAD_SHA1=55a34feb29955da40067ee5a5171278ed0191c93
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="SDL2 gcc_libs"
-
-

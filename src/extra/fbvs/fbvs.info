@@ -1,5 +1,0 @@
-PRGNAM=fbvs
-VERSION=20200426
-BUILD=1
-DEPS="libpng"
-
