@@ -1,8 +1,0 @@
-PRGNAM=kernel
-VERSION=${SLK_BOARD}_5.4.84
-SRCNAM=linux-5.4.84
-SOURCE_TAR=
-BUILD=1
-DOWNLOAD_URL=https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.4.84.tar.xz
-DOWNLOAD_SHA1=3670b9ec553bfd125fbb33edf08fc0c06d8a2ad5
-DEPS=
