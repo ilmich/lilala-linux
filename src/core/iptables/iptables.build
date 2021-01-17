@@ -39,6 +39,7 @@ chown -R root:root .
 
 CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
 CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+CPPFLAGS="--sysroot=$SLK_SYSROOT" \
 ./configure \
   --prefix=/usr \
   --disable-static \

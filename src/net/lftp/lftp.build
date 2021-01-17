@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=lftp
-VERSION=4.9.1
+VERSION=4.9.2
 BUILD=1
 DOWNLOAD_URL=http://lftp.yar.ru/ftp/lftp-$VERSION.tar.xz
-DOWNLOAD_SHA1=bc6eda14a03b264066119cce96f638fee61568b7
+DOWNLOAD_SHA1=e1c7936fef725c9e9c5ccccc30f73f9a9f781115
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="expat readline zlib"
 
@@ -38,7 +38,7 @@ cd $PRGNAM-$VERSION
 chown -R root:root .
 
 CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
-CPPFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+CPPFLAGS="--sysroot=$SLK_SYSROOT " \
 CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
 LDFLAGS=" --sysroot=$SLK_SYSROOT -lncursesw" \
 ./configure \
@@ -52,9 +52,8 @@ LDFLAGS=" --sysroot=$SLK_SYSROOT -lncursesw" \
   --with-modules \
   --disable-nls \
   --enable-threads=posix \
-  --disable-rpath \
-  --host=$SLK_TARGET
-  
+  --host=$SLK_TARGET \
+  --with-zlib=$SLK_SYSROOT/usr
 #--with-expat=$SLK_SYSROOT/usr \
 #  --with-readline=$SLK_SYSROOT/usr \
 #  --with-zlib=$SLK_SYSROOT/usr \

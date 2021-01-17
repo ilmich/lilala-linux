@@ -39,7 +39,7 @@ function findbuildlist() {
 		    fi
 		fi
 	fi
-	
+
 	#parsing buildlist line by line
 	while read CMD; do
 	#skip comments in buildlist
@@ -93,7 +93,7 @@ function buildpkg() {
     PKG_LOGS=$OUTPUT_LOGS/`dirname $1`
     PKG_NAME=`basename $1`
     PKGTYPE=tgz
-    TAG=lilala    
+    TAG=lilala
 
     if [ -d $TMP/$1 ]; then
         rm -r $TMP/$1
@@ -116,7 +116,7 @@ function buildpkg() {
     if [ -e $PKG_NAME.build.override ]; then
         . ./$PKG_NAME.build.override
     fi
-    
+
     ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
     if [ -z $SLK_ARCH ]; then
         SLK_ARCH=$ARCH
@@ -128,7 +128,7 @@ function buildpkg() {
         echo "Building $1"
         mkdir -p $PKG_DIR
         mkdir -p $STAGING_PKG_DIR
-        (     
+        (
             # download source code
             if [ ! -z $DOWNLOAD_URL ]; then
                 SOURCE_TAR=${SOURCE_TAR:-`basename $DOWNLOAD_URL`}
@@ -180,7 +180,7 @@ function buildpkg() {
               find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs -r $SLK_TARGET-strip --strip-unneeded 2> /dev/null || true
               find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $SLK_TARGET-strip --strip-unneeded 2> /dev/null || true              
               mkdir -p $OUTPUT
-              makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$SLK_ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+              makepkg -l n -c n $OUTPUT/$PRGNAM-$VERSION-$SLK_ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
               if [ ! -z $SLK_STRIP_PKG ]; then
                 rm -rf usr/man \
                         usr/share/man \
@@ -199,21 +199,21 @@ function buildpkg() {
 
             # cleanup package
             rm -rf $PKG
-            
+
             # unset SOURCE_TAR
-            SOURCE_TAR=        
+            SOURCE_TAR=
         )
 
         if [ $? -ne 0 ]; then
             echo "Error in $PKG_NAME.build"
             exit 1
-        fi	
+        fi
 
 	if [ -e $PKGFINALDEV ]; then
 	    echo "Installing on staging $i"
 	    ROOT=$STAGINGFS upgradepkg --reinstall --install-new $PKGFINALDEV #&> $PKG_LOGS/$PKG_NAME.install.log
 	fi
-        
+
     else
         echo "Skipping $1"
     fi

@@ -64,9 +64,7 @@ LDFLAGS="--sysroot=$SLK_SYSROOT -s " \
   --cpu=$SLK_CPU \
   --target-os=linux \
   --enable-neon \
-  --enable-v4l2-request --enable-libudev \
   --enable-version3 \
-  --enable-libdrm \
   --cross-prefix=$SLK_TARGET- \
   --pkg-config=pkg-config
 

@@ -1,35 +1,6 @@
 diff -rupN minidlna-1.3.0/configure.ac minidlna-1.3.0-new/configure.ac
 --- minidlna-1.3.0/configure.ac	2020-11-24 19:53:50.000000000 +0100
 +++ minidlna-1.3.0-new/configure.ac	2020-12-23 19:01:58.994103664 +0100
-@@ -256,7 +256,7 @@ test x"$ac_cv_header_vorbis_codec_h" !=
- test x"$ac_cv_header_FLAC_metadata_h" != x"yes" && AC_MSG_ERROR([libFLAC headers not found or not usable])
- 
- CFLAGS_SAVE="$CFLAGS"
--CFLAGS="$CFLAGS -Wall -Werror"
-+CFLAGS="$CFLAGS"
- AC_MSG_CHECKING([if we should use the daemon() libc function])
- AC_COMPILE_IFELSE(
-      [AC_LANG_PROGRAM(
-@@ -414,7 +414,7 @@ for dir in "" /usr/local $SEARCH_DIR; do
-     AC_CHECK_LIB([id3tag -lz], [id3_file_open], [LIBID3TAG_LIBS="-lid3tag -lz"], [unset ac_cv_lib_id3tag_id3_file_open; LDFLAGS="$LDFLAGS_SAVE"; continue])
-     break
- done
--test x"$ac_cv_lib_id3tag__lz___id3_file_open" = x"yes" || AC_MSG_ERROR([Could not find libid3tag])
-+test x"$ac_cv_lib_id3tag__lz_id3_file_open" = x"yes" || AC_MSG_ERROR([Could not find libid3tag])
- AC_SUBST(LIBID3TAG_LIBS)
- 
- LDFLAGS_SAVE="$LDFLAGS"
-@@ -440,8 +440,8 @@ for dir in "" /usr/local $SEARCH_DIR; do
- 		  [unset ac_cv_lib_avformat_av_open_input_file; unset ac_cv_lib_avformat_avformat_open_input; LDFLAGS="$LDFLAGS_SAVE"; continue])])
-     break
- done
--if test x"$ac_cv_lib_avformat__lavcodec__lavutil__lz___av_open_input_file" != x"yes" &&
--   test x"$ac_cv_lib_avformat__lavcodec__lavutil__lz___avformat_open_input" != x"yes"; then
-+if test x"$ac_cv_lib_avformat__lavcodec__lavutil__lz_av_open_input_file" != x"yes" &&
-+   test x"$ac_cv_lib_avformat__lavcodec__lavutil__lz_avformat_open_input" != x"yes"; then
-    AC_MSG_ERROR([Could not find libavformat - part of ffmpeg])
- fi
- AC_SUBST(LIBAVFORMAT_LIBS)
 @@ -486,9 +486,9 @@ AC_CHECK_LIB(avahi-client, avahi_threade
  ################################################################################################################
  ### Header checks
