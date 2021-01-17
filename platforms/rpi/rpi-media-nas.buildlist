@@ -1,4 +1,4 @@
 +rpi
 lib/readline
 net/lftp
-+extra/minidlna
++extra/minidlna-app
