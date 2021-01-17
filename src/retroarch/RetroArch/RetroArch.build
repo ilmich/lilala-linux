@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Slackware build script for RetroArch
+# Build script for RetroArch
 
 # Copyright 2020 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
@@ -22,34 +22,15 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-if [ $UID != "0" ]; then
-    echo "You must be logged as root!!!"
-    exit 1
-fi
-
 PRGNAM=RetroArch
-CWD=$(pwd)
-TMP=${TMP:-/tmp}
-PKG=$TMP/package-$PRGNAM
-OUTPUT=${OUTPUT:-$PWD}
-ARCH=${ARCH:-`uname -m`}
+VERSION=1.9.0
+BUILD=1
+DOWNLOAD_URL=https://github.com/libretro/RetroArch/archive/v$VERSION.tar.gz
+DOWNLOAD_SHA1=49ac34c1c7047a580f1e436ec13fee0a7b70adf9
+SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
+DEPS="eudev alsa-lib"
 
-if [ ! -e $CWD/$PRGNAM.info ]; then
-    echo "File $PRGNAM.info not found"
-    exit 1
-fi
-
-. $CWD/$PRGNAM.info
-
-STRIP_CMD=strip
-if [ ! -z "$SLK_TARGET" ]; then
-    TARGET=" --host=$SLK_TARGET "
-    STRIP_CMD=$SLK_TARGET-strip
-fi
-
-if [ ! -z "$SLK_SYSROOT" ]; then
-    SYSROOT=" --sysroot=$SLK_SYSROOT "
-fi
+function build() {
 
 case $ARCH in
     i?86) ARCH=i486 ;;
@@ -58,22 +39,6 @@ case $ARCH in
     *) ARCH=$( uname -m ) ;;
 esac
 
-if [ -z "$SLK_CFLAGS" ]; then
-	if [ "$ARCH" = "i486" ]; then
-	  SLK_CFLAGS="-O2 -march=i486 -mtune=i686"
-	elif [ "$ARCH" = "i686" ]; then
-	  SLK_CFLAGS="-O2 -march=i686 -mtune=i686"
-	elif [ "$ARCH" = "x86_64" ]; then
-	  SLK_CFLAGS="-O2 -fPIC"
-	else
-	  SLK_CFLAGS="-O2"
-	fi
-fi
-
-set -e
-
-rm -rf $PKG
-mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
 tar xvf $CWD/$SOURCE_TAR
@@ -82,9 +47,9 @@ chown -R root:root .
 
 patch -p1 < $CWD/retroarch.patch
 
-CFLAGS="$SLK_CFLAGS $SYSROOT -s -DEGL_NO_X11 " \
-CXXFLAGS="$SLK_CFLAGS $SYSROOT -s -DEGL_NO_X11 " \
-LDFLAGS="$SLK_CFLAGS $SYSROOT -s -lcrypto " \
+CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s -DEGL_NO_X11 " \
+CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s -DEGL_NO_X11 " \
+LDFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s -lcrypto " \
 ./configure \
   --prefix=/usr \
   --bindir=/usr/bin \
@@ -103,7 +68,7 @@ LDFLAGS="$SLK_CFLAGS $SYSROOT -s -lcrypto " \
   --disable-ffmpeg \
   --disable-freetype \
   --disable-dinput \
-  $TARGET \
+  --host=$SLK_TARGET \
   $EXTRA_OPTIONS
 
 #fix for include dir
@@ -119,39 +84,8 @@ install -Dm 644 gfx/video_filters/*.{filt,so} -t $PKG/usr/lib/retroarch/filters/
 
 rm $PKG/usr/bin/retroarch-cg2glsl
 
-set -e
-#strip binaries
-( cd $PKG
-  find . | xargs file | grep "executable" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
-  find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
-  find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $STRIP_CMD --strip-unneeded 2> /dev/null || true
-)
-
 # install docs
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a COPYING README*  $PKG/usr/doc/$PRGNAM-$VERSION
 
-mkdir -p $PKG/install
-cat $CWD/slack-desc > $PKG/install/slack-desc
-
-#generate slack-required
-if [ ! -z "$DEPS" ]; then
-    for i in $DEPS;
-    do
-	echo $i >> $PKG/install/slack-required
-    done
-fi
-
-cd $PKG
-mkdir -p $OUTPUT
-
-if [ -z $SLK_ARCH ]; then
-    makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
-else
-    makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$SLK_ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
-fi
-
-# Clean up the extra stuff:
-if [ "$1" = "--cleanup" ]; then
-  rm -rf $PKG
-fi
+}
