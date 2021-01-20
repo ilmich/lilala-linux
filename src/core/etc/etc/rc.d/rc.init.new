@@ -132,12 +132,6 @@ on_boot() {
 	/etc/rc.d/rc.dropbear start
     fi
 
-    # starting cron daemon
-    if [ -x /sbin/crond ]; then
-	echo_color 2 "Starting crond..."
-	/sbin/crond
-    fi
-
     if [ -e "/etc/keymap" ]; then
         echo_color 2 "Load keyboard..."
         loadkeys `cat /etc/keymap`
@@ -147,6 +141,12 @@ on_boot() {
     if [ -x /etc/rc.d/rc.local ]; then
         echo_color 2 "Loading /etc/rc.d/rc.local..."
         /etc/rc.d/rc.local
+    fi
+
+    # starting cron daemon
+    if [ -x /sbin/crond ]; then
+	echo_color 2 "Starting crond..."
+	/sbin/crond
     fi
 
     /bin/dmesg > /var/log/dmesg

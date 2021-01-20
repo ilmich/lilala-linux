@@ -50,10 +50,10 @@ fi
 
 cp $CWD/kernel_${SLK_BOARD}_config arch/$ARCH/configs/${SLK_BOARD}_defconfig
 make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- ${SLK_BOARD}_defconfig
-#install kernel headers into sysroot
-make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- headers_install INSTALL_HDR_PATH=$SLK_SYSROOT/usr
 make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET-
 make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- INSTALL_MOD_PATH=$PKG/ modules_install
+#install kernel headers into sysroot
+make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- headers_install INSTALL_HDR_PATH=$SLK_SYSROOT/usr
 
 mkdir -p $PKG/boot/overlays
 
