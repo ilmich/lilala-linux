@@ -25,3 +25,4 @@ core/libpcap
 core/libnftnl
 core/iptables
 core/haveged
+core/sysstat
