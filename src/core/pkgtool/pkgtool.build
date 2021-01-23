@@ -24,16 +24,16 @@
 
 PRGNAM=pkgtool
 VERSION=15.0
-BUILD=3
+BUILD=4
 DOWNLOAD_URL=
 DOWNLOAD_SHA1=
 DEPS=
 
 function build() {
 
-install -m744 -D $CWD/scripts/installpkg $PKG/usr/sbin/installpkg
-install -m744 -D $CWD/scripts/upgradepkg $PKG/usr/sbin/upgradepkg
-install -m744 -D $CWD/scripts/removepkg $PKG/usr/sbin/removepkg
+install -m744 -D $CWD/scripts/installpkg $PKG/sbin/installpkg
+install -m744 -D $CWD/scripts/upgradepkg $PKG/sbin/upgradepkg
+install -m744 -D $CWD/scripts/removepkg $PKG/sbin/removepkg
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
