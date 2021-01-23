@@ -1,0 +1,19 @@
+#!/bin/sh
+
+PID=$(pidof -o %PPID darkhttpd 2> /dev/null)
+WEB_ROOT=/var/www
+OPTIONS=""
+
+case $1 in
+	start)
+		[ -z "$PID" ] && /usr/bin/darkhttpd $WEB_ROOT --daemon $OPTIONS &> /dev/null;
+		;;
+	stop)
+		[ -n "$PID" ] && kill -9 $PID &> /dev/null;
+		;;
+	*)
+		echo "usage: $0 start|stop"
+		exit 1
+esac
+
+
