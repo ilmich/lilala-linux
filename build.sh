@@ -151,14 +151,14 @@ function buildpkg() {
             PKG=$TMP/`dirname $1`/package-$PRGNAM
             CWD=$(pwd)
             SLK_SYSROOT=$STAGINGFS
-            
+
             # cleanup tmp files
             rm -rf $PKG
             mkdir -p $TMP $PKG $OUTPUT
             # build package
             set -e
             build
-            
+
             #ensure return to build script dir
             cd $CWD 
             mkdir -p $PKG/install
@@ -180,7 +180,7 @@ function buildpkg() {
               find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs -r $SLK_TARGET-strip --strip-unneeded 2> /dev/null || true
               find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $SLK_TARGET-strip --strip-unneeded 2> /dev/null || true              
               mkdir -p $OUTPUT
-              makepkg -l n -c n $OUTPUT/$PRGNAM-$VERSION-$SLK_ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+              makepkg -l n -c n $PKGFINALDEV
               if [ ! -z $SLK_STRIP_PKG ]; then
                 rm -rf usr/man \
                         usr/share/man \
@@ -208,7 +208,6 @@ function buildpkg() {
             echo "Error in $PKG_NAME.build"
             exit 1
         fi
-
 	if [ -e $PKGFINALDEV ]; then
 	    echo "Installing on staging $i"
 	    ROOT=$STAGINGFS upgradepkg --reinstall --install-new $PKGFINALDEV #&> $PKG_LOGS/$PKG_NAME.install.log
