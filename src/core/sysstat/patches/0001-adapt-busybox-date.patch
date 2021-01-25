@@ -1,0 +1,27 @@
+diff -rupN sysstat-12.5.2/sa1.in sysstat-12.5.2-new/sa1.in
+--- sysstat-12.5.2/sa1.in	2020-12-19 09:51:54.000000000 +0100
++++ sysstat-12.5.2-new/sa1.in	2021-01-23 22:40:16.637887643 +0100
+@@ -42,9 +42,9 @@ if [ "${ROTATE}" = "y" ]
+ then
+ 	if [ "${LONG_NAME}" = "y" ]
+ 	then
+-		DATE=`date --date=yesterday +%Y%m%d`
++		YDAY=$((`date +%s`-86400)) ; DATE=`date -d@$YDAY +%Y%m%d`
+ 	else
+-		DATE=`date --date=yesterday +%d`
++		YDAY=$((`date +%s`-86400)) ; DATE=`date -d@$YDAY +%d`
+ 	fi
+ 	SA_DIR=${SA_DIR}/sa${DATE}
+ fi
+diff -rupN sysstat-12.5.2/sa2.in sysstat-12.5.2-new/sa2.in
+--- sysstat-12.5.2/sa2.in	2020-12-19 09:51:54.000000000 +0100
++++ sysstat-12.5.2-new/sa2.in	2021-01-23 22:21:28.387891947 +0100
+@@ -38,7 +38,7 @@ if [ x$YESTERDAY = xno ]
+ then
+ 	DATE_OPTS=
+ else
+-	DATE_OPTS="--date=yesterday"
++	DATE_OPTS="-d@$(( `date +%s`-86400))"
+ fi
+ 
+ if [ ${HISTORY} -gt 28 ]
