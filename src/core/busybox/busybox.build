@@ -24,7 +24,7 @@
 
 PRGNAM=busybox
 VERSION=1.32.0
-BUILD=3
+BUILD=4
 DOWNLOAD_URL=https://busybox.net/downloads/busybox-$VERSION.tar.bz2
 DOWNLOAD_SHA1=277b245e4bbad2df44c767017c68cb68c477274b
 SOURCE_TAR=`basename $DOWNLOAD_URL`
@@ -57,7 +57,7 @@ mkdir -p $PKG/etc/cron.monthly
 mkdir -p $PKG/var/spool/cron/crontabs
 
 chmod -R 0750 $PKG/var/spool/cron/crontabs
-install -D -m 0600 $CWD/crontabs.default $PKG/var/spool/cron/crontabs/root
+install -D -m 0600 $CWD/crontabs.default $PKG/var/spool/cron/crontabs/root.new
 install -D -m 0644 $CWD/ntpd.conf.new $PKG/etc/ntpd.conf.new
 install -D -m 0700 examples/udhcp/simple.script $PKG/usr/share/udhcpc/default.script
 install -D -m 4111 bbsuid $PKG/bin/bbsuid

@@ -11,3 +11,4 @@ config() {
 }
 
 config etc/ntpd.conf.new
+config var/spool/cron/crontabs/root.new

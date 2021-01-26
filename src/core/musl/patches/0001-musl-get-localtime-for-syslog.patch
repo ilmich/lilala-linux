@@ -1,0 +1,12 @@
+diff -rupN musl-1.2.2/src/misc/syslog.c musl-1.2.2-new/src/misc/syslog.c
+--- musl-1.2.2/src/misc/syslog.c	2021-01-15 03:26:00.000000000 +0100
++++ musl-1.2.2-new/src/misc/syslog.c	2021-01-26 09:16:02.092990134 +0100
+@@ -98,7 +98,7 @@ static void _vsyslog(int priority, const
+ 	if (!(priority & LOG_FACMASK)) priority |= log_facility;
+ 
+ 	now = time(NULL);
+-	gmtime_r(&now, &tm);
++	localtime_r(&now, &tm);
+ 	strftime(timebuf, sizeof timebuf, "%b %e %T", &tm);
+ 
+ 	pid = (log_opt & LOG_PID) ? getpid() : 0;

@@ -43,6 +43,11 @@ on_boot() {
     echo_color 2 "Setting up loopback device..."
     /sbin/ifconfig lo 127.0.0.1
 
+    #set timezone
+    if [ -e /etc/localtime ]; then
+        export TZ=`cat /etc/localtime`
+    fi
+
     echo_color 2 "Start syslogd..."
     /sbin/syslogd
 
