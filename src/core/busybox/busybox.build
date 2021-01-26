@@ -24,7 +24,7 @@
 
 PRGNAM=busybox
 VERSION=1.32.0
-BUILD=2
+BUILD=3
 DOWNLOAD_URL=https://busybox.net/downloads/busybox-$VERSION.tar.bz2
 DOWNLOAD_SHA1=277b245e4bbad2df44c767017c68cb68c477274b
 SOURCE_TAR=`basename $DOWNLOAD_URL`
