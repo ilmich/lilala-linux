@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Build script for e2fsprogs
+# Build script for lua
 
-# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2021 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,13 +22,13 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PRGNAM=e2fsprogs
-VERSION=1.45.6
-BUILD=2
-DOWNLOAD_URL=http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-$VERSION.tar.gz
-DOWNLOAD_SHA1=4f2eb83d9fd96d61355c10f1223e47cc8df71229
+PRGNAM=lua
+VERSION=5.4.2
+BUILD=1
+DOWNLOAD_URL=http://www.lua.org/ftp/lua-$VERSION.tar.gz
+DOWNLOAD_SHA1=96d4a21393c94bed286b8dc0568f4bdde8730b22
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=
+DEPS=""
 
 function build() {
 cd $TMP
@@ -37,35 +37,21 @@ tar xvf $CWD/$SOURCE_TAR
 cd $PRGNAM-$VERSION
 chown -R root:root .
 
-CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
-CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
-./configure \
-  --prefix=/ \
-  --sysconfdir=/etc \
-  --enable-elf-shlibs \
-  --libdir=/lib \
-  --enable-libuuid \
-  --enable-libblkid \
-  --disable-defrag \
-  --mandir=/usr/man \
-  --infodir=/usr/share/info \
-  --datarootdir=/usr/share \
-  --includedir=/usr/include \
-  --host=$SLK_TARGET
+#apply patches
+for i in `find $CWD/patches/ -name *.patch | sort -`; do
+    patch -p1 < $i
+done
 
-make -j2 V=1
-make DESTDIR=$PKG install install-libs
+make CC=$SLK_TARGET-gcc CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s" -j2 linux 
+make TO_LIB="liblua.so liblua.so.5.4 liblua.so.$VERSION" INSTALL_TOP=$PKG/usr install
 
-# remove static lib
-rm $PKG/lib/*.a
+install -Dm644 $CWD/lua.pc $PKG/usr/lib/pkgconfig/lua.pc
 
-# remove cron jobs (not usable with busybox cron)
-rm -r $PKG/etc/cron.d
-
-# Don't clobber an existing config file
-mv $PKG/etc/mke2fs.conf $PKG/etc/mke2fs.conf.new
+# remove luac
+rm $PKG/usr/bin/luac
 
 # install docs
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a INSTALL README RELEASE-NOTES $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a README doc/  $PKG/usr/doc/$PRGNAM-$VERSION
+
 }
