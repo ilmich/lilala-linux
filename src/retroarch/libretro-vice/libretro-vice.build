@@ -43,8 +43,8 @@ for i in `find $CWD/patches/ -name *.patch | sort -`; do
 done
 
 for EMU in xvic x64; do
-    CC="$SLK_TARGET-gcc -DHAVE_TIME_T_IN_TIME_H=1 $SYSROOT -s" \
-    CXX="$SLK_TARGET-g++ -DHAVE_TIME_T_IN_TIME_H=1 $SYSROOT" \
+    CC="$SLK_TARGET-gcc -DHAVE_TIME_T_IN_TIME_H=1 --sysroot=$SLK_SYSROOT -s" \
+    CXX="$SLK_TARGET-g++ -DHAVE_TIME_T_IN_TIME_H=1 --sysroot=$SLK_SYSROOT" \
     platform="armv7a-neon-hardfloat" make -j2 -f Makefile EMUTYPE=$EMU
     install -Dm 644 vice_${EMU}_libretro.so $PKG/usr/lib/libretro/vice_${EMU}_libretro.so
 

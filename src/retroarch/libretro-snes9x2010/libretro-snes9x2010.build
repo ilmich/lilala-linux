@@ -42,7 +42,7 @@ for i in `find $CWD/patches/ -name *.patch | sort -`; do
     patch -p1 < $i
 done
 
-CC="$SLK_TARGET-gcc $SYSROOT -s" platform=armv7a-neon-hardfloat make -f Makefile.libretro
+CC="$SLK_TARGET-gcc --sysroot=$SLK_SYSROOT -s" platform=armv7a-neon-hardfloat make -f Makefile.libretro
 install -Dm644 snes9x2010_libretro.so $PKG/usr/lib/libretro/snes9x2010_libretro.so
 install -Dm644 $CWD/snes9x2010_libretro.info $PKG/usr/share/libretro/info/snes9x2010_libretro.info
 

@@ -42,8 +42,8 @@ for i in `find $CWD/patches/ -name *.patch | sort -`; do
     patch -p1 < $i
 done
 
-CFLAGS="$SLK_CFLAGS $SYSROOT -s " \
-CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
+CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
 ./configure \
   --prefix=/ \
   --disable-static \

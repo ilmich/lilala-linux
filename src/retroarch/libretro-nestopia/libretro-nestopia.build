@@ -45,7 +45,7 @@ done
 
 (
     cd libretro
-    CXX="$SLK_TARGET-g++ $SYSROOT -s" platform="armv7a-neon-hardfloat" make -f Makefile
+    CXX="$SLK_TARGET-g++ --sysroot=$SLK_SYSROOT -s" platform="armv7a-neon-hardfloat" make -f Makefile
     install -Dm 644 nestopia_libretro.so $PKG/usr/lib/libretro/nestopia_libretro.so
     install -Dm 644 $CWD/nestopia_libretro.info $PKG/usr/share/libretro/info/nestopia_libretro.info
 )

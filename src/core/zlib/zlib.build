@@ -39,8 +39,8 @@ chown -R root:root .
 
 patch -p0 < $CWD/configure-mandir.patch
 
-CFLAGS="$SLK_CFLAGS $SYSROOT -s " \
-CXXFLAGS="$SLK_CFLAGS $SYSROOT -s " \
+CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
 CHOST=$SLK_TARGET \
 LDFLAGS="-Wl,-soname,libz.so.1" \
 ./configure \
