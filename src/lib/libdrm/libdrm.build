@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=libdrm
-VERSION=2.4.100
+VERSION=2.4.104
 BUILD=1
-DOWNLOAD_URL=https://dri.freedesktop.org/libdrm/libdrm-$VERSION.tar.gz
-DOWNLOAD_SHA1=2097f0b98deaff16b8f3b93cedcb5cd35291a3c1
+DOWNLOAD_URL=https://dri.freedesktop.org/libdrm/libdrm-$VERSION.tar.xz
+DOWNLOAD_SHA1=c96d3c5236195cd4c0621ef843c30b959b328b75
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS=
 
@@ -37,30 +37,34 @@ tar xvf $CWD/$SOURCE_TAR
 cd $PRGNAM-$VERSION
 chown -R root:root .
 
-CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s" \
-CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
-./configure \
-  --prefix=/usr \
-  --disable-static \
-  --libdir=/usr/lib \
-  --bindir=/usr/bin \
-  --sbindir=/usr/sbin \
-  --sysconfdir=/etc \
-  --localstatedir=/var \
-  --mandir=/usr/man \
-  --docdir=/usr/doc/$PRGNAM-$VERSION \
-  --includedir=/usr/include \
-  --disable-intel \
-  --enable-vc4 \
-  --enable-freedreno \
-  --enable-freedreno-kgsl \
-  --host=$SLK_TARGET
+mkdir build
+cat > build/meson.cross << EOF
+[binaries]
+c = '$SLK_TARGET-gcc'
+cpp = '$SLK_TARGET-g++'
+ar = '$SLK_TARGET-ar'
+strip = '$SLK_TARGET-strip'
+pkgconfig = 'pkg-config'
+[host_machine]
+system = 'linux'
+cpu_family = '$ARCH'
+cpu = '$SLK_ARCH'
+endian = 'little'
+[properties]
+needs_exe_wrapper = true
+EOF
 
-make -j2 V=1
-make DESTDIR=$PKG install
+(
+    cd build
+    meson --cross-file meson.cross \
+		-Dbuildtype=plain \
+		-Dprefix=/usr \
+		-Dc_args="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s" \
+		-Dcpp_args="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s"
+)
 
-#remove .la
-rm $PKG/usr/lib/*.la
+ninja -C build/
+DESTDIR=$PKG ninja -C build/ install
 
 # install docs
 #mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
