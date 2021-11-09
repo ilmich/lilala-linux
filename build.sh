@@ -63,7 +63,7 @@ function deletepkg() {
     PKG_DIR=$OUTPUT_PKGS/`dirname $1`
     STAGING_PKG_DIR=$OUTPUT_STAGING_PKGS/`dirname $1`
     PKG_NAME=`basename $1`
-    PKGTYPE=tgz
+    PKGTYPE=tbz
     TAG=lilala
     if [ -z $SLK_ARCH ]; then
         SLK_ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
@@ -92,7 +92,7 @@ function buildpkg() {
     STAGING_PKG_DIR=$OUTPUT_STAGING_PKGS/`dirname $1`
     PKG_LOGS=$OUTPUT_LOGS/`dirname $1`
     PKG_NAME=`basename $1`
-    PKGTYPE=tgz
+    PKGTYPE=tbz
     TAG=lilala
 
     if [ -d $TMP/$1 ]; then
@@ -181,6 +181,8 @@ function buildpkg() {
               find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $SLK_TARGET-strip --strip-unneeded 2> /dev/null || true              
               mkdir -p $OUTPUT
               makepkg -l n -c n $PKGFINALDEV
+              rm -f usr/lib/*.a
+              rm -f lib/*.a
               if [ ! -z $SLK_STRIP_PKG ]; then
                 rm -rf usr/man \
                         usr/share/man \
@@ -193,8 +195,8 @@ function buildpkg() {
                         usr/lib/cmake \
                         lib/pkgconfig \
                         usr/share/aclocal
-                makepkg -l y -c n $PKGFINAL
               fi
+              makepkg -l y -c n $PKGFINAL
             )
 
             # cleanup package
@@ -210,7 +212,7 @@ function buildpkg() {
         fi
 	if [ -e $PKGFINALDEV ]; then
 	    echo "Installing on staging $i"
-	    ROOT=$STAGINGFS upgradepkg --reinstall --install-new $PKGFINALDEV #&> $PKG_LOGS/$PKG_NAME.install.log
+	    ROOT=$STAGINGFS INSTLOCKDIR=$TMP/lock upgradepkg --reinstall --install-new $PKGFINALDEV #&> $PKG_LOGS/$PKG_NAME.install.log
 	fi
 
     else
