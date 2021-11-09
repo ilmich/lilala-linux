@@ -24,7 +24,7 @@
 
 PRGNAM=bash
 VERSION=5.1.8
-BUILD=1
+BUILD=2
 DOWNLOAD_URL=http://ftp.gnu.org/gnu/bash/bash-$VERSION.tar.gz
 DOWNLOAD_SHA1=6399bd1f9ef4dd0d901c7b76737bc409de73c77a
 SOURCE_TAR=`basename $DOWNLOAD_URL`
@@ -37,7 +37,7 @@ tar xvf $CWD/$SOURCE_TAR
 cd $PRGNAM-$VERSION
 chown -R root:root .
 
-CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s" \
+CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s -static" \
 CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
 ./configure \
   --prefix=/ \

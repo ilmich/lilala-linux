@@ -25,7 +25,7 @@
 PRGNAM=ncurses
 VERSION=6.1
 SVERSION=${VERSION/_/-}
-BUILD=1
+BUILD=2
 DOWNLOAD_URL=http://invisible-mirror.net/archives/ncurses/ncurses-$SVERSION.tar.gz
 DOWNLOAD_SHA1=57acf6bc24cacd651d82541929f726f4def780cc
 SOURCE_TAR=`basename $DOWNLOAD_URL`
@@ -63,7 +63,7 @@ make -j2
 make DESTDIR=$PKG install
 
 #remove static libs
-rm $PKG/lib/*.a
+#rm $PKG/lib/*.a
 
 #mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 #cp -a COPYRIGHT INSTALL README VERSION WHATSNEW $PKG/usr/doc/$PRGNAM-$VERSION
