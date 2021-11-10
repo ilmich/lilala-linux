@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=openssl
-VERSION=1.1.1i
+VERSION=3.0.0
 BUILD=1
 DOWNLOAD_URL=https://www.openssl.org/source/openssl-$VERSION.tar.gz
-DOWNLOAD_SHA1=eb684ba4ed31fe2c48062aead75233ecd36882a6
+DOWNLOAD_SHA1=3be896f1b33bc01af874ccca701a6f700af9de20
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS=
 
@@ -68,6 +68,6 @@ rm $PKG/usr/bin/c_rehash
 mv $PKG/etc/ssl/openssl.cnf $PKG/etc/ssl/openssl.cnf.new
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a CHANGES* INSTALL* LICENSE README* $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a CHANGES* INSTALL* LICENSE.txt README* $PKG/usr/doc/$PRGNAM-$VERSION
 
 }

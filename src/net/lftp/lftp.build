@@ -24,7 +24,7 @@
 
 PRGNAM=lftp
 VERSION=4.9.2
-BUILD=1
+BUILD=2
 DOWNLOAD_URL=http://lftp.yar.ru/ftp/lftp-$VERSION.tar.xz
 DOWNLOAD_SHA1=e1c7936fef725c9e9c5ccccc30f73f9a9f781115
 SOURCE_TAR=`basename $DOWNLOAD_URL`
