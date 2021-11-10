@@ -1,0 +1,66 @@
+#!/bin/sh
+
+# Build script for slapt-get
+
+# Copyright 2021 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=slapt-get
+VERSION=0.11.3
+BUILD=2
+DOWNLOAD_URL=https://github.com/jaos/slapt-get/archive/refs/tags/$VERSION.tar.gz
+DOWNLOAD_SHA1=67cb314d6a87adbcf8cd20d5fc0ad20d3ed4e585
+SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
+DEPS="openssl curl zlib"
+
+function build() {
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+
+#apply patches
+for i in `find $CWD/patches/ -name *.patch | sort -`; do
+    patch -p1 < $i
+done
+
+make CC=$SLK_TARGET-gcc HAS_GPGME=0 STRIP=$SLK_TARGET-strip LIBDIR=/usr/lib \
+     CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s -DVERSION='\"$VERSION\"' -DPACKAGE='\"slapt-get\"' -DRC_LOCATION='\"/etc/slapt-get/slapt-getrc\"'" install DESTDIR=$PKG
+
+#cleanup slackware repositories
+rm $PKG/etc/slapt-get/slapt-getrc
+
+# create the lilala ones
+cat > $PKG/etc/slapt-get/slapt-getrc.new << EOF
+# Working directory for local storage/cache.
+WORKINGDIR=/var/cache/slapt-get
+
+# Exclude package names and expressions (comma delimited).
+# To exclude pre and beta packages, add this to the exclude: 
+#   [0-9\_\.\-]{1}pre[0-9\-\.\-]{1}
+EXCLUDE=^kernel-(generic|huge|modules|firmware)$
+
+# Base url to directory with a PACKAGES.TXT.
+SOURCE=http://ilmich.altervista.org/lilala-repo/$SLK_ARCH/:OFFICIAL
+
+EOF
+
+}
