@@ -1,65 +1,65 @@
 #!/bin/sh
 
-function findbuildscript() {
-	COUNT=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.build 2> /dev/null | grep $1.build | wc -l`
-	if [ $(($COUNT)) -eq 1 ]; then
-		PKGBUILD=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.build | grep \/$1.build`
-		PKGBUILD=`dirname $PKGBUILD`
-		echo ${PKGBUILD#platforms/$PLATFORM_NAME/src/} >> $2
-	else
-		COUNT=`ls -1 src/*/*/*.build | grep \/$1.build | wc -l`
-		if [ $(($COUNT)) -eq 1 ]; then
-			PKGBUILD=`ls -1 src/*/*/*.build | grep $1.build`
-			PKGBUILD=`dirname $PKGBUILD`
-			echo ${PKGBUILD#src/} >> $2
-		else
-			return 1
-		fi
-	fi
-	return 0
+findbuildscript() {
+    COUNT=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.build 2> /dev/null | grep $1.build | wc -l`
+    if [ $(($COUNT)) -eq 1 ]; then
+        PKGBUILD=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.build | grep \/$1.build`
+        PKGBUILD=`dirname $PKGBUILD`
+        echo ${PKGBUILD#platforms/$PLATFORM_NAME/src/} >> $2
+    else
+        COUNT=`ls -1 src/*/*/*.build | grep \/$1.build | wc -l`
+        if [ $(($COUNT)) -eq 1 ]; then
+            PKGBUILD=`ls -1 src/*/*/*.build | grep $1.build`
+            PKGBUILD=`dirname $PKGBUILD`
+            echo ${PKGBUILD#src/} >> $2
+            else
+            return 1
+            fi
+    fi
+    return 0
 }
 
-function findbuildlist() {
-	# scan platforms buildlist
-	COUNT=`ls -1 platforms/$PLATFORM_NAME/*.buildlist 2> /dev/null | grep \/$1.buildlist | wc -l `
-	if [ $(($COUNT)) -eq 1 ]; then
-		BUILDLIST=`ls -1 platforms/$PLATFORM_NAME/*.buildlist | grep \/$1.buildlist`
-	else
-		# scan source tree buildlist
-		COUNT=`ls -1 src/*.buildlist | grep \/$1.buildlist | wc -l `
-		if [ $(($COUNT)) -eq 1 ]; then
-			BUILDLIST=`ls -1 src/*.buildlist | grep \/$1.buildlist`
-		else
-		    # scan source tree buildlist
-		    COUNT=`ls -1 src/*/*.buildlist | grep \/$1.buildlist | wc -l `
-		    if [ $(($COUNT)) -eq 1 ]; then
-			BUILDLIST=`ls -1 src/*/*.buildlist | grep \/$1.buildlist`
-		    else
-			return 1
-		    fi
-		fi
-	fi
+findbuildlist() {
+    # scan platforms buildlist
+    COUNT=`ls -1 platforms/$PLATFORM_NAME/*.buildlist 2> /dev/null | grep \/$1.buildlist | wc -l `
+    if [ $(($COUNT)) -eq 1 ]; then
+        BUILDLIST=`ls -1 platforms/$PLATFORM_NAME/*.buildlist | grep \/$1.buildlist`
+    else
+        # scan source tree buildlist
+        COUNT=`ls -1 src/*.buildlist | grep \/$1.buildlist | wc -l `
+        if [ $(($COUNT)) -eq 1 ]; then
+            BUILDLIST=`ls -1 src/*.buildlist | grep \/$1.buildlist`
+        else
+            # scan source tree buildlist
+            COUNT=`ls -1 src/*/*.buildlist | grep \/$1.buildlist | wc -l `
+            if [ $(($COUNT)) -eq 1 ]; then
+                BUILDLIST=`ls -1 src/*/*.buildlist | grep \/$1.buildlist`
+            else
+                return 1
+            fi
+        fi
+    fi
 
-	#parsing buildlist line by line
-	while read CMD; do
-	#skip comments in buildlist
-	if [[ $CMD == \#* ]]; then
-		continue;
-	fi
-	#include another buildlist
-	if [[ $CMD == \+* ]]; then
-		SUBSTRING=$(echo $CMD | cut -c 2-)
-		findbuildlist $SUBSTRING $2
-		continue;
-	fi
-	echo $CMD >> $2
-	done < $BUILDLIST
+    #parsing buildlist line by line
+    while read CMD; do
+    #skip comments in buildlist
+    if [[ $CMD == \#* ]]; then
+        continue;
+    fi
+    #include another buildlist
+    if [[ $CMD == \+* ]]; then
+        SUBSTRING=$(echo $CMD | cut -c 2-)
+        findbuildlist $SUBSTRING $2
+        continue;
+    fi
+    echo $CMD >> $2
+    done < $BUILDLIST
 
-	return 0
+    return 0
 }
 
 # TOOD better package removal based on some sort of metadata 
-function deletepkg() {
+deletepkg() {
     PKG_DIR=$OUTPUT_PKGS/`dirname $1`
     STAGING_PKG_DIR=$OUTPUT_STAGING_PKGS/`dirname $1`
     PKG_NAME=`basename $1`
@@ -87,7 +87,7 @@ function deletepkg() {
     cd $MAIN_DIR
 }
 
-function buildpkg() {
+buildpkg() {
     PKG_DIR=$OUTPUT_PKGS/`dirname $1`
     STAGING_PKG_DIR=$OUTPUT_STAGING_PKGS/`dirname $1`
     PKG_LOGS=$OUTPUT_LOGS/`dirname $1`
@@ -210,10 +210,10 @@ function buildpkg() {
             echo "Error in $PKG_NAME.build"
             exit 1
         fi
-	if [ -e $PKGFINALDEV ]; then
-	    echo "Installing on staging $i"
-	    ROOT=$STAGINGFS INSTLOCKDIR=$TMP/lock upgradepkg --reinstall --install-new $PKGFINALDEV #&> $PKG_LOGS/$PKG_NAME.install.log
-	fi
+    if [ -e $PKGFINALDEV ]; then
+        echo "Installing on staging $i"
+        ROOT=$STAGINGFS INSTLOCKDIR=$TMP/lock upgradepkg --reinstall --install-new $PKGFINALDEV #&> $PKG_LOGS/$PKG_NAME.install.log
+    fi
 
     else
         echo "Skipping $1"
@@ -222,7 +222,7 @@ function buildpkg() {
 
 }
 
-function buildrootfs() {
+buildrootfs() {
     for i in `find $OUTPUT_PKGS -name *.t?z`; do
 	ROOT=$ROOTFS upgradepkg --reinstall --install-new --terse $i
     done
@@ -234,19 +234,19 @@ function buildrootfs() {
     du -d 0 -h $ROOTFS
 }
 
-function usage() {
+usage() {
     echo "usage: $0 [build|rebuild|delete|cleanfs|buildfs|rebuildfs]"
     echo ""
     echo "      build [package|buildlist]       build single or multiple package"
     echo "      rebuild [package|buildlist]     rebuild single or multiple package"
-    echo "      delete [package|buildlist]      debuild single or multiple package"
+    echo "      delete [package|buildlist]      delete single or multiple package"
     echo "      cleanfs                         clean output filesystem"
     echo "      buildfs                         build output filesystem"
     echo "      rebuildfs                       rebuild output filesystem"
     exit 1
 }
 
-function showbuildinfo() {
+showbuildinfo() {
 
     echo "Building Lilala linux for $PLATFORM_NAME"
     echo "----------------------------------------"
@@ -313,58 +313,58 @@ BUILDPKG=
 DELETEPKG=
 case $1 in
     build)
-	echo "starting build"
-    showbuildinfo
-	BUILDPKG="YES"
-	shift
-	;;
+        echo "starting build"
+        showbuildinfo
+        BUILDPKG="YES"
+        shift
+        ;;
     rebuild)
-    showbuildinfo
-	DELETEPKG="YES"
-	BUILDPKG="YES"
-	shift
-	;;
+        showbuildinfo
+        DELETEPKG="YES"
+        BUILDPKG="YES"
+        shift
+        ;;
     delete)
-    showbuildinfo
-	DELETEPKG="YES"
-	shift
-	;;
+        showbuildinfo
+        DELETEPKG="YES"
+        shift
+        ;;
     cleanfs)
     showbuildinfo
-	echo "cleaning target fs"
-	rm -r $ROOTFS
-	exit 0
-	;;
+        echo "cleaning target fs"
+        rm -r $ROOTFS
+        exit 0
+        ;;
     buildfs)
-    showbuildinfo
-	echo "build target fs"
-	buildrootfs
-	exit 0
-	;;
+        showbuildinfo
+        echo "build target fs"
+        buildrootfs
+        exit 0
+        ;;
     rebuildfs)
-    showbuildinfo
-	echo "rebuild target fs"
-	rm -r $ROOTFS
-	mkdir -p $ROOTFS
-	buildrootfs
-	exit 0
-	;;
+        showbuildinfo
+        echo "rebuild target fs"
+        rm -r $ROOTFS
+        mkdir -p $ROOTFS
+        buildrootfs
+        exit 0
+        ;;
     *) 
-	echo "Command $1 not recognized"
-	usage
-	exit 1
-	;;
+        echo "Command $1 not recognized"
+        usage
+        exit 1
+        ;;
 esac
 
 rm -f $OUTPUT_DIR/buildlist
 while [ $# -gt 0 ] ; do
     findbuildlist $1 $OUTPUT_DIR/buildlist
     if [ "$?" == 1 ]; then
-	findbuildscript $1 $OUTPUT_DIR/buildlist
-	if [ $? -eq 1 ]; then
-		echo "package or buildlist $1 not exists"
-		exit 1
-	fi
+    findbuildscript $1 $OUTPUT_DIR/buildlist
+    if [ $? -eq 1 ]; then
+        echo "package or buildlist $1 not exists"
+    exit 1
+    fi
     fi
 
     shift
@@ -375,10 +375,10 @@ buildpkg core/$SLK_LIBC
 buildpkg kernel/kernel
 
 for i in `cat $OUTPUT_DIR/buildlist`; do
-	if [ ! -z $DELETEPKG ]; then
-		deletepkg $i
-	fi
-	if [ ! -z $BUILDPKG ]; then
-		buildpkg $i
-	fi
+    if [ ! -z $DELETEPKG ]; then
+        deletepkg $i
+    fi
+    if [ ! -z $BUILDPKG ]; then
+        buildpkg $i
+    fi
 done
