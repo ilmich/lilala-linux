@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Slackware remove package script
 #
 # Copyright 1994, 1995, 1998  Patrick Volkerding, Moorhead, Minnesota USA
@@ -411,7 +411,7 @@ remove_packages() {
     fi
     # If there is an uninstall script, run it here:
     if [ -r $TMP/$PKGNAME ]; then
-     cd $ROOT/ ; sh $TMP/$PKGNAME
+     ( cd $ROOT/ ; sh $TMP/$PKGNAME )
      # Move the uninstall script to $LOG_DIR/removed_uninstall_scripts:
      mv $TMP/$PKGNAME $LOG_DIR/removed_uninstall_scripts
     fi
