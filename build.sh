@@ -1,5 +1,23 @@
 #!/bin/sh
 
+downloadsource() {
+    # download source code
+    if [ ! -z $3 ]; then
+        SOURCE_TAR=$3
+    else
+        SOURCE_TAR=`basename $1`
+    fi
+
+    if [ ! -e ${CACHE_DIR}/$SOURCE_TAR ]; then
+        wget -c $1 -O $CACHE_DIR/$SOURCE_TAR
+    fi
+
+    if [ ! $2 == `sha1sum $CACHE_DIR/$SOURCE_TAR | cut -d " " -f 1` ]; then
+        echo "SHA1 did not match"
+        exit 1
+    fi
+}
+
 findbuildscript() {
     COUNT=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.build 2> /dev/null | grep $1.build | wc -l`
     if [ $(($COUNT)) -eq 1 ]; then
@@ -63,8 +81,6 @@ deletepkg() {
     PKG_DIR=$OUTPUT_PKGS/`dirname $1`
     STAGING_PKG_DIR=$OUTPUT_STAGING_PKGS/`dirname $1`
     PKG_NAME=`basename $1`
-    PKGTYPE=tbz
-    TAG=lilala
     if [ -z $SLK_ARCH ]; then
         SLK_ARCH=`echo $SLK_TARGET | cut -d - -f 1 -`
     fi
@@ -92,8 +108,6 @@ buildpkg() {
     STAGING_PKG_DIR=$OUTPUT_STAGING_PKGS/`dirname $1`
     PKG_LOGS=$OUTPUT_LOGS/`dirname $1`
     PKG_NAME=`basename $1`
-    PKGTYPE=tbz
-    TAG=lilala
 
     if [ -d $TMP/$1 ]; then
         rm -r $TMP/$1
@@ -131,19 +145,12 @@ buildpkg() {
         (
             # download source code
             if [ ! -z $DOWNLOAD_URL ]; then
-                SOURCE_TAR=${SOURCE_TAR:-`basename $DOWNLOAD_URL`}
-
-            if [ ! -e ${CACHE_DIR}/$SOURCE_TAR ]; then
-                wget -c $DOWNLOAD_URL -O $CACHE_DIR/$SOURCE_TAR
-            fi
-
-            if [ ! $DOWNLOAD_SHA1 == `sha1sum $CACHE_DIR/$SOURCE_TAR | cut -d " " -f 1` ]; then
-                echo "SHA1 did not match"
-                exit 1
-            fi
-
-            # linking source tar
-            ln -s $CACHE_DIR/$SOURCE_TAR .
+                if [ ! -z $DOWNLOAD_SHA1 ]; then
+                    downloadsource $DOWNLOAD_URL $DOWNLOAD_SHA1 $SOURCE_TAR
+                else
+                    downloadsource $DOWNLOAD_URL "" $SOURCE_TAR
+                fi
+                ln -s $CACHE_DIR/$SOURCE_TAR .
             fi
 
             # setup some vars
@@ -224,7 +231,7 @@ buildpkg() {
 
 buildrootfs() {
     for i in `find $OUTPUT_PKGS -name *.t?z`; do
-	ROOT=$ROOTFS upgradepkg --reinstall --install-new --terse $i
+	ROOT=$ROOTFS INSTLOCKDIR=$TMP/lock upgradepkg --reinstall --install-new --terse $i
     done
     (
 	cd $ROOTFS
@@ -299,6 +306,8 @@ CACHE_DIR=$MAIN_DIR/cache
 OUTPUT_STAGING_PKGS=$OUTPUT_DIR/staging_pkgs
 OUTPUT_LOGS=$OUTPUT_DIR/logs
 TMP=/tmp/lilala
+PKGTYPE=tbz
+TAG=lilala
 
 mkdir -p $ROOTFS
 mkdir -p $STAGINGFS
