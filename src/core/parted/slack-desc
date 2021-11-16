@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+      |-----handy-ruler------------------------------------------------------|
+parted: parted (tools for manipulating partition tables)
+parted:
+parted: GNU Parted manipulates partition tables.
+parted: This is useful for creating space for new operating systems,
+parted: reorganizing disk usage, copying data on hard disks and disk imaging.
+parted:
+parted: The package contains a library, libparted, as well as a command-line
+parted: frontend, parted, which can also be used in scripts.
+parted:
+parted: https://www.gnu.org/software/parted/
+parted:

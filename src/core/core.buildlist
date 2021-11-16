@@ -26,3 +26,4 @@ core/libnftnl
 core/iptables
 core/haveged
 core/sysstat
+core/parted

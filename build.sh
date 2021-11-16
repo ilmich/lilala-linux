@@ -1,5 +1,14 @@
 #!/bin/sh
 
+applypatches() {
+    if [ -d $1 ]; then
+        #apply patches
+        for i in `find $1 -name *.patch | sort -`; do
+            patch -p1 < $i
+        done
+    fi
+}
+
 downloadsource() {
     # download source code
     if [ ! -z $3 ]; then
@@ -190,6 +199,8 @@ buildpkg() {
               makepkg -l n -c n $PKGFINALDEV
               rm -f usr/lib/*.a
               rm -f lib/*.a
+              rm -f lib/*.la
+              rm -f usr/lib/*.la
               if [ ! -z $SLK_STRIP_PKG ]; then
                 rm -rf usr/man \
                         usr/share/man \
@@ -230,7 +241,7 @@ buildpkg() {
 }
 
 buildrootfs() {
-    for i in `find $OUTPUT_PKGS -name *.t?z`; do
+    for i in `find $OUTPUT_PKGS/{core,kernel} -name *.t?z`; do
 	ROOT=$ROOTFS INSTLOCKDIR=$TMP/lock upgradepkg --reinstall --install-new --terse $i
     done
     (
