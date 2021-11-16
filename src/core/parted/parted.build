@@ -28,7 +28,7 @@ BUILD=1
 DOWNLOAD_URL=https://ftp.gnu.org/gnu/parted/parted-$VERSION.tar.xz
 DOWNLOAD_SHA1=903c58fab429d3b62aa324033a3e41b0b96ad810
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=
+DEPS="ncurses readline e2fsprogs"
 
 function build() {
 cd $TMP
