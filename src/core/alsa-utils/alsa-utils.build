@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=alsa-utils
-VERSION=1.1.9
+VERSION=1.2.5.1
 BUILD=1
 DOWNLOAD_URL=https://www.alsa-project.org/files/pub/utils/alsa-utils-$VERSION.tar.bz2
-DOWNLOAD_SHA1=9aee48df54a6df7519f50b9b62a13217e2a91bf8
+DOWNLOAD_SHA1=370f2dab0f3c9f2da589ad7d5418c26c9777378a
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="alsa-lib"
 
@@ -39,6 +39,7 @@ chown -R root:root .
 
 CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s" \
 CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+LDFLAGS=" --sysroot=$SLK_SYSROOT " \
 ./configure \
   --prefix=/usr \
   --disable-static \

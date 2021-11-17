@@ -28,3 +28,5 @@ core/haveged
 core/sysstat
 core/readline
 core/parted
+core/alsa-lib
+core/alsa-utils
