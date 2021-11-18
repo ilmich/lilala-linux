@@ -37,7 +37,7 @@ tar xvf $CWD/$SOURCE_TAR
 cd $PRGNAM-$VERSION
 chown -R root:root .
 
-CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s -static" \
+CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s" \
 CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
 ./configure \
   --prefix=/ \

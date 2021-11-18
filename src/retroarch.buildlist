@@ -1,7 +1,5 @@
-+core/core
 +lib/mesa-lib
 core/eudev
-lib/alsa-lib
 retroarch/RetroArch
 retroarch/libretro-nestopia
 retroarch/libretro-vice
