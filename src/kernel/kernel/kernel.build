@@ -30,15 +30,15 @@ BUILD=1
 DOWNLOAD_URL=https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.4.84.tar.xz
 DOWNLOAD_SHA1=3670b9ec553bfd125fbb33edf08fc0c06d8a2ad5
 DEPS=
+KERNEL_IMG=vmlinuz
 
 function build() {
 cd $TMP
 rm -rf $SRCNAM
 tar xvf $CWD/$SOURCE_TAR
 cd $SRCNAM
-chown -R root:root .
 
-#apply patches
+ apply patches
 for i in `find $CWD/patches/ -name *.patch | sort -`; do
     patch -p1 < $i
 done
@@ -48,21 +48,36 @@ if [ ! -e $CWD/kernel_${SLK_BOARD}_config ]; then
     exit 1
 fi
 
+EXTRA=" dtbs"
+case $SLK_ARCH in
+    i?86) ARCH=x86 ; EXTRA="" ;;
+esac
+
 cp $CWD/kernel_${SLK_BOARD}_config arch/$ARCH/configs/${SLK_BOARD}_defconfig
-make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- ${SLK_BOARD}_defconfig
-make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET-
-make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- INSTALL_MOD_PATH=$PKG/ modules_install
+make -j4 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- ${SLK_BOARD}_defconfig
+make -j4 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- bzImage modules $EXTRA
+make -j4 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- INSTALL_MOD_PATH=$PKG/ modules_install
 #install kernel headers into sysroot
-make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- headers_install INSTALL_HDR_PATH=$SLK_SYSROOT/usr
+make -j4 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- headers_install INSTALL_HDR_PATH=$SLK_SYSROOT/usr
 
-mkdir -p $PKG/boot/overlays
+mkdir -p $PKG/boot-${SLK_BOARD}/overlays
 
-cp arch/$ARCH/boot/zImage $PKG/boot/vmlinuz-$VERSION
+if [ -e arch/$ARCH/boot/bzImage ]; then
+    cp arch/$ARCH/boot/bzImage $PKG/boot-${SLK_BOARD}/$KERNEL_IMG
+fi
+if [ -e arch/$ARCH/boot/zImage ]; then
+    cp arch/$ARCH/boot/zImage $PKG/boot-${SLK_BOARD}/$KERNEL_IMG
+fi
+
 if [ -e arch/$ARCH/boot/dts ]; then
-    cp arch/$ARCH/boot/dts/*.dtb $PKG/boot/
+    cp arch/$ARCH/boot/dts/*.dtb $PKG/boot-${SLK_BOARD}/
 fi
 if [ -e arch/$ARCH/boot/dts/overlays ]; then
-    cp arch/$ARCH/boot/dts/overlays/*.dtb* $PKG/boot/overlays/
+    cp arch/$ARCH/boot/dts/overlays/*.dtb* $PKG/boot-${SLK_BOARD}/overlays/
 fi
+
+# compress modules
+echo compressing modules
+find $PKG/lib -name *.ko -exec gzip -v {} \;
 
 }
