@@ -1,5 +1,35 @@
 #!/bin/sh
 
+buildimage() {
+cat > $TMP/genimage.cfg << EOF
+image rootfs.ext4 {
+    ext4 {
+        use-mke2fs = "true"
+    }
+    mountpoint = "/"
+    size = 500M
+}
+image boot.vfat {
+    vfat {}
+    mountpoint = "/boot-$SLK_BOARD"
+    size = 64M
+}
+EOF
+
+cat $PLATFORM_DIR/genimage.cfg >> $TMP/genimage.cfg
+rm -rf $TMP/gentmp
+genimage --config $TMP/genimage.cfg \
+	 --rootpath $ROOTFS \
+         --tmppath $TMP/gentmp \
+         --mke2fs /sbin/mke2fs \
+         --mkdosfs /sbin/mkdosfs \
+         --e2fsck /sbin/e2fsck  \
+         --outputpath $OUTPUT_DIR/images-$SLK_BOARD
+
+#gzip $OUTPUT_DIR/images-$SLK_BOARD/sdcard.img
+
+}
+
 applypatches() {
     if [ -d $1 ]; then
         #apply patches
@@ -196,11 +226,11 @@ buildpkg() {
               find . | xargs file | grep "shared object" | grep ELF | cut -f 1 -d : | xargs -r $SLK_TARGET-strip --strip-unneeded 2> /dev/null || true
               find . | xargs file | grep "current ar archive" | cut -f 1 -d : | xargs -r $SLK_TARGET-strip --strip-unneeded 2> /dev/null || true              
               mkdir -p $OUTPUT
-              makepkg -l n -c n $PKGFINALDEV
               rm -f usr/lib/*.a
               rm -f lib/*.a
               rm -f lib/*.la
               rm -f usr/lib/*.la
+              makepkg -l n -c n $PKGFINALDEV
               if [ ! -z $SLK_STRIP_PKG ]; then
                 rm -rf usr/man \
                         usr/share/man \
@@ -241,13 +271,13 @@ buildpkg() {
 }
 
 buildrootfs() {
-    for i in `find $OUTPUT_PKGS/{core,kernel} -name *.t?z`; do
+    for i in `find $OUTPUT_PKGS/{core,kernel,$PLATFORM_NAME} -name *.t?z`; do
 	ROOT=$ROOTFS INSTLOCKDIR=$TMP/lock upgradepkg --reinstall --install-new --terse $i
     done
-    (
-	cd $ROOTFS
-        tar cvJf $OUTPUT_DIR/lilala-linux-rootfs-$SLK_BOARD.tar.xz .
-    )
+    #(
+#	cd $ROOTFS
+#        tar cvJf $OUTPUT_DIR/lilala-linux-rootfs-$SLK_BOARD.tar.xz .
+#    )
     echo "Filesystem size:"
     du -d 0 -h $ROOTFS
 }
@@ -369,6 +399,14 @@ case $1 in
         buildrootfs
         exit 0
         ;;
+    buildimage)
+        showbuildinfo
+        rm -r $ROOTFS
+        mkdir -p $ROOTFS
+        buildrootfs
+        buildimage
+        exit 0
+        ;;
     *) 
         echo "Command $1 not recognized"
         usage
@@ -380,24 +418,24 @@ rm -f $OUTPUT_DIR/buildlist
 while [ $# -gt 0 ] ; do
     findbuildlist $1 $OUTPUT_DIR/buildlist
     if [ "$?" == 1 ]; then
-    findbuildscript $1 $OUTPUT_DIR/buildlist
-    if [ $? -eq 1 ]; then
-        echo "package or buildlist $1 not exists"
-    exit 1
+        findbuildscript $1 $OUTPUT_DIR/buildlist
+        if [ $? -eq 1 ]; then
+            echo "package or buildlist $1 not exists"
+            exit 1
+        fi
     fi
-    fi
-
     shift
 done
 
 #ensure libc is builted
 buildpkg core/$SLK_LIBC
 buildpkg kernel/kernel
-
 for i in `cat $OUTPUT_DIR/buildlist`; do
     if [ ! -z $DELETEPKG ]; then
         deletepkg $i
     fi
+done
+for i in `cat $OUTPUT_DIR/buildlist`; do
     if [ ! -z $BUILDPKG ]; then
         buildpkg $i
     fi
