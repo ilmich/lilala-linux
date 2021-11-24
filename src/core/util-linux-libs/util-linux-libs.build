@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Build script for parted
+# Build script for util-linux-libs
 
 # Copyright 2021 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
@@ -22,24 +22,26 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PRGNAM=parted
-VERSION=3.4
+PRGNAM=util-linux-libs
+SRCNAM=util-linux
+VERSION=2.37
 BUILD=1
-DOWNLOAD_URL=https://ftp.gnu.org/gnu/parted/parted-$VERSION.tar.xz
-DOWNLOAD_SHA1=903c58fab429d3b62aa324033a3e41b0b96ad810
-SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="ncurses readline util-linux-libs"
+DOWNLOAD_URL=https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.37/util-linux-$VERSION.tar.gz
+DOWNLOAD_SHA1=cbf6a589dc19f1b02192744b93942ca9e41ec230
+SOURCE_TAR=$SRCNAM-$VERSION.tar.gz
+DEPS=
 
 function build() {
 cd $TMP
-rm -rf $PRGNAM-$VERSION
+rm -rf $SRCNAM-$VERSION
 tar xvf $CWD/$SOURCE_TAR
-cd $PRGNAM-$VERSION
-chown -R root:root .
+cd $SRCNAM-$VERSION
 
+PATH="$SLK_SYSROOT/usr/bin:$PATH" \
 CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
 CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
-LDFLAGS=" --sysroot=$SLK_SYSROOT" \
+CPPFLAGS=" --sysroot=$SLK_SYSROOT " \
+LDFLAGS=" --sysroot=$SLK_SYSROOT " \
 ./configure \
   --prefix=/ \
   --sysconfdir=/etc \
@@ -48,17 +50,16 @@ LDFLAGS=" --sysroot=$SLK_SYSROOT" \
   --infodir=/usr/share/info \
   --datarootdir=/usr/share \
   --includedir=/usr/include \
-  --disable-rpath \
+  --without-tinfo \
+  --without-python \
   --disable-nls \
-  --disable-device-mapper \
-  --disable-static \
-  --enable-shared \
   --host=$SLK_TARGET
 
 make -j2 V=1
-make DESTDIR=$PKG install
-
+make DESTDIR=$PKG install-usrlib_execLTLIBRARIES install-nodist_blkidincHEADERS install-nodist_fdiskincHEADERS \
+    install-nodist_mountincHEADERS \
+    install-nodist_smartcolsincHEADERS install-uuidincHEADERS
 # install docs
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a INSTALL README COPYING $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a README* COPYING $PKG/usr/doc/$PRGNAM-$VERSION
 }

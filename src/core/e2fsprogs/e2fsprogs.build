@@ -28,7 +28,7 @@ BUILD=1
 DOWNLOAD_URL=http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-$VERSION.tar.gz
 DOWNLOAD_SHA1=9aeef4e24aa0d887ae972672fc816bd0ef9d64f2
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS=
+DEPS="util-linux-libs"
 
 function build() {
 cd $TMP
@@ -39,25 +39,27 @@ chown -R root:root .
 
 CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
 CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+LDFLAGS=" --sysroot=$SLK_SYSROOT -lblkid -luuid " \
 ./configure \
   --prefix=/ \
   --sysconfdir=/etc \
-  --enable-elf-shlibs \
   --libdir=/lib \
-  --enable-libuuid \
-  --enable-libblkid \
   --disable-defrag \
   --mandir=/usr/man \
   --infodir=/usr/share/info \
   --datarootdir=/usr/share \
   --includedir=/usr/include \
+  --enable-elf-shlibs \
+  --disable-fsck \
+  --disable-nls \
+  --disable-uuidd \
+  --disable-libuuid \
+  --disable-libblkid \
+  --disable-rpath \
   --host=$SLK_TARGET
 
 make -j2 V=1
-make DESTDIR=$PKG install install-libs
-
-# remove static lib
-rm $PKG/lib/*.a
+make DESTDIR=$PKG install
 
 # remove cron jobs (not usable with busybox cron)
 rm -r $PKG/etc/cron.d

@@ -10,6 +10,7 @@ core/zlib
 core/tar
 core/openssl
 core/kmod
+core/util-linux-libs
 core/e2fsprogs
 core/curl
 core/popt
