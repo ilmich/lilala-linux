@@ -1,0 +1,64 @@
+#!/bin/sh
+
+# Build script for xfsprogs
+
+# Copyright 2021 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=xfsprogs
+VERSION=5.13.0
+BUILD=1
+DOWNLOAD_URL=https://mirrors.edge.kernel.org/pub/linux/utils/fs/xfs/xfsprogs/xfsprogs-$VERSION.tar.xz
+DOWNLOAD_SHA1=86664522878991f8a36b0192c2594f78fc0918ec
+SOURCE_TAR=`basename $DOWNLOAD_URL`
+DEPS="util-linux-libs inih"
+
+function build() {
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+
+CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
+LDFLAGS=" --sysroot=$SLK_SYSROOT" \
+./configure \
+  --prefix=/ \
+  --sysconfdir=/etc \
+  --libdir=/lib \
+  --mandir=/usr/man \
+  --infodir=/usr/share/info \
+  --datarootdir=/usr/share \
+  --includedir=/usr/include \
+  --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --disable-static \
+  --enable-shared \
+  --host=$SLK_TARGET
+
+make -j2 V=1
+make DESTDIR=$PKG install
+
+rm -rf $PKG/usr/share/doc/
+
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a LICENSES/* README $PKG/usr/doc/$PRGNAM-$VERSION
+}

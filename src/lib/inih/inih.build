@@ -1,0 +1,86 @@
+#!/bin/sh
+
+# Build script for inih
+
+# Copyright 2021 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=inih
+VERSION=r53
+BUILD=1
+DOWNLOAD_URL=https://github.com/benhoyt/inih/archive/refs/tags/$VERSION.tar.gz
+DOWNLOAD_SHA1=9924ce7fba763f4faa7e63fc11f84a655b73020b
+SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
+DEPS=""
+
+function build() {
+
+case $ARCH in
+    i?86) ARCH=x86 ;;
+    arm*) ARCH=arm ;;
+    aarch64) ARCH=aarch64 ;;
+    x86_64) ;;
+    *) ARCH=$( uname -m ) ;;
+esac
+
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd $PRGNAM-$VERSION
+chown -R root:root .
+
+mkdir build
+cat > build/meson.cross << EOF
+[binaries]
+c = '$SLK_TARGET-gcc'
+cpp = '$SLK_TARGET-g++'
+ar = '$SLK_TARGET-ar'
+strip = '$SLK_TARGET-strip'
+pkgconfig = 'pkg-config'
+[host_machine]
+system = 'linux'
+cpu_family = '$ARCH'
+cpu = '$SLK_ARCH'
+endian = 'little'
+[properties]
+needs_exe_wrapper = true
+EOF
+
+(
+    cd build
+    meson --cross-file meson.cross \
+		-Dprefix=/usr \
+		-Ddefault_library=both \
+		-Ddistro_install=true \
+		-Dwith_INIReader=true \
+		-Dmulti-line_entries=true \
+		-Dutf-8_bom=true \
+		-Dinline_comments=true \
+		-Duse_heap=false
+)
+
+ninja -C build/
+DESTDIR=$PKG ninja -C build/ install
+
+# install docs
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a LICENSE* README* $PKG/usr/doc/$PRGNAM-$VERSION
+
+}
