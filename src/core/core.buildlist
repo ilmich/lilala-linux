@@ -31,3 +31,4 @@ core/readline
 core/parted
 core/alsa-lib
 core/alsa-utils
+core/slapt-get

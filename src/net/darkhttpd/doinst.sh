@@ -11,4 +11,3 @@ config() {
 }
 
 config etc/rc.d/rc.darkhttpd.new
-

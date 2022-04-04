@@ -2,7 +2,7 @@
 
 # Build script for e2fsprogs
 
-# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019,2020,2021,2022 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=e2fsprogs
-VERSION=1.46.4
+VERSION=1.46.5
 BUILD=1
 DOWNLOAD_URL=http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-$VERSION.tar.gz
-DOWNLOAD_SHA1=9aeef4e24aa0d887ae972672fc816bd0ef9d64f2
+DOWNLOAD_SHA1=5eb29684be3d0b1b4379afb1e0631fd4cca7ae0e
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="util-linux-libs"
 

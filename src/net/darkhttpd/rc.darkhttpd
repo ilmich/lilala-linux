@@ -6,14 +6,15 @@ OPTIONS=""
 
 case $1 in
 	start)
-		[ -z "$PID" ] && /usr/bin/darkhttpd $WEB_ROOT --daemon $OPTIONS &> /dev/null;
+		[ -z "$PID" ] && /usr/bin/darkhttpd $WEB_ROOT --daemon --log /var/log/darkhttpd $OPTIONS &> /dev/null;
 		;;
 	stop)
 		[ -n "$PID" ] && kill -9 $PID &> /dev/null;
 		;;
+	restart)
+		[ -n "$PID" ] && kill -9 $PID &> /dev/null;
+	        /usr/bin/darkhttpd $WEB_ROOT --daemon --log /var/log/darkhttpd $OPTIONS &> /dev/null;
 	*)
-		echo "usage: $0 start|stop"
+		echo "usage: $0 start|stop|restart"
 		exit 1
 esac
-
-

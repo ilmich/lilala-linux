@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=slapt-get
-VERSION=0.11.3
-BUILD=2
+VERSION=0.11.5
+BUILD=1
 DOWNLOAD_URL=https://github.com/jaos/slapt-get/archive/refs/tags/$VERSION.tar.gz
-DOWNLOAD_SHA1=67cb314d6a87adbcf8cd20d5fc0ad20d3ed4e585
+DOWNLOAD_SHA1=ba8d3fb1a99eef9ab88285b4e0f5cf011970a960
 SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
 DEPS="openssl curl zlib"
 
