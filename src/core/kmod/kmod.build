@@ -4,7 +4,7 @@
 
 # Copyright 2011-2015  Robby Workman, Tuscaloosa, Alabama, USA
 # Copyright 2013-2015  Patrick J. Volkerding, Sebeka, MN, USA
-# Copyright 2017,2018,2019,2020  Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019,2020,2021,2022  Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -25,10 +25,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=kmod
-VERSION=27
+VERSION=29
 BUILD=1
 DOWNLOAD_URL=https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-$VERSION.tar.gz
-DOWNLOAD_SHA1=5bc0c876747eaa50c58f0da06ca87e7c824945a8
+DOWNLOAD_SHA1=3a88f8231d712464c3a801a2ccee793ed477b56a
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="zlib"
 

@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=nano
-VERSION=5.9
+VERSION=6.2
 BUILD=1
-DOWNLOAD_URL=https://www.nano-editor.org/dist/v5/nano-$VERSION.tar.xz
-DOWNLOAD_SHA1=18df28d3d896a4100e80f02ed9511b0308082d8f
+DOWNLOAD_URL=https://www.nano-editor.org/dist/v6/nano-$VERSION.tar.xz
+DOWNLOAD_SHA1=ac30b8ee222ca9be76d26bc2cd9c45f70e0e7819
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="ncurses"
 
