@@ -1,0 +1,20 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+          |-----handy-ruler------------------------------------------------------|
+lm-sensors: lm-sensors - hardware sensors
+lm-sensors:
+lm-sensors: The lm-sensors package, version 3, provides user-space support for
+lm-sensors: the hardware monitoring drivers in Linux 2.6.5 and later.
+lm-sensors:
+lm-sensors:
+lm-sensors:
+lm-sensors:
+lm-sensors:
+lm-sensors: https://hwmon.wiki.kernel.org/lm_sensors
+lm-sensors:
+
