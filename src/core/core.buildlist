@@ -33,3 +33,4 @@ core/alsa-lib
 core/alsa-utils
 core/slapt-get
 core/lm-sensors
+core/smartmontools
