@@ -1,0 +1,56 @@
+#!/bin/sh
+
+# Build script for rpi-firmware
+
+# Copyright 2021 Michele Zuccalà < ardutu at gmail dot com >
+# All rights reserved
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+PRGNAM=rpi-firmware
+VERSION=${SLK_BOARD}_6159b7c1195b41aa43b0d2f322e192d84845e622
+SVERSION=39821d33e777cde9ba1a3cc8a73cfdd62fbbd2de
+BUILD=1
+DOWNLOAD_URL=https://github.com/raspberrypi/rpi-firmware/archive/$SVERSION.tar.gz
+DOWNLOAD_SHA1=0e7d295eb80fa141e18a20e81b74b38037050eaa
+SOURCE_TAR=rpi-firmware-$SVERSION.tar.gz
+DEPS=""
+
+function build() {
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$SOURCE_TAR
+cd rpi-firmware-$SVERSION
+
+case $SLK_BOARD in
+    rpi) KVER="" ; KMODVER="+" ; DTB="bcm2708*.dtb" ; BLOB="bootcode.bin start.elf fixup.dat";;
+    rpi2) KVER="7" ; KMODVER="-v7+" ; DTB="bcm27*rpi-2*.dtb" ; BLOB="bootcode.bin start.elf fixup.dat";;
+    rpi3) KVER="7" ; KMODVER="-v7+" ; DTB="bcm2710*3*.dtb" ; BLOB="bootcode.bin start.elf fixup.dat";;
+    rpi4) KVER="7l" ; KMODVER="-v7l+" ; DTB="bcm2711*.dtb" ; BLOB="start4.elf fixup4.dat";;
+    *) KVER="" ; KMODVER="+" ;;
+esac
+
+mkdir -p $PKG/boot-$SLK_BOARD
+cp -a $BLOB $PKG/boot-$SLK_BOARD
+cp -a $CWD/cmdline.txt $CWD/config.txt $PKG/boot-$SLK_BOARD
+
+# install docs
+#mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+#cp -a CHANGES COPYING README $PKG/usr/doc/$PRGNAM-$VERSION
+
+}
