@@ -2,7 +2,7 @@
 
 # Build script for curl
 
-# Copyright 2017,2018,2019,2020,2021 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019,2020,2021,2022 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=curl
-VERSION=7.82.0
+VERSION=7.86.0
 BUILD=1
 DOWNLOAD_URL=https://curl.haxx.se/download/$PRGNAM-$VERSION.tar.gz
-DOWNLOAD_SHA1=78d135ae0bc0180dd3bcc625af7e7eae9c0ba189
+DOWNLOAD_SHA1=1c314d3f2229ea932d10cb803f3e26f3fba630ec
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="zlib openssl"
 
@@ -36,6 +36,8 @@ rm -rf $PRGNAM-$VERSION
 tar xvf $CWD/$SOURCE_TAR
 cd $PRGNAM-$VERSION
 chown -R root:root .
+
+applypatches $CWD/patches/
 
 CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s" \
 CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \

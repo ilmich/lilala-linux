@@ -24,18 +24,20 @@
 
 PRGNAM=libretro-nestopia
 SRCNAM=nestopia
-VERSION=20200427
+VERSION=20220823
+COMMIT=a9ee6ca84f04990e209880fe47144e62b14253db
+SOURCE_TAR=$SRCNAM-$COMMIT.tar.gz
 BUILD=1
-DOWNLOAD_URL=
-DOWNLOAD_SHA1=
+DOWNLOAD_URL=https://github.com/libretro/nestopia/archive/$COMMIT.tar.gz
+DOWNLOAD_SHA1=2e9ea53ecb0653115cee1f9e788cd116ae029799
 DEPS="RetroArch"
 
 function build() {
 
 cd $TMP
-rm -rf $SRCNAM-$VERSION
-tar xvf $CWD/$SRCNAM-$VERSION.tar.xz
-cd $SRCNAM-$VERSION
+rm -rf $SRCNAM-$COMMIT
+tar xvf $CWD/$SRCNAM-$COMMIT.tar.gz
+cd $SRCNAM-$COMMIT
 chown -R root:root .
 
 #apply patches

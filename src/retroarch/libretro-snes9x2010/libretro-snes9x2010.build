@@ -24,17 +24,19 @@
 
 PRGNAM=libretro-snes9x2010
 SRCNAM=snes9x2010
-VERSION=20200425
+VERSION=20220725
+COMMIT=e86e54624a7910a64a9a744e3734d4067c48d240
+SOURCE_TAR=$SRCNAM-$COMMIT.tar.gz
 BUILD=1
-DOWNLOAD_URL=
-DOWNLOAD_SHA1=
+DOWNLOAD_URL=https://github.com/libretro/snes9x2010/archive/$COMMIT.tar.gz
+DOWNLOAD_SHA1=b961665dfc2adc0ab06bfe0db01f03578d2cd3ee
 DEPS="RetroArch"
 
 function build() {
 cd $TMP
-rm -rf $SRCNAM-$VERSION
-tar xvf $CWD/$SRCNAM-$VERSION.tar.xz
-cd $SRCNAM-$VERSION
+rm -rf $SRCNAM-$COMMIT
+tar xvf $CWD/$SRCNAM-$COMMIT.tar.gz
+cd $SRCNAM-$COMMIT
 chown -R root:root .
 
 #apply patches

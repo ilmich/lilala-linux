@@ -24,17 +24,19 @@
 
 PRGNAM=libretro-vice
 SRCNAM=vice-libretro
-VERSION=20200522
+VERSION=20220715
+COMMIT=1c71c5b7fe0d3492186667999378c7730b545b92
+SOURCE_TAR=$SRCNAM-$COMMIT.tar.gz
 BUILD=1
-DOWNLOAD_URL=
-DOWNLOAD_SHA1=
+DOWNLOAD_URL=https://github.com/libretro/vice-libretro/archive/$COMMIT.tar.gz
+DOWNLOAD_SHA1=92184fa0642c6ef38dfd4fcd1dbcb300f332df75
 DEPS="RetroArch"
 
 function build() {
 cd $TMP
-rm -rf $SRCNAM-$VERSION
-tar xvf $CWD/$SRCNAM-$VERSION.tar.xz
-cd $SRCNAM-$VERSION
+rm -rf $SRCNAM-$COMMIT
+tar xvf $CWD/$SRCNAM-$COMMIT.tar.gz
+cd $SRCNAM-$COMMIT
 chown -R root:root .
 
 #apply patches

@@ -23,7 +23,7 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=darkhttp
-VERSION=1.13_2b37151
+VERSION=1.14
 BUILD=1
 DOWNLOAD_URL=
 DOWNLOAD_SHA1=
@@ -35,7 +35,7 @@ cd $TMP
 rm -rf $PRGNAM-$VERSION
 mkdir $PRGNAM-$VERSION
 cd $PRGNAM-$VERSION
-wget https://raw.githubusercontent.com/emikulic/darkhttpd/2b37151afc7dff616bfb41034be9d94f875e1840/darkhttpd.c
+wget https://raw.githubusercontent.com/emikulic/darkhttpd/a7b8f8fa6e82ff035de5dd032c4017f6057f197a/darkhttpd.c
 
 #apply patches
 for i in `find $CWD/patches/ -name *.patch | sort -`; do

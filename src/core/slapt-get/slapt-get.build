@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=slapt-get
-VERSION=0.11.5
+VERSION=0.11.7
 BUILD=1
 DOWNLOAD_URL=https://github.com/jaos/slapt-get/archive/refs/tags/$VERSION.tar.gz
-DOWNLOAD_SHA1=ba8d3fb1a99eef9ab88285b4e0f5cf011970a960
+DOWNLOAD_SHA1=7b8e7fb93d43be84f990b94ce8f085dc20f5c270
 SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
 DEPS="openssl curl zlib"
 
@@ -43,7 +43,7 @@ for i in `find $CWD/patches/ -name *.patch | sort -`; do
 done
 
 make CC=$SLK_TARGET-gcc HAS_GPGME=0 STRIP=$SLK_TARGET-strip LIBDIR=/usr/lib \
-     CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s -DVERSION='\"$VERSION\"' -DPACKAGE='\"slapt-get\"' -DRC_LOCATION='\"/etc/slapt-get/slapt-getrc\"'" install DESTDIR=$PKG
+     CFLAGS="$SLK_CFLAGS -fPIC --sysroot=$SLK_SYSROOT -s -DVERSION='\"$VERSION\"' -DPACKAGE='\"slapt-get\"' -DRC_LOCATION='\"/etc/slapt-get/slapt-getrc\"'" install DESTDIR=$PKG
 
 #cleanup slackware repositories
 rm $PKG/etc/slapt-get/slapt-getrc
