@@ -19,12 +19,17 @@ EOF
 cat $PLATFORM_DIR/genimage.cfg >> $TMP/genimage.cfg
 rm -rf $TMP/gentmp
 genimage --config $TMP/genimage.cfg \
-	 --rootpath $ROOTFS \
+	--rootpath $ROOTFS \
          --tmppath $TMP/gentmp \
          --mke2fs /sbin/mke2fs \
          --mkdosfs /sbin/mkdosfs \
          --e2fsck /sbin/e2fsck  \
          --outputpath $OUTPUT_DIR/images-$SLK_BOARD
+
+if [ -e $PLATFORM_DIR/install-bootloader-$SLK_BOARD.sh ]; then
+    source $PLATFORM_DIR/install-bootloader-$SLK_BOARD.sh
+    install $OUTPUT_DIR/images-$SLK_BOARD/sdcard.img
+fi
 
 #gzip $OUTPUT_DIR/images-$SLK_BOARD/sdcard.img
 
@@ -52,7 +57,8 @@ downloadsource() {
     fi
 
     if [ ! $2 == `sha1sum $CACHE_DIR/$SOURCE_TAR | cut -d " " -f 1` ]; then
-        echo "SHA1 did not match"
+        SUM=`sha1sum $CACHE_DIR/$SOURCE_TAR | cut -d " " -f 1`
+        echo "SHA1 did not match, found $SUM expected $2"
         exit 1
     fi
 }
@@ -178,6 +184,9 @@ buildpkg() {
     PKGFINALDEV=$STAGING_PKG_DIR/$PKG_NAME-$VERSION-$SLK_ARCH-$BUILD$TAG.$PKGTYPE
 
     if [ ! -e $PKGFINALDEV ]; then
+        # remove oldest package
+        rm -f $STAGING_PKG_DIR/$PKG_NAME*-$SLK_ARCH*$TAG.$PKGTYPE
+
         echo "Building $1"
         mkdir -p $PKG_DIR
         mkdir -p $STAGING_PKG_DIR
@@ -231,6 +240,9 @@ buildpkg() {
               rm -f lib/*.la
               rm -f usr/lib/*.la
               makepkg -l n -c n $PKGFINALDEV
+
+              rm -f $PKG_DIR/$PKG_NAME*-$SLK_ARCH*$TAG.$PKGTYPE
+
               if [ ! -z $SLK_STRIP_PKG ]; then
                 rm -rf usr/man \
                         usr/share/man \
@@ -271,7 +283,7 @@ buildpkg() {
 }
 
 buildrootfs() {
-    for i in `find $OUTPUT_PKGS/{core,kernel,$PLATFORM_NAME} -name *.t?z`; do
+    for i in `find $OUTPUT_PKGS/{core,extra,lib,net,retroarch,kernel,$PLATFORM_NAME} -name *.t?z`; do
 	ROOT=$ROOTFS INSTLOCKDIR=$TMP/lock upgradepkg --reinstall --install-new --terse $i
     done
     #(
@@ -346,7 +358,7 @@ OUTPUT_PKGS=$OUTPUT_DIR/pkgs
 CACHE_DIR=$MAIN_DIR/cache
 OUTPUT_STAGING_PKGS=$OUTPUT_DIR/staging_pkgs
 OUTPUT_LOGS=$OUTPUT_DIR/logs
-TMP=/tmp/lilala
+TMP=$PWD/build
 PKGTYPE=tbz
 TAG=lilala
 
