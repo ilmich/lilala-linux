@@ -2,7 +2,7 @@
 
 # Build script for rpi-firmware
 
-# Copyright 2021 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2022 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,11 +23,11 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=rpi-firmware
-VERSION=${SLK_BOARD}_6159b7c1195b41aa43b0d2f322e192d84845e622
-SVERSION=39821d33e777cde9ba1a3cc8a73cfdd62fbbd2de
+VERSION=${SLK_BOARD}_5e787e2
+SVERSION=5e787e2f1e6bf830235bcdc9555dde8ef9ab6d81
 BUILD=1
 DOWNLOAD_URL=https://github.com/raspberrypi/rpi-firmware/archive/$SVERSION.tar.gz
-DOWNLOAD_SHA1=0e7d295eb80fa141e18a20e81b74b38037050eaa
+DOWNLOAD_SHA1=dc45619a609cc77ef38038417a7e8e8618780a28
 SOURCE_TAR=rpi-firmware-$SVERSION.tar.gz
 DEPS=""
 
