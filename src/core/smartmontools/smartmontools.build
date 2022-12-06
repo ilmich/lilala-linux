@@ -24,11 +24,11 @@
 
 PRGNAM=smartmontools
 VERSION=7.3
-BUILD=2
+BUILD=3
 DOWNLOAD_URL=https://sourceforge.net/projects/smartmontools/files/smartmontools/7.3/smartmontools-$VERSION.tar.gz
 DOWNLOAD_SHA1=5ce7adb606119148d725b91a00652d427ca0adc2
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="utils-linux-libs gcc_libs"
+DEPS="util-linux-libs gcc_libs"
 
 function build() {
 cd $TMP

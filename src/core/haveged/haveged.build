@@ -2,7 +2,7 @@
 
 # Build script for haveged
 
-# Copyright 2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2019,2020,2022 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=haveged
-VERSION=1.9.15
+VERSION=1.9.18
 BUILD=1
 DOWNLOAD_URL=https://github.com/jirka-h/haveged/archive/v$VERSION.tar.gz
-DOWNLOAD_SHA1=22ff16780b2736439028f4aa386f4cd3530655fe
+DOWNLOAD_SHA1=5d812f9e1eccdf8fc67f8e87020fa0e72a4e9266
 SOURCE_TAR=$PRGNAM-$VERSION.tar.gz
 DEPS=
 

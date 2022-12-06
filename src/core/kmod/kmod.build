@@ -25,10 +25,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=kmod
-VERSION=29
+VERSION=30
 BUILD=1
 DOWNLOAD_URL=https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-$VERSION.tar.gz
-DOWNLOAD_SHA1=3a88f8231d712464c3a801a2ccee793ed477b56a
+DOWNLOAD_SHA1=8d057ecd797ab945269f743e22f731677a94a876
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="zlib"
 
@@ -81,6 +81,6 @@ rm -f $PKG/lib/{*.so,*.la}
 
 # install docs
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a COPYING README NEWS TODO $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a COPYING README.md NEWS TODO $PKG/usr/doc/$PRGNAM-$VERSION
 
 }
