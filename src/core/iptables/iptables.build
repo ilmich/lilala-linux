@@ -2,7 +2,7 @@
 
 # Build script for iptables
 
-# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019,2020,2025 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,17 +23,17 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=iptables
-VERSION=1.8.7
+VERSION=1.8.11
 BUILD=1
-DOWNLOAD_URL=http://www.netfilter.org/projects/iptables/files/iptables-$VERSION.tar.bz2
-DOWNLOAD_SHA1=05ef75415cb7cb7641f51d51e74f3ea29cc31ab1
+DOWNLOAD_URL=http://www.netfilter.org/projects/iptables/files/iptables-$VERSION.tar.xz
+DOWNLOAD_SHA1=e5b10a1a4ebc850631d93236ae88cac207e1d7f8
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="libnftnl libpcap"
 
 function build() {
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR > /dev/null
 cd $PRGNAM-$VERSION
 chown -R root:root .
 
@@ -61,6 +61,6 @@ install -D -m=0700 $CWD/rc.firewall $PKG/etc/rc.d/rc.firewall.new
 rm $PKG/usr/lib/*.la
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a COMMIT_NOTES COPYING INCOMPATIBILITIES INSTALL $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a COPYING INSTALL $PKG/usr/doc/$PRGNAM-$VERSION
 
 }

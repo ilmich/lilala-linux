@@ -2,7 +2,7 @@
 
 # Build script for alsa-utils
 
-# Copyright 2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2019,2020,2025 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,17 +23,17 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=alsa-utils
-VERSION=1.2.6
+VERSION=1.2.13
 BUILD=1
 DOWNLOAD_URL=https://www.alsa-project.org/files/pub/utils/alsa-utils-$VERSION.tar.bz2
-DOWNLOAD_SHA1=b29ac97723c1a2dfd3eaabca02b80c6e869e235c
+DOWNLOAD_SHA1=5d86307be2c3f67d7911dd215eb90abeb5aa433d
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="alsa-lib"
 
 function build() {
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR > /dev/null
 cd $PRGNAM-$VERSION
 chown -R root:root .
 

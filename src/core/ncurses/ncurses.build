@@ -2,7 +2,7 @@
 
 # Build script for ncurses
 
-# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019,2020,2025 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,18 +23,18 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=ncurses
-VERSION=6.1
+VERSION=6.5
 SVERSION=${VERSION/_/-}
 BUILD=3
 DOWNLOAD_URL=http://invisible-mirror.net/archives/ncurses/ncurses-$SVERSION.tar.gz
-DOWNLOAD_SHA1=57acf6bc24cacd651d82541929f726f4def780cc
+DOWNLOAD_SHA1=cde3024ac3f9ef21eaed6f001476ea8fffcaa381
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS=
 
 function build() {
 cd $TMP
 rm -rf $PRGNAM-$SVERSION
-tar xvf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR > /dev/null
 cd $PRGNAM-$SVERSION
 chown -R root:root .
 
@@ -60,7 +60,7 @@ INSTALL="/bin/ginstall --strip-program=$SLK_TARGET-strip" \
   --sysconfdir=/etc/ \
   --host=$SLK_TARGET 
 
-make -j2
+make -j4
 make DESTDIR=$PKG install
 
 echo "INPUT(-lncursesw)" > $PKG/lib/libncurses.so

@@ -4,7 +4,7 @@
 
 # Copyright 2011-2015  Robby Workman, Tuscaloosa, Alabama, USA
 # Copyright 2013-2015  Patrick J. Volkerding, Sebeka, MN, USA
-# Copyright 2017,2018,2019,2020,2021,2022  Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019,2020,2021,2022,2025  Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -25,22 +25,21 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=kmod
-VERSION=30
+VERSION=34
 BUILD=1
 DOWNLOAD_URL=https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-$VERSION.tar.gz
-DOWNLOAD_SHA1=8d057ecd797ab945269f743e22f731677a94a876
+DOWNLOAD_SHA1=8c3395b3c98183843c7d60829534003e87188fbb
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="zlib"
 
 function build() {
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR > /dev/null
 cd $PRGNAM-$VERSION
 chown -R root:root .
 
-# Fix paths in manual pages
-sed -i "s,/usr/lib,/lib,g" man/*
+./autogen.sh
 
 CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s" \
 CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
@@ -55,6 +54,7 @@ CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
   --docdir=/usr/doc/$PKGNAM-$VERSION \
   --includedir=/usr/include \
   --with-zlib \
+  --disable-manpages \
   --host=$SLK_TARGET
 
 make -j2 V=1
@@ -81,6 +81,6 @@ rm -f $PKG/lib/{*.so,*.la}
 
 # install docs
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a COPYING README.md NEWS TODO $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a COPYING README.md NEWS $PKG/usr/doc/$PRGNAM-$VERSION
 
 }

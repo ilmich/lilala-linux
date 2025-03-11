@@ -2,7 +2,7 @@
 
 # Build script for mesa
 
-# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019,2020,2025 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=mesa
-VERSION=21.0.0
-BUILD=1
-DOWNLOAD_URL=https://mesa.freedesktop.org/archive/mesa-$VERSION.tar.xz
-DOWNLOAD_SHA1=62729d18d288ff61278b78223fb996551690259e
+VERSION=23.0.4
+BUILD=2
+DOWNLOAD_URL=https://archive.mesa3d.org/mesa-$VERSION.tar.xz
+DOWNLOAD_SHA1=86c6c9165e34cb611ba5ccaf3bb9a335020f6acd
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="expat libdrm"
 
@@ -42,7 +42,7 @@ esac
 
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR > /dev/null
 cd $PRGNAM-$VERSION
 chown -R root:root .
 
@@ -66,16 +66,29 @@ EOF
 (
     cd build
     meson --cross-file meson.cross \
-		-Dbuildtype=plain \
-		-Ddri-drivers= \
-		-Dglx=disabled \
-		-Dplatforms=wayland \
-		-Dlibunwind=false  \
-		-Dgallium-drivers=v3d,vc4,lima,panfrost,swrast,kmsro \
-		-Dvulkan-drivers=freedreno,swrast \
+		-Dgallium-extra-hud=false \
+                -Dgallium-rusticl=false \
+                -Dgallium-nine=false \
+                -Dgallium-opencl=disabled \
+                -Dshader-cache=enabled \
+                -Dshared-glapi=enabled \
+                -Dopengl=true \
+                -Dgbm=enabled \
+                -Degl=enabled \
+                -Dvalgrind=disabled \
+                -Dlibunwind=disabled \
+                -Dlmsensors=disabled \
+                -Dbuild-tests=false \
+                -Ddraw-use-llvm=false \
+                -Dmicrosoft-clc=disabled \
+                -Dosmesa=false \
+		-Dgallium-drivers=v3d,vc4,lima,panfrost,kmsro \
+		-Dvulkan-drivers=freedreno \
 		-Dllvm=disabled \
-		-Dasm=false \
+		-Dplatforms="" \
+		-Dglx=disabled \
 		-Dprefix=/usr \
+		-Dgles1=disabled -Dgles2=enabled \
 		-Dc_args="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s" \
 		-Dcpp_args="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s"
 )

@@ -2,7 +2,7 @@
 
 # Build script for dialog
 
-# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019,2020,2025 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,18 +23,18 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=dialog
-VERSION=1.3_20170509
+VERSION=1.3_20250116
 SVERSION=${VERSION/_/-}
 BUILD=1
 DOWNLOAD_URL=http://invisible-mirror.net/archives/dialog/dialog-$SVERSION.tgz
-DOWNLOAD_SHA1=b576b64d0a780186b26a606bd5fb132eeda0825f
+DOWNLOAD_SHA1=6255c42b22b98bc2bcc6122375254952be713dd7
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="ncurses"
 
 function build() {
 cd $TMP
 rm -rf $PRGNAM-$SVERSION
-tar xvf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR > /dev/null
 cd $PRGNAM-$SVERSION
 chown -R root:root .
 

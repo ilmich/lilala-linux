@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=curl
-VERSION=7.86.0
+VERSION=8.12.1
 BUILD=1
 DOWNLOAD_URL=https://curl.haxx.se/download/$PRGNAM-$VERSION.tar.gz
-DOWNLOAD_SHA1=1c314d3f2229ea932d10cb803f3e26f3fba630ec
+DOWNLOAD_SHA1=03a503613a10a0f51ecd620cdc825ced4c5cc193
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="zlib openssl"
 
@@ -62,6 +62,7 @@ CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
   --disable-rtsp \
   --disable-ldap \
   --with-openssl \
+  --without-libpsl \
   --host=$SLK_TARGET
 
 make -j2 V=1
@@ -74,6 +75,6 @@ rm $PKG/usr/bin/curl-config
 
 # install docs
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a CHANGES COPYING README $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a CHANGES.md COPYING README $PKG/usr/doc/$PRGNAM-$VERSION
 
 }

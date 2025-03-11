@@ -2,7 +2,7 @@
 
 # Build script for logrotate
 
-# Copyright 2020 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2020,2025 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,17 +23,17 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=logrotate
-VERSION=3.17.0
+VERSION=3.22.0
 BUILD=1
 DOWNLOAD_URL=https://github.com/logrotate/logrotate/releases/download/$VERSION/logrotate-$VERSION.tar.gz
-DOWNLOAD_SHA1=143fcf6010ff32cfb0a13ea49df22cb383843b63
+DOWNLOAD_SHA1=a43045c6705a7454f890a0046358a059727703b0
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS="popt"
 
 function build() {
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR > /dev/null
 cd $PRGNAM-$VERSION
 chown -R root:root .
 
@@ -42,11 +42,7 @@ CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
 ./configure \
   --prefix=/usr \
   --sysconfdir=/etc \
-  --enable-elf-shlibs \
   --libdir=/lib \
-  --enable-libuuid \
-  --enable-libblkid \
-  --disable-defrag \
   --mandir=/usr/man \
   --infodir=/usr/share/info \
   --datarootdir=/usr/share \

@@ -2,7 +2,7 @@
 
 # Build script for libpcap
 
-# Copyright 2017,2018,2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019,2020,2025 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,17 +23,17 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=libpcap
-VERSION=1.10.1
+VERSION=1.10.5
 BUILD=1
 DOWNLOAD_URL=http://www.tcpdump.org/release/libpcap-$VERSION.tar.gz
-DOWNLOAD_SHA1=4343528176e0402cce807a09a97191069a1e3dd9
+DOWNLOAD_SHA1=6a29bce449ef75001627224f7c7b71ed51e3d84e
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS=
 
 function build() {
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR > /dev/null
 cd $PRGNAM-$VERSION
 chown -R root:root .
 

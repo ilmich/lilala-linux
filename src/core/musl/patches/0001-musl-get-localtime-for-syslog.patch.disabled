@@ -7,6 +7,6 @@ diff -rupN musl-1.2.2/src/misc/syslog.c musl-1.2.2-new/src/misc/syslog.c
  	now = time(NULL);
 -	gmtime_r(&now, &tm);
 +	localtime_r(&now, &tm);
- 	strftime(timebuf, sizeof timebuf, "%b %e %T", &tm);
+ 	strftime(timebuf, sizeof timebuf, "%b %e %T", &tm, C_LOCALE);
  
  	pid = (log_opt & LOG_PID) ? getpid() : 0;

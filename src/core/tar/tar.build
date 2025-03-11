@@ -2,7 +2,7 @@
 
 # Build script for tar
 
-# Copyright 2019,2020 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2019,2020,2025 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,10 +23,10 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=tar
-VERSION=1.32
+VERSION=1.35
 BUILD=1
-DOWNLOAD_URL=https://ftp.gnu.org/gnu/tar/tar-1.32.tar.xz
-DOWNLOAD_SHA1=162e00af4702565119c05465e8b6f21c75092794
+DOWNLOAD_URL=https://ftp.gnu.org/gnu/tar/tar-$VERSION.tar.xz
+DOWNLOAD_SHA1=6b9824c92deddbd7021801515270211f5252fbd8
 SOURCE_TAR=`basename $DOWNLOAD_URL`
 DEPS=
 
@@ -34,7 +34,7 @@ function build() {
 
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR > /dev/null
 cd $PRGNAM-$VERSION
 chown -R root:root .
 

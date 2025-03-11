@@ -2,7 +2,7 @@
 
 # Build script for e2fsprogs
 
-# Copyright 2017,2018,2019,2020,2021,2022 Michele Zuccalà < ardutu at gmail dot com >
+# Copyright 2017,2018,2019,2020,2021,2022,2025 Michele Zuccalà < ardutu at gmail dot com >
 # All rights reserved
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,23 +23,23 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=e2fsprogs
-VERSION=1.46.5
-BUILD=1
+VERSION=1.47.2
+BUILD=2
 DOWNLOAD_URL=http://prdownloads.sourceforge.net/e2fsprogs/e2fsprogs-$VERSION.tar.gz
-DOWNLOAD_SHA1=5eb29684be3d0b1b4379afb1e0631fd4cca7ae0e
+DOWNLOAD_SHA1=2197a81512f3d463f450a57832798006ca920b8e
 SOURCE_TAR=`basename $DOWNLOAD_URL`
-DEPS="util-linux-libs"
+DEPS="util-linux"
 
 function build() {
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$SOURCE_TAR
+tar xvf $CWD/$SOURCE_TAR > /dev/null
 cd $PRGNAM-$VERSION
 chown -R root:root .
 
 CFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
 CXXFLAGS="$SLK_CFLAGS --sysroot=$SLK_SYSROOT -s " \
-LDFLAGS=" --sysroot=$SLK_SYSROOT -lblkid -luuid " \
+LDFLAGS=" --sysroot=$SLK_SYSROOT -lblkid " \
 ./configure \
   --prefix=/ \
   --sysconfdir=/etc \
@@ -58,7 +58,7 @@ LDFLAGS=" --sysroot=$SLK_SYSROOT -lblkid -luuid " \
   --disable-rpath \
   --host=$SLK_TARGET
 
-make -j2 V=1
+make -j4 V=1
 make DESTDIR=$PKG install
 
 # remove cron jobs (not usable with busybox cron)
