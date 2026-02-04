@@ -33,52 +33,59 @@ DEPS=
 KERNEL_IMG=vmlinuz
 EXTRA=" dtbs"
 
+
+function install_dtb() {
+	echo "You must override install_dtb function!!!"
+	exit -1
+}
+
 function build() {
-cd $TMP
-rm -rf $SRCNAM
-tar xvf $CWD/$SOURCE_TAR
-cd $SRCNAM
+	cd $TMP
+	rm -rf $SRCNAM
+	tar xvf $CWD/$SOURCE_TAR > /dev/null
+	cd $SRCNAM
 
-#apply patches
-for i in `find $CWD/patches/ -name *.patch | sort -`; do
-    patch -p1 < $i
-done
+	#apply patches
+#	for i in `find $CWD/patches/ -name *.patch | sort -`; do
+#	    echo "===> apply patch $i"
+#	    patch -p1 < $i
+#	done
 
-if [ ! -e $CWD/kernel_${SLK_BOARD}_config ]; then
-    echo "config for kernel $SLK_BOARD not found!!"
-    exit 1
-fi
+	if [ ! -e $CWD/kernel_${SLK_BOARD}_config ]; then
+	    echo "config for kernel $SLK_BOARD not found!!"
+	    exit 1
+	fi
 
-case $SLK_ARCH in
-    i?86) ARCH=x86 ; EXTRA="" ;;
-esac
+	case $SLK_ARCH in
+	    i?86) ARCH=x86 ; EXTRA="" ;;
+	esac
 
-#cp $CWD/kernel_${SLK_BOARD}_config arch/$ARCH/configs/${SLK_BOARD}_defconfig
-cp $CWD/kernel_${SLK_BOARD}_config .config
-make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- oldconfig
-make -j4 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- bzImage modules $EXTRA
-make -j4 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- INSTALL_MOD_PATH=$PKG/ modules_install
-#install kernel headers into sysroot
-make -j4 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- headers_install INSTALL_HDR_PATH=$SLK_SYSROOT/usr
+	#cp $CWD/kernel_${SLK_BOARD}_config arch/$ARCH/configs/${SLK_BOARD}_defconfig
+	cp $CWD/kernel_${SLK_BOARD}_config .config
+	make -j3 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- oldconfig
+	make -j6 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- bzImage modules $EXTRA
+	make -j4 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- INSTALL_MOD_PATH=$PKG/ modules_install
+	#install kernel headers into sysroot
+	make -j4 ARCH=$ARCH CROSS_COMPILE=$SLK_TARGET- headers_install INSTALL_HDR_PATH=$SLK_SYSROOT/usr
 
-mkdir -p $PKG/boot-${SLK_BOARD}/overlays
+	mkdir -p $PKG/boot-${SLK_BOARD}/overlays
 
-if [ -e arch/$ARCH/boot/bzImage ]; then
-    cp arch/$ARCH/boot/bzImage $PKG/boot-${SLK_BOARD}/$KERNEL_IMG
-fi
-if [ -e arch/$ARCH/boot/zImage ]; then
-    cp arch/$ARCH/boot/zImage $PKG/boot-${SLK_BOARD}/$KERNEL_IMG
-fi
+	if [ -e arch/$ARCH/boot/bzImage ]; then
+	    cp arch/$ARCH/boot/bzImage $PKG/boot-${SLK_BOARD}/$KERNEL_IMG
+	fi
+	if [ -e arch/$ARCH/boot/zImage ]; then
+	    cp arch/$ARCH/boot/zImage $PKG/boot-${SLK_BOARD}/$KERNEL_IMG
+	fi
 
-if [ -e arch/$ARCH/boot/dts ]; then
-    cp arch/$ARCH/boot/dts/*.dtb $PKG/boot-${SLK_BOARD}/
-fi
-if [ -e arch/$ARCH/boot/dts/overlays ]; then
-    cp arch/$ARCH/boot/dts/overlays/*.dtb* $PKG/boot-${SLK_BOARD}/overlays/
-fi
+	if [ -e arch/$ARCH/boot/dts ]; then
+	    # cp arch/$ARCH/boot/dts/*.dtb $PKG/boot-${SLK_BOARD}/
+	    install_dtb
+	fi
+	#if [ -e arch/$ARCH/boot/dts/overlays ]; then
+	#    cp arch/$ARCH/boot/dts/overlays/*.dtb* $PKG/boot-${SLK_BOARD}/overlays/
+	#fi
 
-# compress modules
-#echo compressing modules
-#find $PKG/lib -name *.ko -exec gzip -v {} \;
-
+	# compress modules
+	#echo compressing modules
+	#find $PKG/lib -name *.ko -exec gzip -v {} \;
 }
