@@ -39,6 +39,7 @@ applypatches() {
     if [ -d $1 ]; then
         #apply patches
         for i in `find $1 -name *.patch | sort -`; do
+            echo "Apply patch $i"
             patch -p1 < $i
         done
     fi
@@ -64,7 +65,7 @@ downloadsource() {
 }
 
 findbuildscript() {
-    COUNT=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.build 2> /dev/null | grep $1.build | wc -l`
+    COUNT=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.build 2> /dev/null | grep \/$1.build | wc -l`
     if [ $(($COUNT)) -eq 1 ]; then
         PKGBUILD=`ls -1 platforms/$PLATFORM_NAME/src/*/*/*.build | grep \/$1.build`
         PKGBUILD=`dirname $PKGBUILD`
@@ -72,7 +73,7 @@ findbuildscript() {
     else
         COUNT=`ls -1 src/*/*/*.build | grep \/$1.build | wc -l`
         if [ $(($COUNT)) -eq 1 ]; then
-            PKGBUILD=`ls -1 src/*/*/*.build | grep $1.build`
+            PKGBUILD=`ls -1 src/*/*/*.build | grep \/$1.build`
             PKGBUILD=`dirname $PKGBUILD`
             echo ${PKGBUILD#src/} >> $2
             else
@@ -286,10 +287,10 @@ buildrootfs() {
     for i in `find $OUTPUT_PKGS/{core,extra,lib,net,retroarch,kernel,$PLATFORM_NAME} -name *.t?z`; do
 	ROOT=$ROOTFS INSTLOCKDIR=$TMP/lock upgradepkg --reinstall --install-new --terse $i
     done
-    #(
-#	cd $ROOTFS
-#        tar cvJf $OUTPUT_DIR/lilala-linux-rootfs-$SLK_BOARD.tar.xz .
-#    )
+    (
+	cd $ROOTFS
+        tar cvJf $OUTPUT_DIR/lilala-linux-rootfs-$SLK_BOARD.tar.xz .
+    )
     echo "Filesystem size:"
     du -d 0 -h $ROOTFS
 }
